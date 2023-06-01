@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Oswald&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap');
+.navbar {
+    width: 100%;
+    height: 100px;
+    background: var(--mainColor);
+    border-bottom: #555;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.bubble {
+    /* width: 100%; */
+    height: auto;
+    border-radius: 7ex;
+    background: #f0f8ff;
+    border-bottom: #555;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.navbar-text{
+    color: aliceblue;
+}
+
+.logo-container{
+    margin-left: 40px;
+}
+
+.logo-container span{
+    font-family: 'Oswald', sans-serif;
+    font-weight: 500;
+    color: aliceblue;
+    cursor: pointer;
+}
+
+
+.nav-logo {
+    height: 5vmin;
+    pointer-events: none;
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    .nav-logo {
+      animation: nav-logo-spin infinite 20s linear;
+    }
+  }
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+  
+
+.navbar h1{
+    font-weight:bolder;
+    color: aliceblue;
+    cursor: pointer;
+    font-family: 'Oswald', sans-serif;
+    /* font-weight: 10; */
+    font-size: 50px;
+    /* width: 0px; */
+    animation: infinite;
+    display: flex;
+}
+
+.links-container {
+    margin-right: 40px;
+    display:flex;
+    /* width: 300px; */
+    justify-content:space-evenly;
+    color:aliceblue;
+}
+
+.link a{
+    color: var(--mainColor);
+    font-size: 20px;
+    text-decoration: none;
+    justify-content: center;
+    display: flex;
+    margin: 10px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* .link a:hover{
+    color: var(--mainColor);
+    text-decoration: none;
+} */

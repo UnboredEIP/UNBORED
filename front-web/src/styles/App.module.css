@@ -1,5 +1,10 @@
 .App {
-  text-align: center;
+  /* text-align: center; */
+  background: whitesmoke;
+  display: flex;
+  height: auto;
+  align-items: center;
+  justify-content: center;
 }
 
 .App-logo {
@@ -14,7 +19,7 @@
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: whitesmoke;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -24,8 +29,13 @@
   color: white;
 }
 
+:root {
+  --mainColor: #E1604D;
+  --textColor: whitesmoke;
+}
+
 .App-link {
-  color: #61dafb;
+  color: var(--mainColor);
 }
 
 @keyframes App-logo-spin {
@@ -33,6 +43,6 @@
     transform: rotate(0deg);
   }
   to {
-    transform: rotate(360deg);
+    transform: rotate(180deg);
   }
 }
