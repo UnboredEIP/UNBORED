@@ -10,9 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import {createAppContainer} from 'react-navigation';
-import {NavigationContainer} from '@react-navigation/native';
-import { createStackNavigator ,TransitionPresets} from 'react-navigation-stack'
+
 function Settings() {
   const [firstName, setFirstName] = useState('Rémi');
   const [lastName, setLastName] = useState('SALEH');
