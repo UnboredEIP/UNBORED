@@ -1,0 +1,17 @@
+
+
+[
+    {"1":
+    {"date": "17 Dec", "source":"./asset/img-1.png","title":"La couleur de la fugue", "type":"Exposition", "going":"20", "adress":"Grand Avenue, France"},
+    "2":
+    {"date": "17 Dec", "source":"require(./asset/img-2.png)","title":"DJ Concerto Rico", "type":"Musique", "going":"18", "adress":"La Avenue, Paris"},
+    "3":
+    {"date": "21 Dec", "source":"./asset/img-3.png","title":"Festival de l'amour", "type":"Autre", "going":"22", "adress":"Grand Avenue, France"},
+    "4":
+    {"date": "21 Dec", "source":"./asset/img-4.png","title":"Festival des femmes", "type":"Autre", "going":"11", "adress":"Grand Avenue, France"},
+    "5":
+    {"date": "25 Dec", "source":"./asset/img-5.png","title":"Sport Training", "type":"Sport", "going":"2.3", "adress":"Grand Avenue, France"},
+    "6":
+    {"date": "27 Dec", "source":"https://encrypted-tbn2.gstatic.com/licensed-image?q=tbn:ANd9GcRUJW3szZD6VJqJlQEKXojABKTQ3_55jCq8gcr0lttLU0MblXjMwArJAC8jn3bRSnOv4tP3CABK6NWlqPs","title":"Art Workshop", "type":"Art", "going":"1.3", "adress":"Grand Avenue, France"}
+    }
+]
