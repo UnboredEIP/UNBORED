@@ -40,6 +40,10 @@
     },
     "extra": {
       "eas": {
+<<<<<<< HEAD
+=======
+        "projectId": "df2f28a1-374e-4e2c-852e-855f117615d9"
+>>>>>>> 5a62af852752f3f3f01cb0ee30d1064341556fe7
       }
     },
     "owner": "remisaleh"
