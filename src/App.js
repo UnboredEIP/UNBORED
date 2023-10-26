@@ -11,7 +11,8 @@ import OTP3 from "./pages/OTP";
 import Accueil3 from "./pages/Accueil";
 import OnBoarding3 from "./pages/OnBoarding";
 import Settings from "./pages/profile/Settings";
-import CreateAccount from "./pages/auth/CreateAccount";
+import CreateAccount from "./pages/auth/Register";
+import Register2 from "./pages/auth/Register2";
 import ChoosePreferences from "./ChoosePreferences";
 import ForgetPasswordScreen from "./pages/profile/ForgetPassword";
 import LoginScreen from "./pages/auth/Login";
@@ -47,8 +48,8 @@ const AppNavigator = createStackNavigator(
         ...TransitionPresets.FadeFromBottomAndroid,
       },
     },
-    CreateAccount: {
-      screen: CreateAccount,
+    Register2: {
+      screen: Register2,
       navigationOptions: {
         ...TransitionPresets.SlideFromRightIOS,
       },
@@ -86,7 +87,7 @@ const AppNavigator = createStackNavigator(
   },
   {
     headerMode: false,
-    initialRouteName: "CreateAccount",
+    initialRouteName: "Register2",
   }
 );
 const AppContainer = createAppContainer(AppNavigator);

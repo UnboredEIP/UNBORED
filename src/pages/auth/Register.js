@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/styles2";
-
 const CreateAccount = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -61,7 +60,6 @@ const CreateAccount = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.inscrire2}>S'inscrire gratuitement !</Text>
-
       <View style={styles.inputView2}>
         <TextInput
           style={styles.TextInput}
