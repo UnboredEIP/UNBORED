@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, TextInput, Dimensions } from "react-native";
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const MyTextInput = ({ placeholder, secureTextEntry, isDatepicker = false, onDateChange, keyboardType }) => {
-  const [text, onChangeText] = useState("");
+const MyTextInput = ({
+  placeholder,
+  secureTextEntry,
+  isDatepicker = false,
+  onDateChange,
+  keyboardType,
+  onChangeText,
+}) => {
   const [date, setDate] = useState(new Date());
 
   const renderInput = () => {
     if (isDatepicker) {
       return (
         <DateTimePicker
-        style={styles.test}
+          style={styles.test}
           value={date}
           mode="date"
           display="default"
@@ -31,7 +37,6 @@ const MyTextInput = ({ placeholder, secureTextEntry, isDatepicker = false, onDat
         <TextInput
           style={styles.input}
           onChangeText={onChangeText}
-          value={text}
           placeholder={placeholder}
           secureTextEntry={secureTextEntry || false}
           returnKeyType="done"

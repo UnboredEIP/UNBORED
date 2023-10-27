@@ -15,48 +15,10 @@ import {
 } from "@expo-google-fonts/source-sans-pro";
 import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../components/TextField";
-import RNPickerSelect from "react-native-picker-select";
+import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
-import { RootSiblingParent } from "react-native-root-siblings";
-async function makeRegisterRequest(
-  username,
-  email,
-  password,
-  gender,
-  number,
-  birthdate,
-  preferences
-) {
-  try {
-    const response = await fetch("http://20.216.143.86/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        gender,
-        number,
-        birthdate,
-        preferences,
-      }),
-    });
-    if (response.status === 201) {
-      console.log("User created");
-      return true;
-    } else {
-      console.error(response.json);
-      return false;
-    }
-  } catch (error) {
-    console.error("Request error: ", error);
-    return false;
-  }
-}
 
 async function makeRLoginRequest(email, password) {
   try {
@@ -83,7 +45,7 @@ async function makeRLoginRequest(email, password) {
   }
 }
 
-const Register2 = ({ navigation }) => {
+const Login2 = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
@@ -114,7 +76,7 @@ const Register2 = ({ navigation }) => {
               style={{ height: 200, width: 200 }}
             ></Image>
 
-            <Text style={styles().h1}>S'inscrire gratuitement</Text>
+            <Text style={styles().h1}>Se connecter</Text>
 
             <Text style={styles().titleTextField}>
               Email<Text style={styles().colorStar}>*</Text>
@@ -125,12 +87,6 @@ const Register2 = ({ navigation }) => {
               onChangeText={(email) => setEmail(email)}
             />
 
-            <Text style={styles().titleTextField}>Nom d'utilisateur</Text>
-            <MyTextInput
-              placeholder="Nom d'utilisateur"
-              onChangeText={(username) => setUsername(username)}
-            />
-
             <Text style={styles().titleTextField}>
               Mot de passe<Text style={styles().colorStar}>*</Text>
             </Text>
@@ -139,75 +95,13 @@ const Register2 = ({ navigation }) => {
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
             />
-
-            <Text style={styles().titleTextField}>Numéro de téléphone</Text>
-            <MyTextInput
-              placeholder="Numéro de téléphone"
-              keyboardType={"numeric"}
-              onChangeText={(number) => setNumber(number)}
-            />
-
-            <Text style={styles().titleTextField}>Date de naissance</Text>
-            <MyTextInput
-              placeholder="Date de naissance"
-              isDatepicker
-              onDateChange={(birthdate) => setBirthdate(birthdate)}
-            />
-            <Text style={styles().titleTextField}>Genre</Text>
-            <RNPickerSelect
-              onValueChange={(value) => {
-                setGender(value);
-                console.log(gender);
-              }}
-              items={[
-                { label: "Homme", value: "Homme" },
-                { label: "Femme", value: "Femme" },
-              ]}
-              placeholder={{ label: "Sélectionnez un genre", value: null }}
-              style={{
-                inputIOS: {
-                  marginTop: 10,
-                  fontSize: 16,
-                  padding: 12,
-                  alignItems: "center",
-                  width: "auto",
-                  alignSelf: "center",
-                  textAlign: "center",
-                  borderWidth: 2,
-                  borderColor: "#E1604D",
-                  borderRadius: 20,
-                  color: "white",
-                  paddingRight: 30,
-                  backgroundColor: "#E1604D",
-                  opacity: 0.8,
-                },
-                inputAndroid: {
-                  fontSize: 16,
-                  paddingVertical: 8,
-                  paddingHorizontal: 10,
-                  borderWidth: 0.5,
-                  borderColor: "#E1604D",
-                  borderRadius: 8,
-                  color: "black",
-                  paddingRight: 30,
-                },
-              }}
-            />
             <RootSiblingParent>
               <TouchableOpacity
                 style={styles().boutton}
                 onPress={async () => {
-                  const response = await makeRegisterRequest(
-                    username,
-                    email,
-                    password,
-                    gender,
-                    number,
-                    birthdate,
-                    []
-                  );
+                  const response = await makeRLoginRequest(email, password);
                   if (response) {
-                    Toast.show("Registration succeed", {
+                    Toast.show("Login succeed", {
                       duration: Toast.durations.LONG,
                       position: Toast.positions.BOTTOM,
                       backgroundColor: "green",
@@ -215,9 +109,8 @@ const Register2 = ({ navigation }) => {
                       animation: true,
                       hideOnPress: true,
                     });
-                    navigation.navigate("Login2");
                   } else {
-                    Toast.show("Registration failed", {
+                    Toast.show("Login failed", {
                       duration: Toast.durations.LONG,
                       position: Toast.positions.BOTTOM,
                       backgroundColor: "red",
@@ -228,18 +121,30 @@ const Register2 = ({ navigation }) => {
                   }
                 }}
               >
-                <Text style={styles().textButton}>S'inscrire</Text>
+                <Text style={styles().textButton}>Se connecter</Text>
               </TouchableOpacity>
             </RootSiblingParent>
+            <TouchableOpacity>
+              <Text
+                style={
+                  (styles().loginText,
+                  { marginTop: 20, marginBottom: 20, color: "#E1604D" })
+                }
+              >
+                Mot de passe oublié
+              </Text>
+            </TouchableOpacity>
             <Text
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
             >
               ou continuer avec
             </Text>
             <Text style={styles().loginText}>
-              J'ai déjà un compte{" "}
-              <TouchableOpacity onPress={() => navigation.navigate("Login2")}>
-                <Text style={styles().colorStar}>Se connecter</Text>
+              Pas encore de compte ?{" "}
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Register2")}
+              >
+                <Text style={styles().colorStar}>S'inscire</Text>
               </TouchableOpacity>
             </Text>
           </View>
@@ -305,4 +210,4 @@ const styles = (textColor) => {
   });
 };
 
-export default Register2;
+export default Login2;
