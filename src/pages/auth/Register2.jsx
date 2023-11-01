@@ -93,6 +93,7 @@ const Register2 = ({ navigation }) => {
   const [gender, setGender] = useState("M");
   const [number, setNumber] = useState("");
   const [birthdate, setBirthdate] = useState("");
+
   if (!fontsLoaded) {
     return (
       <View>
@@ -112,7 +113,7 @@ const Register2 = ({ navigation }) => {
             <Image
               source={require("../../../assets/logo2.gif")}
               style={{ height: 200, width: 200 }}
-            ></Image>
+            />
 
             <Text style={styles().h1}>S'inscrire gratuitement</Text>
 
@@ -152,6 +153,7 @@ const Register2 = ({ navigation }) => {
               placeholder="Date de naissance"
               isDatepicker
               onDateChange={(birthdate) => setBirthdate(birthdate)}
+              onChangeText={(birthdate) => setBirthdate(birthdate)}
             />
             <Text style={styles().titleTextField}>Genre</Text>
             <RNPickerSelect
@@ -197,34 +199,41 @@ const Register2 = ({ navigation }) => {
               <TouchableOpacity
                 style={styles().boutton}
                 onPress={async () => {
-                  const response = await makeRegisterRequest(
-                    username,
-                    email,
-                    password,
-                    gender,
-                    number,
-                    birthdate,
-                    []
-                  );
-                  if (response) {
-                    Toast.show("Registration succeed", {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.BOTTOM,
-                      backgroundColor: "green",
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                    });
-                    navigation.navigate("Login2");
-                  } else {
-                    Toast.show("Registration failed", {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.BOTTOM,
-                      backgroundColor: "red",
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                    });
+                  if (
+                    username !== "" &&
+                    email !== "" &&
+                    password !== "" &&
+                    gender !== ""
+                  ) {
+                    const response = await makeRegisterRequest(
+                      username,
+                      email,
+                      password,
+                      gender,
+                      number,
+                      birthdate,
+                      []
+                    );
+                    if (response) {
+                      Toast.show("Registration succeed", {
+                        duration: Toast.durations.LONG,
+                        position: Toast.positions.BOTTOM,
+                        backgroundColor: "green",
+                        shadow: true,
+                        animation: true,
+                        hideOnPress: true,
+                      });
+                      navigation.navigate("Login2");
+                    } else {
+                      Toast.show("Registration failed", {
+                        duration: Toast.durations.LONG,
+                        position: Toast.positions.BOTTOM,
+                        backgroundColor: "red",
+                        shadow: true,
+                        animation: true,
+                        hideOnPress: true,
+                      });
+                    }
                   }
                 }}
               >
@@ -236,9 +245,51 @@ const Register2 = ({ navigation }) => {
             >
               ou continuer avec
             </Text>
+
+            <View style={{ flexDirection: "row", marginBottom: 32 }}>
+              <RootSiblingParent>
+                <TouchableOpacity style={styles().oauthButton}>
+                  <Image
+                    source={require("../../../assets/Facebook.png")}
+                    style={{ height: 25, width: 25, margin: 10 }}
+                  />
+                  <Text
+                    style={
+                      (styles().textButton,
+                      {
+                        color: "black",
+                        fontSize: 16,
+                        fontFamily: "SourceSansPro_600SemiBold",
+                      })
+                    }
+                  >
+                    Facebook
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles().oauthButton}>
+                  <Image
+                    source={require("../../../assets/google.png")}
+                    style={{ height: 25, width: 25, margin: 10 }}
+                  />
+                  <Text
+                    style={
+                      (styles().textButton,
+                      {
+                        color: "black",
+                        fontSize: 16,
+                        fontFamily: "SourceSansPro_600SemiBold",
+                      })
+                    }
+                  >
+                    Google
+                  </Text>
+                </TouchableOpacity>
+              </RootSiblingParent>
+            </View>
+
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}
-              <TouchableOpacity onPress={() => navigation.navigate("Login2")}>
+              <TouchableOpacity isonPress={() => navigation.navigate("Login2")}>
                 <Text style={styles().colorStar}>Se connecter</Text>
               </TouchableOpacity>
             </Text>
@@ -301,6 +352,24 @@ const styles = (textColor) => {
       fontFamily: "SourceSansPro_600SemiBold",
       fontSize: 16,
       color: "white",
+    },
+    oauthButton: {
+      borderRadius: 25,
+      borderWidth: 1,
+      borderColor: "#F4F6F9",
+      height: 50,
+      width: screenWidth < 350 ? 145 : 160,
+      alignItems: "center",
+      justifyContent: "center",
+      marginHorizontal: 10,
+      flexDirection: "row",
+      shadowColor: "black", // Shadow color
+      shadowOffset: {
+        width: 2,
+        height: 1,
+      }, // Shadow offset
+      shadowOpacity: 0.1, // Shadow opacity
+      shadowRadius: 2, // Shadow radius
     },
   });
 };

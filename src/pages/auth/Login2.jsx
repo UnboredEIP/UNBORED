@@ -19,6 +19,7 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 async function makeRLoginRequest(email, password) {
   try {
@@ -33,7 +34,10 @@ async function makeRLoginRequest(email, password) {
       }),
     });
     if (response.status === 201) {
-      console.log("User created");
+      const data = await response.json();
+      const token = data["refresh"];
+      await AsyncStorage.setItem("token", token);
+      console.log(data["refresh"]);
       return true;
     } else {
       console.error(response.toString());
@@ -49,12 +53,8 @@ const Login2 = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [gender, setGender] = useState("M");
-  const [number, setNumber] = useState("");
-  const [birthdate, setBirthdate] = useState("");
   if (!fontsLoaded) {
     return (
       <View>
@@ -99,25 +99,27 @@ const Login2 = ({ navigation }) => {
               <TouchableOpacity
                 style={styles().boutton}
                 onPress={async () => {
-                  const response = await makeRLoginRequest(email, password);
-                  if (response) {
-                    Toast.show("Login succeed", {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.BOTTOM,
-                      backgroundColor: "green",
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                    });
-                  } else {
-                    Toast.show("Login failed", {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.BOTTOM,
-                      backgroundColor: "red",
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                    });
+                  if (email !== "" && password !== "") {
+                    const response = await makeRLoginRequest(email, password);
+                    if (response) {
+                      Toast.show("Login succeed", {
+                        duration: Toast.durations.LONG,
+                        position: Toast.positions.BOTTOM,
+                        backgroundColor: "green",
+                        shadow: true,
+                        animation: true,
+                        hideOnPress: true,
+                      });
+                    } else {
+                      Toast.show("Login failed", {
+                        duration: Toast.durations.LONG,
+                        position: Toast.positions.BOTTOM,
+                        backgroundColor: "red",
+                        shadow: true,
+                        animation: true,
+                        hideOnPress: true,
+                      });
+                    }
                   }
                 }}
               >
