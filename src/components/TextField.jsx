@@ -12,14 +12,23 @@ const MyTextInput = ({
   onDateChange,
   keyboardType,
   onChangeText,
+  borderColor = "#AEB3BE",
 }) => {
   const [date, setDate] = useState(new Date());
+  const [isFocused, setIsFocused] = useState(false);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+  };
 
   const renderInput = () => {
     if (isDatepicker) {
       return (
         <DateTimePicker
-          style={styles.test}
           value={date}
           mode="date"
           display="default"
@@ -35,12 +44,14 @@ const MyTextInput = ({
     } else {
       return (
         <TextInput
-          style={styles.input}
+          style={styles(borderColor, isFocused).input}
           onChangeText={onChangeText}
           placeholder={placeholder}
           secureTextEntry={secureTextEntry || false}
           returnKeyType="done"
           keyboardType={keyboardType}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
       );
     }
@@ -49,16 +60,19 @@ const MyTextInput = ({
   return <SafeAreaView>{renderInput()}</SafeAreaView>;
 };
 
-const styles = StyleSheet.create({
-  input: {
-    height: screenHeight / 17,
-    width: screenWidth / 1.2,
-    margin: 12,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 20,
-    borderColor: "#E1604D",
-  },
-});
+const styles = (borderColor, isFocused) => {
+  return StyleSheet.create({
+    input: {
+      height: screenHeight / 17,
+      width: screenWidth / 1.2,
+      margin: 12,
+      borderWidth: isFocused ? 1.5 : 2,
+      padding: 10,
+      borderRadius: 20,
+      borderColor: isFocused ? "#E1604D" : borderColor,
+      opacity: isFocused ? 1 : 0.5,
+    },
+  });
+};
 
 export default MyTextInput;

@@ -20,6 +20,8 @@ import Toast from "react-native-root-toast";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 import { RootSiblingParent } from "react-native-root-siblings";
+import Buttons from "../../components/Buttons";
+
 async function makeRegisterRequest(
   username,
   email,
@@ -195,9 +197,11 @@ const Register2 = ({ navigation }) => {
                 },
               }}
             />
+            <View style={{ marginTop: 20 }} />
             <RootSiblingParent>
-              <TouchableOpacity
-                style={styles().boutton}
+              <Buttons
+                texte={"S'inscrire"}
+                backgroundColor="#E1604D"
                 onPress={async () => {
                   if (
                     username !== "" &&
@@ -215,6 +219,7 @@ const Register2 = ({ navigation }) => {
                       []
                     );
                     if (response) {
+                      console.log("success");
                       Toast.show("Registration succeed", {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
@@ -225,6 +230,7 @@ const Register2 = ({ navigation }) => {
                       });
                       navigation.navigate("Login2");
                     } else {
+                      console.log("fail");
                       Toast.show("Registration failed", {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
@@ -236,60 +242,41 @@ const Register2 = ({ navigation }) => {
                     }
                   }
                 }}
-              >
-                <Text style={styles().textButton}>S'inscrire</Text>
-              </TouchableOpacity>
+              />
             </RootSiblingParent>
             <Text
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
             >
               ou continuer avec
             </Text>
-
             <View style={{ flexDirection: "row", marginBottom: 32 }}>
               <RootSiblingParent>
-                <TouchableOpacity style={styles().oauthButton}>
-                  <Image
-                    source={require("../../../assets/Facebook.png")}
-                    style={{ height: 25, width: 25, margin: 10 }}
-                  />
-                  <Text
-                    style={
-                      (styles().textButton,
-                      {
-                        color: "black",
-                        fontSize: 16,
-                        fontFamily: "SourceSansPro_600SemiBold",
-                      })
-                    }
-                  >
-                    Facebook
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles().oauthButton}>
-                  <Image
-                    source={require("../../../assets/google.png")}
-                    style={{ height: 25, width: 25, margin: 10 }}
-                  />
-                  <Text
-                    style={
-                      (styles().textButton,
-                      {
-                        color: "black",
-                        fontSize: 16,
-                        fontFamily: "SourceSansPro_600SemiBold",
-                      })
-                    }
-                  >
-                    Google
-                  </Text>
-                </TouchableOpacity>
+                <Buttons
+                  hasIcon={true}
+                  iconPath={
+                    "https://www.facebook.com/images/fb_icon_325x325.png"
+                  }
+                  textColor="black"
+                  width={screenWidth < 350 ? 145 : 160}
+                  backgroundColor="white"
+                  texte="Facebook"
+                />
+                <Buttons
+                  hasIcon={true}
+                  iconPath={
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png"
+                  }
+                  textColor="black"
+                  width={screenWidth < 350 ? 145 : 160}
+                  backgroundColor="white"
+                  texte="Google"
+                />
               </RootSiblingParent>
             </View>
 
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}
-              <TouchableOpacity isonPress={() => navigation.navigate("Login2")}>
+              <TouchableOpacity onPress={() => navigation.navigate("Login2")}>
                 <Text style={styles().colorStar}>Se connecter</Text>
               </TouchableOpacity>
             </Text>
@@ -363,13 +350,13 @@ const styles = (textColor) => {
       justifyContent: "center",
       marginHorizontal: 10,
       flexDirection: "row",
-      shadowColor: "black", // Shadow color
+      shadowColor: "black",
       shadowOffset: {
         width: 2,
         height: 1,
-      }, // Shadow offset
-      shadowOpacity: 0.1, // Shadow opacity
-      shadowRadius: 2, // Shadow radius
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
     },
   });
 };

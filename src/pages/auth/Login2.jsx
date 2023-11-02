@@ -20,6 +20,7 @@ import Toast from "react-native-root-toast";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Buttons from "../../components/Buttons";
 
 async function makeRLoginRequest(email, password) {
   try {
@@ -94,10 +95,12 @@ const Login2 = ({ navigation }) => {
               placeholder="Mot de passe"
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
-            />
+              />
             <RootSiblingParent>
-              <TouchableOpacity
-                style={styles().boutton}
+              <View style={{marginBottom: 10}}>
+                </View>
+              <Buttons
+                texte={"Se connecter"}
                 onPress={async () => {
                   if (email !== "" && password !== "") {
                     const response = await makeRLoginRequest(email, password);
@@ -122,15 +125,14 @@ const Login2 = ({ navigation }) => {
                     }
                   }
                 }}
-              >
-                <Text style={styles().textButton}>Se connecter</Text>
-              </TouchableOpacity>
+                />
+
             </RootSiblingParent>
             <TouchableOpacity>
               <Text
                 style={
                   (styles().loginText,
-                  { marginTop: 20, marginBottom: 20, color: "#E1604D" })
+                  { marginTop: 20, marginBottom: 0, color: "#E1604D" })
                 }
               >
                 Mot de passe oublié
@@ -141,6 +143,31 @@ const Login2 = ({ navigation }) => {
             >
               ou continuer avec
             </Text>
+            <View style={{ flexDirection: "row" }}>
+              <RootSiblingParent>
+                <Buttons
+                  hasIcon={true}
+                  iconPath={
+                    "https://www.facebook.com/images/fb_icon_325x325.png"
+                  }
+                  textColor="black"
+                  width={screenWidth < 350 ? 145 : 160}
+                  backgroundColor="white"
+                  texte="Facebook"
+                />
+                <Buttons
+                  hasIcon={true}
+                  iconPath={
+                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png"
+                  }
+                  textColor="black"
+                  width={screenWidth < 350 ? 145 : 160}
+                  backgroundColor="white"
+                  texte="Google"
+                />
+              </RootSiblingParent>
+            </View>
+            <View style={{marginTop: 15}}/>
             <Text style={styles().loginText}>
               Pas encore de compte ?{" "}
               <TouchableOpacity
