@@ -15,6 +15,7 @@ import CreateAccount from "./pages/auth/CreateAccount";
 import ChoosePreferences from "./ChoosePreferences";
 import ForgetPasswordScreen from "./pages/profile/ForgetPassword";
 import LoginScreen from "./pages/auth/Login";
+import Profile from "./pages/profile/Profile";
 import styles from "./styles/styles2";
 
 class OTP2 extends React.Component {
@@ -83,10 +84,16 @@ const AppNavigator = createStackNavigator(
         ...TransitionPresets.ScaleFromCenterAndroid,
       },
     },
+    Profile: {
+      screen: Profile,
+      navigationOptions: {
+        ...TransitionPresets.ScaleFromCenterAndroid,
+      },
+    },
   },
   {
     headerMode: false,
-    initialRouteName: "CreateAccount",
+    initialRouteName: "Home",
   }
 );
 const AppContainer = createAppContainer(AppNavigator);

@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
+import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/styles2";
 
@@ -88,7 +89,7 @@ const CreateAccount = ({ navigation }) => {
         />
       </View>
       <View style={styles.inputView2}>
-        {/* <Picker
+        <Picker
           selectedValue={gender}
           onValueChange={(itemValue) => setGender(itemValue)}
         >
@@ -96,7 +97,7 @@ const CreateAccount = ({ navigation }) => {
           <Picker.Item label="Homme" value="Homme" style={styles.TextInput31}/>
           <Picker.Item label="Femme" value="Femme" style={styles.TextInput31}/>
           <Picker.Item label="Autre" value="Autre" style={styles.TextInput31}/>
-        </Picker> */}
+        </Picker>
       </View>
       <View style={styles.inputView2}>
         <TextInput
