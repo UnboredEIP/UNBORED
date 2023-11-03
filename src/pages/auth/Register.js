@@ -10,7 +10,6 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/styles2";
-
 const CreateAccount = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -62,7 +61,6 @@ const CreateAccount = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.inscrire2}>S'inscrire gratuitement !</Text>
-
       <View style={styles.inputView2}>
         <TextInput
           style={styles.TextInput}
@@ -93,10 +91,14 @@ const CreateAccount = ({ navigation }) => {
           selectedValue={gender}
           onValueChange={(itemValue) => setGender(itemValue)}
         >
-          <Picker.Item label="Sélectionnez le genre" value="" style={styles.TextInput5} />
-          <Picker.Item label="Homme" value="Homme" style={styles.TextInput31}/>
-          <Picker.Item label="Femme" value="Femme" style={styles.TextInput31}/>
-          <Picker.Item label="Autre" value="Autre" style={styles.TextInput31}/>
+          <Picker.Item
+            label="Sélectionnez le genre"
+            value=""
+            style={styles.TextInput5}
+          />
+          <Picker.Item label="Homme" value="Homme" style={styles.TextInput31} />
+          <Picker.Item label="Femme" value="Femme" style={styles.TextInput31} />
+          <Picker.Item label="Autre" value="Autre" style={styles.TextInput31} />
         </Picker>
       </View>
       <View style={styles.inputView2}>

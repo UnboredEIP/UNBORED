@@ -11,12 +11,13 @@ import OTP3 from "./pages/OTP";
 import Accueil3 from "./pages/Accueil";
 import OnBoarding3 from "./pages/OnBoarding";
 import Settings from "./pages/profile/Settings";
-import CreateAccount from "./pages/auth/CreateAccount";
+import Register2 from "./pages/auth/Register2";
 import ChoosePreferences from "./ChoosePreferences";
 import ForgetPasswordScreen from "./pages/profile/ForgetPassword";
-import LoginScreen from "./pages/auth/Login";
+import Login2 from "./pages/auth/Login2";
 import Profile from "./pages/profile/Profile";
 import styles from "./styles/styles2";
+import { NavigationContainer } from "@react-navigation/native";
 
 class OTP2 extends React.Component {
   render() {
@@ -31,7 +32,7 @@ class OTP2 extends React.Component {
 const AppNavigator = createStackNavigator(
   {
     Home: {
-      screen: LoginScreen,
+      screen: Register2,
       navigationOptions: {
         ...TransitionPresets.SlideFromRightIOS,
       },
@@ -48,8 +49,14 @@ const AppNavigator = createStackNavigator(
         ...TransitionPresets.FadeFromBottomAndroid,
       },
     },
-    CreateAccount: {
-      screen: CreateAccount,
+    // Register2: {
+    //   screen: Register2,
+    //   navigationOptions: {
+    //     ...TransitionPresets.SlideFromRightIOS,
+    //   },
+    // },
+    Login2: {
+      screen: Login2,
       navigationOptions: {
         ...TransitionPresets.SlideFromRightIOS,
       },
@@ -94,9 +101,13 @@ const AppNavigator = createStackNavigator(
   {
     headerMode: false,
     initialRouteName: "Home",
+    defaultNavigationOptions: {
+      cardStyle: { backgroundColor: "white" },
+    },
   }
 );
 const AppContainer = createAppContainer(AppNavigator);
+
 export default class App extends React.Component {
   render() {
     return <AppContainer />;

@@ -11,14 +11,15 @@ import {
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MyTextInput from "../../components/TextField";
 
-const Settings = ({navigation}) => {
+const Settings = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
   const [number, setNumber] = useState("");
-  const [birthdate, setBirthdate] = useState("");
+  const [birthdate, setBirthdate] = useState(new Date());
   const [defaultImageUri] = useState(
     "https://camo.githubusercontent.com/c870c9266f63ef17356bc6356d7c2df99d8a9889644352d4fe854f37f5c13693/68747470733a2f2f692e706f7374696d672e63632f5071674c68726e582f756e626f7265642e706e67" // Replace with the actual default image URL
   );
@@ -64,10 +65,10 @@ const Settings = ({navigation}) => {
   }
 
   function formatDate(date) {
-    const day = date.getDate().toString().padStart(2, '0');
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based, so we add 1
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-based, so we add 1
     const year = date.getFullYear().toString();
-  
+
     return `${month} ${day} ${year}`;
   }
 
@@ -90,35 +91,36 @@ const Settings = ({navigation}) => {
       const profileData = await response.json();
       setUsername(profileData.user.username.trim());
       setNumber(profileData.user.number.trim());
-      setBirthdate(formatDate(new Date (profileData.user.birthdate.trim())));
+      // const tmp = new Date(profileData.user.birthdate.trim())
+      setBirthdate(new Date(profileData.user.birthdate.trim()));
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
   };
   const handleSave = async () => {
     try {
-      const authToken = await AsyncStorage.getItem('authToken');
+      const authToken = await AsyncStorage.getItem("authToken");
 
-      const response = await fetch('http://20.216.143.86/profile/update', {
-        method: 'PUT',
+      const response = await fetch("http://20.216.143.86/profile/update", {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({
           username,
           birthdate,
-          number
+          number,
         }),
       });
 
       if (response.ok) {
-        console.log('Profile updated successfully');
+        console.log("Profile updated successfully");
       } else {
-        console.log('Failed to update profile');
+        console.log("Failed to update profile");
       }
     } catch (error) {
-      console.error('Error updating profile:', error);
+      console.error("Error updating profile:", error);
       // Handle errors related to the request, such as network errors
     }
     navigation.navigate("Accueil3");
@@ -132,7 +134,11 @@ const Settings = ({navigation}) => {
   }, []);
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior="padding"
+      enabled={true}
+    >
       <View style={styles.container}>
         <View style={{ flex: 1, alignItems: "center" }}>
           <View style={styles.imageContainer}>
@@ -145,7 +151,10 @@ const Settings = ({navigation}) => {
                 marginBottom: 10,
               }}
             />
-            <TouchableOpacity style={styles.iconContainer} onPress={handleIconClick}>
+            <TouchableOpacity
+              style={styles.iconContainer}
+              onPress={handleIconClick}
+            >
               <Image
                 source={require("../../../assets/icon2.png")}
                 style={{
@@ -185,7 +194,7 @@ const Settings = ({navigation}) => {
             value={username}
             onChangeText={setUsername}
           />
-          <Text style={styles.username}>Number   </Text>
+          <Text style={styles.username}>Number </Text>
           <TextInput
             style={styles.input}
             placeholder="number"
@@ -193,20 +202,21 @@ const Settings = ({navigation}) => {
             onChangeText={setNumber}
           />
           <Text style={styles.username}>Birthdate</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="birthdate"
-            value={birthdate}
-            onChangeText={setBirthdate}
+          <MyTextInput
+            dateSelect={new Date(birthdate)}
+            placeholder="Date de naissance"
+            isDatepicker
+            onDateChange={(birthdate) => setBirthdate(birthdate)}
+            onChangeText={(birthdate) => setBirthdate(birthdate)}
           />
           <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
-          <Text style={styles.loginBtnText}>Sauvegarder</Text>
+            <Text style={styles.loginBtnText}>Sauvegarder</Text>
           </TouchableOpacity>
-          </View>
         </View>
-      </KeyboardAvoidingView>
+      </View>
+    </KeyboardAvoidingView>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -266,18 +276,18 @@ const styles = StyleSheet.create({
     right: 0,
   },
   username: {
-    position: 'relative',
+    position: "relative",
     right: 110,
     marginTop: 20,
     marginBottom: -10,
-    color: 'grey'
+    color: "grey",
   },
   horizontalLine: {
     width: "100%",
-    height: 1,  // Adjust the height as needed
-    backgroundColor: "#ccc",  // Grey color
-    marginTop: 10,  // Adjust the margin as needed
-    marginBottom: 10,  // Adjust the margin as needed
+    height: 1, // Adjust the height as needed
+    backgroundColor: "#ccc", // Grey color
+    marginTop: 10, // Adjust the margin as needed
+    marginBottom: 10, // Adjust the margin as needed
   },
 });
 
