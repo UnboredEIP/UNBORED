@@ -21,6 +21,8 @@ const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Buttons from "../../components/Buttons";
+import Accueil3 from "../Accueil";
+import ChoosePreferences from "../../ChoosePreferences";
 
 async function makeRLoginRequest(email, password) {
   try {
@@ -37,7 +39,7 @@ async function makeRLoginRequest(email, password) {
     if (response.status === 201) {
       const data = await response.json();
       const token = data["refresh"];
-      await AsyncStorage.setItem("token", token);
+      await AsyncStorage.setItem("authToken", token);
       console.log(data["refresh"]);
       return true;
     } else {
@@ -95,10 +97,9 @@ const Login2 = ({ navigation }) => {
               placeholder="Mot de passe"
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
-              />
+            />
             <RootSiblingParent>
-              <View style={{marginBottom: 10}}>
-                </View>
+              <View style={{ marginBottom: 10 }}></View>
               <Buttons
                 texte={"Se connecter"}
                 onPress={async () => {
@@ -113,6 +114,7 @@ const Login2 = ({ navigation }) => {
                         animation: true,
                         hideOnPress: true,
                       });
+                      navigation.navigate("Choose");
                     } else {
                       Toast.show("Login failed", {
                         duration: Toast.durations.LONG,
@@ -125,8 +127,7 @@ const Login2 = ({ navigation }) => {
                     }
                   }
                 }}
-                />
-
+              />
             </RootSiblingParent>
             <TouchableOpacity>
               <Text
@@ -167,7 +168,7 @@ const Login2 = ({ navigation }) => {
                 />
               </RootSiblingParent>
             </View>
-            <View style={{marginTop: 15}}/>
+            <View style={{ marginTop: 15 }} />
             <Text style={styles().loginText}>
               Pas encore de compte ?{" "}
               <TouchableOpacity

@@ -13,8 +13,9 @@ const MyTextInput = ({
   keyboardType,
   onChangeText,
   borderColor = "#AEB3BE",
+  dateSelect = new Date()
 }) => {
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(dateSelect);
   const [isFocused, setIsFocused] = useState(false);
 
   const handleFocus = () => {

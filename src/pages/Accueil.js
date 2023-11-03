@@ -32,7 +32,7 @@ import img6 from "../../asset/img-6.png";
 import loc from "../../asset/location_on.png";
 import vector from "../../asset/Vector.png";
 
-function Accueil3() {
+const Accueil3 = ({ navigation }) => {
   const [text, setText] = useState("");
   const [choice, setChoice] = useState(0);
   useEffect(() => {
@@ -149,7 +149,7 @@ function Accueil3() {
             }}
           >
             <Text style={{ fontWeight: "bold" }}>Recommandé</Text>
-            <TouchableOpacity onPress={() => console.log("voir tout")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
               <Text style={{ fontWeight: "bold", color: "#E1604D" }}>
                 Voir tout
               </Text>
