@@ -12,6 +12,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyTextInput from "../../components/TextField";
+import Navbar from "../../components/NavigationBar";
 
 const Settings = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -134,6 +135,7 @@ const Settings = ({ navigation }) => {
   }, []);
 
   return (
+    <View style={{ flex: 1 }}>
     <KeyboardAvoidingView
       style={styles.container}
       behavior="padding"
@@ -215,6 +217,8 @@ const Settings = ({ navigation }) => {
         </View>
       </View>
     </KeyboardAvoidingView>
+    <Navbar navigation={navigation} />
+    </View>
   );
 };
 

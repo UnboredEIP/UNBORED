@@ -17,6 +17,7 @@ import ForgetPasswordScreen from "./pages/profile/ForgetPassword";
 import Login2 from "./pages/auth/Login2";
 import Profile from "./pages/profile/Profile";
 import styles from "./styles/styles2";
+import Calendar from "./pages/Calendar";
 import { NavigationContainer } from "@react-navigation/native";
 
 class OTP2 extends React.Component {
@@ -93,6 +94,12 @@ const AppNavigator = createStackNavigator(
     },
     Profile: {
       screen: Profile,
+      navigationOptions: {
+        ...TransitionPresets.ScaleFromCenterAndroid,
+      },
+    },
+    Calendar: {
+      screen: Calendar,
       navigationOptions: {
         ...TransitionPresets.ScaleFromCenterAndroid,
       },

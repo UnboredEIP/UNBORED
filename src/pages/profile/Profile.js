@@ -10,6 +10,9 @@ import {
   ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import Navbar from "../../components/NavigationBar";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Accueil3 from "../Accueil";
 
 const Profile = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -52,13 +55,14 @@ const Profile = ({ navigation }) => {
   };
 
   return (
+    <View style={{flex:1}}>
     <KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>
      <View style={styles.container}>
         <View style={{ flex: 1, alignItems: "center" }}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <Text style={styles.textAboveImage}>Mon profil UnBored</Text>
             <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate("Settings")}>
-              <Text style={styles.loginBtnText}>O</Text>
+            <Icon name="gears" size={20} color= {'#E1604D'} />
             </TouchableOpacity>
           </View>
           <View style={styles.imageContainer}>
@@ -103,12 +107,13 @@ const Profile = ({ navigation }) => {
         </View>
       </View>
     </KeyboardAvoidingView>
+    <Navbar navigation={navigation} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F1F1F1',
     flex: 1,
     padding: 20,
   },
@@ -163,7 +168,7 @@ const styles = StyleSheet.create({
     right: 80,
     marginTop: 20,
     marginBottom: 20,
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: "bold",
   },
   descriptionpersonne: {
@@ -196,14 +201,14 @@ const styles = StyleSheet.create({
     borderColor: "#E1604D",
   },
   loginBtn: {
-    width: 30,
-    top:5,
+    width: 40,
+    top:8,
     borderRadius: 25,
-    height: 30,
+    height: 40,
     alignItems: "center",
     justifyContent: "center",
-    marginLeft:50,
-    backgroundColor: "#b3b3b3",
+    marginLeft:30,
+    backgroundColor: "#5265FF1A",
     borderColor: "#E1604D",
     borderWidth: 1,
   },

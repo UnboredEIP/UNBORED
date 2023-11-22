@@ -7,12 +7,13 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
+  Button,
   ScrollView,
   FlatList,
   TextInput,
   TouchableOpacity,
 } from "react-native";
-
+import Navbar from "../components/NavigationBar";
 import "../../asset/SourceSansPro-Regular.otf";
 import book from "../../asset/bookmark.png";
 import notifications from "../../asset/notifications.png";
@@ -39,6 +40,7 @@ const Accueil3 = ({ navigation }) => {
     console.log(choice);
   }, [choice]);
   return (
+    <View style={{ flex: 1 }}>
     <ScrollView
       horizontal={false}
       nestedScrollEnabled={true}
@@ -968,7 +970,6 @@ const Accueil3 = ({ navigation }) => {
       ) : (
         <View></View>
       )}
-
       <View style={{ position: "relative", top: 0, paddingBottom: 30 }}>
         <ScrollView
           showsHorizontalScrollIndicator={false}
@@ -2167,9 +2168,12 @@ const Accueil3 = ({ navigation }) => {
           </ScrollView>
         </View>
       </View>
-
       {/* <View style={{backgroundColor:'blue', width:100+'%', top:300, height:1000}}></View> */}
     </ScrollView>
+    <View>
+    <Navbar navigation={navigation} />
+   </View>
+    </View>
   );
 }
 
