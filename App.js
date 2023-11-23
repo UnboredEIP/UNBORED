@@ -5,20 +5,21 @@ import {
   TransitionPresets,
 } from "react-navigation-stack";
 import React, { useState, useEffect, useRef } from "react";
-import OTP from "./pages/OTP";
-import "../asset/SourceSansPro-Regular.otf";
-import OTP3 from "./pages/OTP";
-import Accueil3 from "./pages/Accueil";
-import OnBoarding3 from "./pages/OnBoarding";
-import Settings from "./pages/profile/Settings";
-import Register2 from "./pages/auth/Register2";
-import ChoosePreferences from "./ChoosePreferences";
-import ForgetPasswordScreen from "./pages/profile/ForgetPassword";
-import Login2 from "./pages/auth/Login2";
-import Profile from "./pages/profile/Profile";
-import styles from "./styles/styles2";
-import Calendar from "./pages/Calendar";
+import OTP from "./src/pages/OTP";
+import "./asset/SourceSansPro-Regular.otf";
+import OTP3 from "./src/pages/OTP";
+import Accueil3 from "./src/pages/Accueil";
+import OnBoarding3 from "./src/pages/OnBoarding";
+import Settings from "./src/pages/profile/Settings";
+import Register2 from "./src/pages/auth/Register2";
+import ChoosePreferences from "./src/ChoosePreferences";
+import ForgetPasswordScreen from "./src/pages/profile/ForgetPassword";
+import Login2 from "./src/pages/auth/Login2";
+import Profile from "./src/pages/profile/Profile";
+import styles from "./src/styles/styles2";
+import Calendar from "./src/pages/Calendar";
 import { NavigationContainer } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 class OTP2 extends React.Component {
   render() {
@@ -30,8 +31,51 @@ class OTP2 extends React.Component {
   }
 }
 
+const checkKeys = async (prefix) => {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const filteredKeys = keys.filter((key) => key.startsWith(prefix));
+    return filteredKeys.length > 0;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const checkFirstLaunch = async () => {
+  try {
+    const firstLaunch = await AsyncStorage.getItem("firstLaunch");
+    if (firstLaunch === null) {
+      // L'application n'a jamais été lancée auparavant
+      await AsyncStorage.setItem("firstLaunch", "true");
+      return true;
+    }
+    // L'application a déjà été lancée auparavant
+    return false;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+class InitialScreen extends React.Component {
+  async componentDidMount() {
+    if (await checkFirstLaunch()) {
+      this.props.navigation.replace("OnBoarding3");
+      return;
+    }
+    const initialRoute = await checkKeys("authToken");
+    this.props.navigation.replace(initialRoute ? "Accueil3" : "Home");
+  }
+
+  render() {
+    return null;
+  }
+}
+
 const AppNavigator = createStackNavigator(
   {
+    Initial: {
+      screen: InitialScreen,
+    },
     Home: {
       screen: Register2,
       navigationOptions: {
@@ -107,7 +151,7 @@ const AppNavigator = createStackNavigator(
   },
   {
     headerMode: false,
-    initialRouteName: "Home",
+    initialRouteName: "Initial",
     defaultNavigationOptions: {
       cardStyle: { backgroundColor: "white" },
     },
@@ -117,6 +161,16 @@ const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.Component {
   render() {
+    const prefix = "authToken";
+    checkKeys(prefix).then((hasKey) => {
+      if (hasKey) {
+        console.log("AsyncStorage has a key that starts with " + prefix);
+      } else {
+        console.log(
+          "AsyncStorage does not have a key that starts with " + prefix
+        );
+      }
+    });
     return <AppContainer />;
   }
 }

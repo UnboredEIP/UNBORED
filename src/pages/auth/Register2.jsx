@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
-  Platform,
+  Platform,F
 } from "react-native";
 import {
   useFonts,
@@ -228,7 +228,7 @@ const Register2 = ({ navigation }) => {
                         animation: true,
                         hideOnPress: true,
                       });
-                      navigation.navigate("Login2");
+                      navigation.replace("Login2");
                     } else {
                       console.log("fail");
                       Toast.show("Registration failed", {
@@ -276,7 +276,7 @@ const Register2 = ({ navigation }) => {
 
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}
-              <TouchableOpacity onPress={() => navigation.navigate("Login2")}>
+              <TouchableOpacity onPress={() => navigation.replace("Login2")}>
                 <Text style={styles().colorStar}>Se connecter</Text>
               </TouchableOpacity>
             </Text>

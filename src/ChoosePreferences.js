@@ -120,7 +120,7 @@ const ChoosePreferences = ({ navigation }) => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
-      navigation.navigate("Accueil3");
+      navigation.replace("Accueil3");
     } catch (error) {
       console.error("Error updating profile:", error);
     }
@@ -143,7 +143,7 @@ const ChoosePreferences = ({ navigation }) => {
           paddingVertical: 10,
           borderRadius: 5,
         }}
-        onPress={() => navigation.navigate("Accueil3")}
+        onPress={() => navigation.replace("Accueil3")}
       >
         <Text style={{ color: "white" }}>Commencer l'aventure UnBored !</Text>
       </TouchableOpacity>

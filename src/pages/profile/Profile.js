@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "../../components/NavigationBar";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 import Accueil3 from "../Accueil";
 
 const Profile = ({ navigation }) => {
@@ -55,62 +55,76 @@ const Profile = ({ navigation }) => {
   };
 
   return (
-    <View style={{flex:1}}>
-    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>
-     <View style={styles.container}>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.textAboveImage}>Mon profil UnBored</Text>
-            <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate("Settings")}>
-            <Icon name="gears" size={20} color= {'#E1604D'} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.imageContainer}>
-            <Image
-                source={require("../../../assets/pot1.jpg")}              
+    <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        enabled={true}
+      >
+        <View style={styles.container}>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={styles.textAboveImage}>Mon profil UnBored</Text>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={() => navigation.replace("Settings")}
+              >
+                <Icon name="gears" size={20} color={"#E1604D"} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.imageContainer}>
+              <Image
+                source={require("../../../assets/pot1.jpg")}
                 style={{
-                width: 180,
-                height: 180,
-                borderRadius: 10,
-                marginBottom: 10,
-              }}
-            />
+                  width: 180,
+                  height: 180,
+                  borderRadius: 10,
+                  marginBottom: 10,
+                }}
+              />
+            </View>
+            <Text style={styles.textBelowImage}>{username}</Text>
+            <View style={styles.numbersContainer}>
+              <View style={styles.numberItem}>
+                <Text style={styles.numberValue}>1234</Text>
+                <Text style={styles.numberLabel}>Followers</Text>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.numberItem}>
+                <Text style={styles.numberValue}>567</Text>
+                <Text style={styles.numberLabel}>Suivie</Text>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.numberItem}>
+                <Text style={styles.numberValue}>89</Text>
+                <Text style={styles.numberLabel}>Events</Text>
+              </View>
+            </View>
+            <View style={styles.dividerhorz} />
+            <Text style={styles.textPreferences}>À propos de moi</Text>
+            <Text style={styles.descriptionpersonne}>
+              "Rémi, un développeur passionné par la création d'applications
+              innovantes. Fort d'une solide expertise en programmation, il
+              excelle dans la résolution de problèmes et la conception de
+              solutions élégantes. Toujours en quête de défis, il est un
+              collaborateur dévoué, prêt à contribuer au succès de tout projet
+              technologique."
+            </Text>
+            <Text style={styles.textPreferences}>Mes intérêts :</Text>
+            <ScrollView horizontal contentContainerStyle={styles.preferenceRow}>
+              {preferences.map((preference, index) => (
+                <Text key={index} style={styles.preferenceItem}>
+                  {preference}
+                </Text>
+              ))}
+            </ScrollView>
           </View>
-          <Text style={styles.textBelowImage}>{username}</Text>
-          <View style={styles.numbersContainer}>
-            <View style={styles.numberItem}>
-              <Text style={styles.numberValue}>1234</Text>
-              <Text style={styles.numberLabel}>Followers</Text>
-            </View>
-            <View style={styles.divider} />
-            <View style={styles.numberItem}>
-              <Text style={styles.numberValue}>567</Text>
-              <Text style={styles.numberLabel}>Suivie</Text>
-            </View>
-            <View style={styles.divider} />
-            <View style={styles.numberItem}>
-              <Text style={styles.numberValue}>89</Text>
-              <Text style={styles.numberLabel}>Events</Text>
-            </View>
-          </View>
-          <View style={styles.dividerhorz} />
-          <Text style={styles.textPreferences}>À propos de moi</Text>
-          <Text style={styles.descriptionpersonne}>"Rémi, un développeur passionné par la création d'applications innovantes. Fort d'une solide expertise en programmation, il excelle dans la résolution de problèmes et la conception de solutions élégantes. Toujours en quête de défis, il est un collaborateur dévoué, prêt à contribuer au succès de tout projet technologique."</Text>
-          <Text style={styles.textPreferences}>Mes intérêts :</Text>
-          <ScrollView horizontal contentContainerStyle={styles.preferenceRow}>
-            {preferences.map((preference, index) => (
-              <Text key={index} style={styles.preferenceItem}>
-                {preference}
-              </Text>
-            ))}
-          </ScrollView>
         </View>
-      </View>
-    </KeyboardAvoidingView>
-    <Navbar navigation={navigation} />
+      </KeyboardAvoidingView>
+      <Navbar navigation={navigation} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -131,7 +145,7 @@ const styles = StyleSheet.create({
   textBelowImage: {
     textAlign: "center",
     marginTop: 15,
-    marginBottom:5,
+    marginBottom: 5,
     fontSize: 16,
   },
   numbersContainer: {
@@ -202,12 +216,12 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: 40,
-    top:8,
+    top: 8,
     borderRadius: 25,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
-    marginLeft:30,
+    marginLeft: 30,
     backgroundColor: "#5265FF1A",
     borderColor: "#E1604D",
     borderWidth: 1,

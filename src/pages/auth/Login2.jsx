@@ -114,7 +114,7 @@ const Login2 = ({ navigation }) => {
                         animation: true,
                         hideOnPress: true,
                       });
-                      navigation.navigate("Choose");
+                      navigation.replace("Choose");
                     } else {
                       Toast.show("Login failed", {
                         duration: Toast.durations.LONG,
@@ -171,9 +171,7 @@ const Login2 = ({ navigation }) => {
             <View style={{ marginTop: 15 }} />
             <Text style={styles().loginText}>
               Pas encore de compte ?{" "}
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Register2")}
-              >
+              <TouchableOpacity onPress={() => navigation.replace("Register2")}>
                 <Text style={styles().colorStar}>S'inscire</Text>
               </TouchableOpacity>
             </Text>

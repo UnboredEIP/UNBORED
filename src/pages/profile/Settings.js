@@ -124,7 +124,7 @@ const Settings = ({ navigation }) => {
       console.error("Error updating profile:", error);
       // Handle errors related to the request, such as network errors
     }
-    navigation.navigate("Accueil3");
+    navigation.replace("Accueil3");
   };
 
   const handleIconClick = () => {
@@ -136,88 +136,88 @@ const Settings = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior="padding"
-      enabled={true}
-    >
-      <View style={styles.container}>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={{ uri: image }}
-              style={{
-                width: 150,
-                height: 150,
-                borderRadius: 10,
-                marginBottom: 10,
-              }}
-            />
-            <TouchableOpacity
-              style={styles.iconContainer}
-              onPress={handleIconClick}
-            >
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        enabled={true}
+      >
+        <View style={styles.container}>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={styles.imageContainer}>
               <Image
-                source={require("../../../assets/icon2.png")}
+                source={{ uri: image }}
                 style={{
-                  width: 30,
-                  height: 30,
+                  width: 150,
+                  height: 150,
+                  borderRadius: 10,
+                  marginBottom: 10,
                 }}
               />
-            </TouchableOpacity>
-          </View>
-          {showButtons && (
-            <View
-              style={{
-                flexDirection: "row",
-                marginLeft: 20,
-                justifyContent: "space-evenly",
-              }}
-            >
-              <TouchableOpacity style={styles.oauthBtn} onPress={pickImage}>
+              <TouchableOpacity
+                style={styles.iconContainer}
+                onPress={handleIconClick}
+              >
                 <Image
-                  style={styles.image4}
-                  source={require("../../../assets/camera.png")}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.oauthBtn} onPress={pickImage2}>
-                <Image
-                  style={styles.image4}
-                  source={require("../../../assets/gallery.png")}
+                  source={require("../../../assets/icon2.png")}
+                  style={{
+                    width: 30,
+                    height: 30,
+                  }}
                 />
               </TouchableOpacity>
             </View>
-          )}
-          <View style={styles.horizontalLine} />
-          <Text style={styles.username}>Username</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="username"
-            value={username}
-            onChangeText={setUsername}
-          />
-          <Text style={styles.username}>Number </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="number"
-            value={number}
-            onChangeText={setNumber}
-          />
-          <Text style={styles.username}>Birthdate</Text>
-          <MyTextInput
-            dateSelect={new Date(birthdate)}
-            placeholder="Date de naissance"
-            isDatepicker
-            onDateChange={(birthdate) => setBirthdate(birthdate)}
-            onChangeText={(birthdate) => setBirthdate(birthdate)}
-          />
-          <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
-            <Text style={styles.loginBtnText}>Sauvegarder</Text>
-          </TouchableOpacity>
+            {showButtons && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginLeft: 20,
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <TouchableOpacity style={styles.oauthBtn} onPress={pickImage}>
+                  <Image
+                    style={styles.image4}
+                    source={require("../../../assets/camera.png")}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.oauthBtn} onPress={pickImage2}>
+                  <Image
+                    style={styles.image4}
+                    source={require("../../../assets/gallery.png")}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+            <View style={styles.horizontalLine} />
+            <Text style={styles.username}>Username</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="username"
+              value={username}
+              onChangeText={setUsername}
+            />
+            <Text style={styles.username}>Number </Text>
+            <TextInput
+              style={styles.input}
+              placeholder="number"
+              value={number}
+              onChangeText={setNumber}
+            />
+            <Text style={styles.username}>Birthdate</Text>
+            <MyTextInput
+              dateSelect={new Date(birthdate)}
+              placeholder="Date de naissance"
+              isDatepicker
+              onDateChange={(birthdate) => setBirthdate(birthdate)}
+              onChangeText={(birthdate) => setBirthdate(birthdate)}
+            />
+            <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
+              <Text style={styles.loginBtnText}>Sauvegarder</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </KeyboardAvoidingView>
-    <Navbar navigation={navigation} />
+      </KeyboardAvoidingView>
+      <Navbar navigation={navigation} />
     </View>
   );
 };
