@@ -7,7 +7,8 @@ import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
-  Platform,F
+  Platform,
+  F,
 } from "react-native";
 import {
   useFonts,

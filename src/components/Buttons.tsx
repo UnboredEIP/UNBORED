@@ -20,24 +20,26 @@ const Buttons = ({
   textColor = "white",
   backgroundColor = "#E1604D",
   // width = screenWidth < 350 ? 145 : 160,
-  width = "80%",
+  width = screenWidth / 2,
   height = 50,
   hasIcon = false,
   iconPath = "https://cdn.discordapp.com/attachments/1017170044091908298/1080063443987611669/unBored.gif?ex=655341f7&is=6540ccf7&hm=956eddad32a5e7640ffceb2493fd78a3cb8fb535342dd982e9fff97c82f2bbaf&",
+  textSize = 16
+
 }) => {
   if (hasIcon === false) {
     return (
       <TouchableOpacity
-        style={styles(textColor, backgroundColor, width, height).boutton}
+        style={styles(textColor, backgroundColor, width, height, textSize).boutton}
         onPress={onPress}
       >
-        <Text style={styles(textColor).textButton}>{texte}</Text>
+        <Text style={styles(textColor, backgroundColor, width, height, textSize).textButton}>{texte}</Text>
       </TouchableOpacity>
     );
   } else {
     return (
       <TouchableOpacity
-        style={styles(textColor, backgroundColor, width, height).oauthButton}
+        style={styles(textColor, backgroundColor, width, height, textSize).oauthButton}
         onPress={onPress}
       >
         <Image
@@ -61,7 +63,7 @@ const Buttons = ({
   }
 };
 
-const styles = (textColor?, backgroundColor?, width?, height?) => {
+const styles = (textColor?, backgroundColor?, width?, height?, textSize?) => {
   return StyleSheet.create({
     boutton: {
       width: width,
@@ -74,7 +76,7 @@ const styles = (textColor?, backgroundColor?, width?, height?) => {
     },
     textButton: {
       fontFamily: "SourceSansPro_600SemiBold",
-      fontSize: 16,
+      fontSize: textSize,
       color: textColor,
     },
     oauthButton: {

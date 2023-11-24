@@ -11,12 +11,12 @@ import { Ionicons } from "@expo/vector-icons";
 
 import slides from "../slides";
 import OnBoardingItem from "../OnBoardingItem";
+import Button from "../components/Buttons";
 
-function Onboarding3() {
+function Onboarding3({ navigation }) {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [currentIndex, setCurrentIndex] = useState(0);
   const firstOpacity = useRef(new Animated.Value(0)).current;
-
   useEffect(() => {
     Animated.timing(firstOpacity, {
       toValue: 1,
@@ -38,7 +38,7 @@ function Onboarding3() {
       <View style={styles.contentContainer}>
         <FlatList
           data={slides}
-          renderItem={({ item }) => <OnBoardingItem item={item} />}
+          renderItem={({ item }) => <OnBoardingItem item={item} navigation={navigation} />  }
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -55,6 +55,7 @@ function Onboarding3() {
           }
         />
       </View>
+      
     </Animated.View>
   );
 }

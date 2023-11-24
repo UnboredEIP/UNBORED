@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, TextInput, Dimensions } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  TextInput,
+  Dimensions,
+  View,
+} from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import Button from "./Buttons";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -13,10 +20,11 @@ const MyTextInput = ({
   keyboardType,
   onChangeText,
   borderColor = "#AEB3BE",
-  dateSelect = new Date()
+  dateSelect = new Date(),
 }) => {
   const [date, setDate] = useState(dateSelect);
   const [isFocused, setIsFocused] = useState(false);
+  const [show, setShow] = useState(false);
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -28,20 +36,25 @@ const MyTextInput = ({
 
   const renderInput = () => {
     if (isDatepicker) {
-      return (
-        <DateTimePicker
-          value={date}
-          mode="date"
-          display="default"
-          onChange={(event, selectedDate) => {
-            if (event.type === "set" && selectedDate) {
-              setDate(selectedDate);
-              const isoDateString = selectedDate.toISOString();
-              onDateChange && onDateChange(isoDateString);
-            }
-          }}
-        />
-      );
+      if (show === true) {
+        return (
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="default"
+            onChange={(event, selectedDate) => {
+              if (event.type === "set" && selectedDate) {
+                setDate(selectedDate);
+                const isoDateString = selectedDate.toISOString();
+                onDateChange && onDateChange(isoDateString);
+              }
+              // if (isFocused == false) {
+              //   setShow(false);
+              // }
+            }}
+          />
+        );
+      } else return null;
     } else {
       return (
         <TextInput
@@ -58,7 +71,25 @@ const MyTextInput = ({
     }
   };
 
-  return <SafeAreaView>{renderInput()}</SafeAreaView>;
+  return (
+    <SafeAreaView>
+      {isDatepicker == false ? null : (
+        <View style={{ marginTop: 10, alignSelf: "center" }}>
+          <Button
+            title="Show Date Picker"
+            // width="100%"
+            texte={show === false ? "Sélectionner birthdate" : "Close Picker"}
+            width={screenWidth / 2}
+            onPress={() => {
+              if (show === true) setShow(false);
+              else setShow(true);
+            }}
+          />
+        </View>
+      )}
+      {renderInput()}
+    </SafeAreaView>
+  );
 };
 
 const styles = (borderColor, isFocused) => {
