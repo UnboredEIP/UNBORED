@@ -36,11 +36,11 @@ async function makeRLoginRequest(email, password) {
         password,
       }),
     });
-    if (response.status === 201) {
+    if (response.status === 202) {
       const data = await response.json();
-      const token = data["refresh"];
+      const token = data["token"];
       await AsyncStorage.setItem("authToken", token);
-      console.log(data["refresh"]);
+      console.log(data["token"]);
       return true;
     } else {
       console.error(response.toString());
@@ -114,6 +114,7 @@ const Login2 = ({ navigation }) => {
                         animation: true,
                         hideOnPress: true,
                       });
+                      const data = await AsyncStorage.getItem("")
                       navigation.replace("Choose");
                     } else {
                       Toast.show("Login failed", {
@@ -171,7 +172,7 @@ const Login2 = ({ navigation }) => {
             <View style={{ marginTop: 15 }} />
             <Text style={styles().loginText}>
               Pas encore de compte ?{" "}
-              <TouchableOpacity onPress={() => navigation.replace("Register2")}>
+              <TouchableOpacity onPress={() => navigation.replace("Home")}>
                 <Text style={styles().colorStar}>S'inscire</Text>
               </TouchableOpacity>
             </Text>

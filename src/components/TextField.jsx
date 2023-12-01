@@ -21,6 +21,7 @@ const MyTextInput = ({
   onChangeText,
   borderColor = "#AEB3BE",
   dateSelect = new Date(),
+  height = screenHeight / 17,
 }) => {
   const [date, setDate] = useState(dateSelect);
   const [isFocused, setIsFocused] = useState(false);
@@ -57,8 +58,10 @@ const MyTextInput = ({
       } else return null;
     } else {
       return (
+        <View style={styles(borderColor, isFocused, height).input}>
+
         <TextInput
-          style={styles(borderColor, isFocused).input}
+          
           onChangeText={onChangeText}
           placeholder={placeholder}
           secureTextEntry={secureTextEntry || false}
@@ -67,6 +70,7 @@ const MyTextInput = ({
           onFocus={handleFocus}
           onBlur={handleBlur}
         />
+          </View>
       );
     }
   };
@@ -92,10 +96,10 @@ const MyTextInput = ({
   );
 };
 
-const styles = (borderColor, isFocused) => {
+const styles = (borderColor, isFocused, height) => {
   return StyleSheet.create({
     input: {
-      height: screenHeight / 17,
+      height: height,
       width: screenWidth / 1.2,
       margin: 12,
       borderWidth: isFocused ? 1.5 : 2,
