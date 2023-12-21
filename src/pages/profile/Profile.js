@@ -17,6 +17,10 @@ import Accueil3 from "../Accueil";
 const Profile = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [preferences, setPreferences] = useState([]);
+  const [defaultImageUri] = useState(
+    "https://camo.githubusercontent.com/c870c9266f63ef17356bc6356d7c2df99d8a9889644352d4fe854f37f5c13693/68747470733a2f2f692e706f7374696d672e63632f5071674c68726e582f756e626f7265642e706e67" // Replace with the actual default image URL
+  );
+  const [image, setImage] = useState(defaultImageUri);
   const [description, setDescription] = useState(""); // State for the user's description
 
   const handleProfileFetch = async () => {
@@ -39,7 +43,8 @@ const Profile = ({ navigation }) => {
       console.log("Profile Data:", profileData);
       setUsername(profileData.user.username.trim());
       setPreferences(profileData.user.preferences);
-      setDescription(profileData.user.description); // Set the user's description
+      setDescription(profileData.user.description.trim());
+      setImage(`http://20.216.143.86/getimage?imageName=${profileData.user.profilPhoto}`);
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -49,10 +54,6 @@ const Profile = ({ navigation }) => {
     handleProfileFetch();
   }, []);
 
-  const handleSave = () => {
-    console.log("Changes saved");
-    // You can send the updated description to your server here if needed.
-  };
 
   return (
     <View style={{flex:1}}>
@@ -67,7 +68,7 @@ const Profile = ({ navigation }) => {
           </View>
           <View style={styles.imageContainer}>
             <Image
-                source={require("../../../assets/pot1.jpg")}              
+                source={{uri : image}}
                 style={{
                 width: 180,
                 height: 180,
@@ -95,7 +96,7 @@ const Profile = ({ navigation }) => {
           </View>
           <View style={styles.dividerhorz} />
           <Text style={styles.textPreferences}>À propos de moi</Text>
-          <Text style={styles.descriptionpersonne}>"Rémi, un développeur passionné par la création d'applications innovantes. Fort d'une solide expertise en programmation, il excelle dans la résolution de problèmes et la conception de solutions élégantes. Toujours en quête de défis, il est un collaborateur dévoué, prêt à contribuer au succès de tout projet technologique."</Text>
+          <Text style={styles.descriptionpersonne}>{description}</Text>
           <Text style={styles.textPreferences}>Mes intérêts :</Text>
           <ScrollView horizontal contentContainerStyle={styles.preferenceRow}>
             {preferences.map((preference, index) => (

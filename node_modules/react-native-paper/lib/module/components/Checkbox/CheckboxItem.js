@@ -40,6 +40,7 @@ const CheckboxItem = _ref => {
     disabled,
     labelVariant = 'bodyLarge',
     labelMaxFontSizeMultiplier = 1.5,
+    rippleColor,
     ...props
   } = _ref;
   const theme = useInternalTheme(themeOverrides);
@@ -75,6 +76,7 @@ const CheckboxItem = _ref => {
     onPress: onPress,
     testID: testID,
     disabled: disabled,
+    rippleColor: rippleColor,
     theme: theme
   }, /*#__PURE__*/React.createElement(View, {
     style: [styles.container, style],

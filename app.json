@@ -7,11 +7,11 @@
         {
           "photosPermission": "custom photos permission",
           "cameraPermission": "Allow $(PRODUCT_NAME) to open the camera",
-
           "//": "Disables the microphone permission",
           "microphonePermission": false
         }
-      ]],
+      ]
+    ],
     "slug": "unbored2",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -26,7 +26,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.remisaleh.AwesomeProject"
     },
     "android": {
       "adaptiveIcon": {
@@ -40,6 +41,7 @@
     },
     "extra": {
       "eas": {
+        "projectId": "df2f28a1-374e-4e2c-852e-855f117615d9"
       }
     },
     "owner": "remisaleh"

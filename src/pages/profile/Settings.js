@@ -12,6 +12,8 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyTextInput from "../../components/TextField";
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Toast from 'react-native-toast-message'; 
 import Navbar from "../../components/NavigationBar";
 
 const Settings = ({ navigation }) => {
@@ -33,44 +35,73 @@ const Settings = ({ navigation }) => {
       setHasGalleryPermission(galleryStatus.status === "granted");
     })();
   }, []);
+  useEffect(() => {
+    handleProfileFetch();
+  }, []);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
       quality: 1,
     });
+  
     if (!result.canceled) {
       if (result.assets.length > 0) {
         setImage(result.assets[0].uri);
+        await updateProfilePicture(result.assets[0].uri);
       }
     }
   };
-
+  
   const pickImage2 = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       quality: 1,
     });
+  
     if (!result.canceled) {
       if (result.assets.length > 0) {
         setImage(result.assets[0].uri);
+        await updateProfilePicture(result.assets[0].uri);
       }
     }
   };
+  
+  const updateProfilePicture = async (uri) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const formData = new FormData();
+      formData.append("file", {
+        uri,
+        type: "image/jpg",
+        name: "profilePicture.jpg",
+      });
+  
+      const imageResponse = await fetch("http://20.216.143.86/profile/profilepicture", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: formData,
+      });
+  
+      if (imageResponse.ok) {
+        console.log("Profile picture updated successfully");
+      } else {
+        const errorDescription = await imageResponse.text();
+        console.log("Failed to update profile picture:", imageResponse.status, errorDescription, formData);
+      }
+    } catch (error) {
+      console.error("Error updating profile picture:", error);
+    }
+  };
+  
 
   if (hasGalleryPermission === false) {
     return <Text>No access to internal Storage</Text>;
-  }
-
-  function formatDate(date) {
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-based, so we add 1
-    const year = date.getFullYear().toString();
-
-    return `${month} ${day} ${year}`;
   }
 
   const handleProfileFetch = async () => {
@@ -92,17 +123,23 @@ const Settings = ({ navigation }) => {
       const profileData = await response.json();
       setUsername(profileData.user.username.trim());
       setNumber(profileData.user.number.trim());
-      // const tmp = new Date(profileData.user.birthdate.trim())
       setBirthdate(new Date(profileData.user.birthdate.trim()));
+      setImage(`http://20.216.143.86/getimage?imageName=${profileData.user.profilPhoto}`);
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
   };
+  const navigatetotamere = async () => {
+    navigation.navigate("Choose");
+  }
+  const navigatetodescr = async () => {
+    navigation.navigate("Description");
+  }
   const handleSave = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
 
-      const response = await fetch("http://20.216.143.86/profile/update", {
+      const profileResponse = await fetch("http://20.216.143.86/profile/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -114,25 +151,45 @@ const Settings = ({ navigation }) => {
           number,
         }),
       });
-
-      if (response.ok) {
-        console.log("Profile updated successfully");
-      } else {
-        console.log("Failed to update profile");
+      if (!username || !number) {
+        Toast.show(`Nom d'utilisateur ou numéro de téléphone vide, merci de remplir ces champs`, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          backgroundColor: "red",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+        });
       }
+      if (!profileResponse.ok) {
+        const errorDescription = await profileResponse.text();
+        console.log("Failed to update profile:", profileResponse.status, errorDescription);
+        Toast.show(`Modification de profile échouée, les informations sont incorrects`, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.BOTTOM,
+          backgroundColor: "red",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+        });
+        return;
+      }
+
+      console.log("Profile updated successfully");
+
     } catch (error) {
       console.error("Error updating profile:", error);
-      // Handle errors related to the request, such as network errors
     }
+  if (username && number) {
     navigation.navigate("Accueil3");
+  }
+    
   };
+  
 
   const handleIconClick = () => {
     setShowButtons((prevShowButtons) => !prevShowButtons);
   };
-  useEffect(() => {
-    handleProfileFetch();
-  }, []);
 
   return (
     <View style={{ flex: 1 }}>
@@ -157,13 +214,7 @@ const Settings = ({ navigation }) => {
               style={styles.iconContainer}
               onPress={handleIconClick}
             >
-              <Image
-                source={require("../../../assets/icon2.png")}
-                style={{
-                  width: 30,
-                  height: 30,
-                }}
-              />
+            <Icon name="gears" size={40} color= {'#E1604D'} />
             </TouchableOpacity>
           </View>
           {showButtons && (
@@ -175,16 +226,10 @@ const Settings = ({ navigation }) => {
               }}
             >
               <TouchableOpacity style={styles.oauthBtn} onPress={pickImage}>
-                <Image
-                  style={styles.image4}
-                  source={require("../../../assets/camera.png")}
-                />
+              <Icon name="camera" size={30} color= {'white'} />
               </TouchableOpacity>
               <TouchableOpacity style={styles.oauthBtn} onPress={pickImage2}>
-                <Image
-                  style={styles.image4}
-                  source={require("../../../assets/gallery.png")}
-                />
+              <Icon name="photo" size={30} color= {'white'} />
               </TouchableOpacity>
             </View>
           )}
@@ -211,6 +256,14 @@ const Settings = ({ navigation }) => {
             onDateChange={(birthdate) => setBirthdate(birthdate)}
             onChangeText={(birthdate) => setBirthdate(birthdate)}
           />
+          <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.loginBtn2} onPress={navigatetotamere}>
+            <Text style={styles.loginBtnText}>Change your preferences !</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.loginBtn2} onPress={navigatetodescr}>
+            <Text style={styles.loginBtnText}>Change your description !</Text>
+          </TouchableOpacity>
+          </View>
           <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
             <Text style={styles.loginBtnText}>Sauvegarder</Text>
           </TouchableOpacity>
@@ -260,18 +313,38 @@ const styles = StyleSheet.create({
     borderColor: "#b3b3b3",
     borderWidth: 1,
   },
+  buttonContainer: {
+    flexDirection: "row",  // Align buttons horizontally
+    justifyContent: "space-between",  // Space buttons evenly
+    marginTop: 20,  // Adjust margin as needed
+  },
+  loginBtn2: {
+    marginTop: 20,
+    marginLeft:5,
+    marginRight:5,
+    width: "50%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 20,
+    backgroundColor: "#E1604D",
+    borderColor: "#b3b3b3",
+    borderWidth: 1,
+  },
   loginBtnText: {
     color: "white",
   },
   oauthBtn: {
-    width: "40%",
+    width: "30%",
     borderRadius: 25,
-    height: 60,
+    height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginLeft: 20,
-    marginRight: 20,
-    marginBottom: 20,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+    marginTop: 10,
     backgroundColor: "#E1604D",
   },
   iconContainer: {

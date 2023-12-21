@@ -52,7 +52,7 @@ async function makeRegisterRequest(
       return true;
     } else {
       console.error(response.json);
-      return false;
+      return response.json();
     }
   } catch (error) {
     console.error("Request error: ", error);
@@ -60,30 +60,31 @@ async function makeRegisterRequest(
   }
 }
 
-async function makeRLoginRequest(email, password) {
-  try {
-    const response = await fetch("http://20.216.143.86/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    });
-    if (response.status === 201) {
-      console.log("User created");
-      return true;
-    } else {
-      console.error(response.toString());
-      return false;
-    }
-  } catch (error) {
-    console.error("Request error: ", error);
-    return false;
-  }
-}
+// async function makeRLoginRequest(email, password) {
+//   try {
+//     const response = await fetch("http://20.216.143.86/auth/login", {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({
+//         email,
+//         password,
+//       }),
+//     });
+//     if (response.status === 201) {
+//       console.log("User created");
+//       return true;
+//     } else {
+//       const errorResponse = await response.json();
+//       console.error(errorResponse);
+//       return {success: false, error: errorResponse.error};
+//     }
+//   } catch (error) {
+//     console.error("Request error: ", error);
+//     return false;
+//   }
+// }
 
 const Register2 = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
@@ -218,7 +219,7 @@ const Register2 = ({ navigation }) => {
                       birthdate,
                       []
                     );
-                    if (response) {
+                    if (response === true) {
                       console.log("success");
                       Toast.show("Registration succeed", {
                         duration: Toast.durations.LONG,
@@ -230,8 +231,7 @@ const Register2 = ({ navigation }) => {
                       });
                       navigation.navigate("Login2");
                     } else {
-                      console.log("fail");
-                      Toast.show("Registration failed", {
+                      Toast.show(`Inscription échouée: identifiants déjà utilisé.`, {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
                         backgroundColor: "red",
@@ -240,6 +240,26 @@ const Register2 = ({ navigation }) => {
                         hideOnPress: true,
                       });
                     }
+                  }
+                  else {
+                    let errorMessage3 = "\nInscription échouée, champs manquant(s) :\n";
+                    if (username.trim() === "") {
+                      errorMessage3 += " Nom d'utilisateur \n";
+                    }                
+                    if (email.trim() === "") {
+                      errorMessage3 += " Email \n";
+                    }
+                    if (password.trim() === "" ) {
+                      errorMessage3 += " Mot de passe \n"
+                    }
+                    Toast.show(errorMessage3, {
+                      duration: Toast.durations.LONG,
+                      position: Toast.positions.BOTTOM,
+                      backgroundColor: "red",
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                    });
                   }
                 }}
               />

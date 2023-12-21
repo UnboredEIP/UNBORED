@@ -36,10 +36,11 @@ async function makeRLoginRequest(email, password) {
         password,
       }),
     });
-    if (response.status === 201) {
+    if (response.status === 202) {
       const data = await response.json();
-      const token = data["refresh"];
-      await AsyncStorage.setItem("authToken", token);
+      const Authtoken = data.token;
+      await AsyncStorage.setItem("authToken", Authtoken);
+      console.log(await AsyncStorage.getItem("authToken"))
       console.log(data["refresh"]);
       return true;
     } else {
@@ -106,7 +107,7 @@ const Login2 = ({ navigation }) => {
                   if (email !== "" && password !== "") {
                     const response = await makeRLoginRequest(email, password);
                     if (response) {
-                      Toast.show("Login succeed", {
+                      Toast.show("Vous êtes connecté", {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
                         backgroundColor: "green",
@@ -114,9 +115,9 @@ const Login2 = ({ navigation }) => {
                         animation: true,
                         hideOnPress: true,
                       });
-                      navigation.navigate("Choose");
+                      navigation.navigate("Accueil3");
                     } else {
-                      Toast.show("Login failed", {
+                      Toast.show("Mot de passe ou Email incorrect", {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
                         backgroundColor: "red",
@@ -126,16 +127,23 @@ const Login2 = ({ navigation }) => {
                       });
                     }
                   }
+                  else {
+                    Toast.show("Mot de passe ou email manquant. Veuillez remplir les deux champs", {
+                      duration: Toast.durations.LONG,
+                      position: Toast.positions.BOTTOM,
+                      backgroundColor: "red",
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                    });
+                  }
                 }}
               />
             </RootSiblingParent>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={async () =>navigation.navigate("MotDePasse")}>
               <Text
-                style={
-                  (styles().loginText,
-                  { marginTop: 20, marginBottom: 0, color: "#E1604D" })
-                }
-              >
+                style={(styles().loginText,
+                  { marginTop: 20, marginBottom: 0, color: "#E1604D" })}>
                 Mot de passe oublié
               </Text>
             </TouchableOpacity>

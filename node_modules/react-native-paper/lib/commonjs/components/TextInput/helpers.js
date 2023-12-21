@@ -510,7 +510,8 @@ const getConstants = isV3 => {
     MIN_HEIGHT,
     INPUT_PADDING_HORIZONTAL,
     ADORNMENT_OFFSET,
-    OUTLINED_INPUT_OFFSET
+    OUTLINED_INPUT_OFFSET,
+    MIN_WIDTH: _constants.MIN_WIDTH
   };
 };
 exports.getConstants = getConstants;

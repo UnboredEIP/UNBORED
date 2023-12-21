@@ -506,6 +506,9 @@ const styles = StyleSheet.create({
   },
   pressableOverlay: {
     ...StyleSheet.absoluteFillObject,
+    ...(Platform.OS === 'web' && {
+      cursor: 'default'
+    }),
     width: '100%'
   }
 });
