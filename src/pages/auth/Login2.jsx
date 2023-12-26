@@ -26,6 +26,7 @@ import ChoosePreferences from "../../ChoosePreferences";
 
 async function makeRLoginRequest(email, password) {
   try {
+    // http://20.216.143.86
     const response = await fetch("http://20.216.143.86/auth/login", {
       method: "POST",
       headers: {
@@ -40,7 +41,7 @@ async function makeRLoginRequest(email, password) {
       const data = await response.json();
       const token = data["token"];
       await AsyncStorage.setItem("authToken", token);
-      console.log(data["token"]);
+      // console.log(data["token"]);
       return true;
     } else {
       console.error(response.toString());
@@ -49,6 +50,31 @@ async function makeRLoginRequest(email, password) {
   } catch (error) {
     console.error("Request error: ", error);
     return false;
+  }
+}
+
+async function navigateTo() {
+  try {
+    const authToken = await AsyncStorage.getItem("authToken");
+    if (authToken) {
+      const response = await fetch("http://20.216.143.86/profile", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP ERROR: STATUS: ${response.status}`);
+      }
+      const tmpData = await response.json();
+      if (tmpData.user.preferences.length >= 1) {
+        await AsyncStorage.setItem("profileData", JSON.stringify(tmpData.user));
+        return true;
+      } else return false;
+    } else console.log("NO TOKEN");
+  } catch (error) {
+    console.error(error);
   }
 }
 
@@ -114,8 +140,10 @@ const Login2 = ({ navigation }) => {
                         animation: true,
                         hideOnPress: true,
                       });
-                      const data = await AsyncStorage.getItem("")
-                      navigation.replace("Choose");
+                      const tmp = await navigateTo();
+                      if (tmp === true) navigation.replace("Accueil3");
+                      else navigation.replace("Choose");
+                      // navigation.replace("Choose");
                     } else {
                       Toast.show("Login failed", {
                         duration: Toast.durations.LONG,

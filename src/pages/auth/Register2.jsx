@@ -8,7 +8,6 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
-  F,
 } from "react-native";
 import {
   useFonts,
@@ -204,7 +203,7 @@ const Register2 = ({ navigation }) => {
             <View style={{ marginTop: 20 }} />
             <Text style={styles().titleTextField}>Description</Text>
             <MyTextInput
-            height={screenHeight/8}
+              height={screenHeight / 8}
               placeholder="Description"
               onChangeText={(description) => setDescription(description)}
             />
@@ -255,7 +254,7 @@ const Register2 = ({ navigation }) => {
                 }}
               />
             </RootSiblingParent>
-           
+
             <Text
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
             >

@@ -20,7 +20,7 @@ import styles from "./src/styles/styles2";
 import Calendar from "./src/pages/Calendar";
 import { NavigationContainer } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import PreferencesUpdate from "./src/pages/settings/Preferences";
 class OTP2 extends React.Component {
   render() {
     return (
@@ -43,6 +43,9 @@ const checkKeys = async (prefix) => {
 
 const checkFirstLaunch = async () => {
   try {
+    // await AsyncStorage.removeItem("first");
+    // const keys = await AsyncStorage.getAllKeys();
+    // await AsyncStorage.multiRemove(keys);
     const firstLaunch = await AsyncStorage.getItem("firstLaunch");
     if (firstLaunch === null) {
       // L'application n'a jamais été lancée auparavant
@@ -138,6 +141,12 @@ const AppNavigator = createStackNavigator(
     },
     Profile: {
       screen: Profile,
+      navigationOptions: {
+        ...TransitionPresets.ScaleFromCenterAndroid,
+      },
+    },
+    PreferencesUpdate: {
+      screen: PreferencesUpdate,
       navigationOptions: {
         ...TransitionPresets.ScaleFromCenterAndroid,
       },

@@ -34,12 +34,57 @@ import loc from "../../asset/location_on.png";
 import vector from "../../asset/Vector.png";
 import Buttons from "../components/Buttons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { jwtDecode } from "jwt-decode";
+
+import base64 from "react-native-base64";
 
 const Accueil3 = ({ navigation }) => {
   const [text, setText] = useState("");
   const [choice, setChoice] = useState(0);
+  let username = "Greenzer";
+  const [profileData, setProfileData] = useState(null);
+
+  async function fetchData() {
+    try {
+      const storedProfileData = await AsyncStorage.getItem("profileData");
+      setProfileData(storedProfileData);
+      // console.log(storedProfileData.preferences);
+    } catch (error) {
+      console.error("ERROR", error);
+    }
+  }
+
+
+  const handleProfileData = async () => {
+    const selectedPreferences = data.filter((item) => item.selected);
+
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+
+      const response = await fetch("http://20.216.143.86/profile/update", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          preferences: selectedPreferences.map((item) => item.name),
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      navigation.replace("Accueil3");
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+
   useEffect(() => {
-    console.log(choice);
+    fetchData();
+    console.log("PROFILE", profileData);
   }, [choice]);
   return (
     <View style={{ flex: 1 }}>
@@ -62,7 +107,7 @@ const Accueil3 = ({ navigation }) => {
             >
               <Text style={{ fontSize: 26, color: "black" }}>
                 {" "}
-                Bonjour Rémi !
+                Bonjour {username} !
               </Text>
               <Buttons
                 texte="deco"
@@ -216,7 +261,9 @@ const Accueil3 = ({ navigation }) => {
               }}
             >
               <Text style={{ fontWeight: "bold" }}>En tendance</Text>
-              <TouchableOpacity onPress={() => console.log("voir tout")}>
+              <TouchableOpacity
+                onPress={() => navigation.replace("PreferencesUpdate")}
+              >
                 <Text style={{ fontWeight: "bold", color: "#E1604D" }}>
                   Voir tout
                 </Text>
