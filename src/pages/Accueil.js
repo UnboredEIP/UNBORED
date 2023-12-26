@@ -41,51 +41,44 @@ import base64 from "react-native-base64";
 const Accueil3 = ({ navigation }) => {
   const [text, setText] = useState("");
   const [choice, setChoice] = useState(0);
-  let username = "Greenzer";
+  const [username, setUsername] = useState("Greenzer");
   const [profileData, setProfileData] = useState(null);
 
-  async function fetchData() {
-    try {
-      const storedProfileData = await AsyncStorage.getItem("profileData");
-      setProfileData(storedProfileData);
-      // console.log(storedProfileData.preferences);
-    } catch (error) {
-      console.error("ERROR", error);
-    }
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const authToken = await AsyncStorage.getItem("authToken");
 
+        const response = await fetch("http://20.216.143.86/profile/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
 
-  const handleProfileData = async () => {
-    const selectedPreferences = data.filter((item) => item.selected);
-
-    try {
-      const authToken = await AsyncStorage.getItem("authToken");
-
-      const response = await fetch("http://20.216.143.86/profile/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          preferences: selectedPreferences.map((item) => item.name),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        setProfileData(responseData);
+      } catch (error) {
+        console.error("Error updating profile:", error);
       }
-
-      navigation.replace("Accueil3");
-    } catch (error) {
-      console.error("Error updating profile:", error);
-    }
-  };
+    };
+    fetchData();
+  }, []);
 
   useEffect(() => {
-    fetchData();
-    console.log("PROFILE", profileData);
-  }, [choice]);
+    // Mettre à jour username lorsque profileData est disponible
+    if (profileData !== null) {
+      setUsername(profileData.user.username);
+    }
+  }, [profileData]);
+
+  if (profileData === null) {
+    return <Text>Loading bro</Text>;
+  }
   return (
     <View style={{ flex: 1 }}>
       <ScrollView
