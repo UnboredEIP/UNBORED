@@ -58,19 +58,16 @@ const MyTextInput = ({
       } else return null;
     } else {
       return (
-        <View style={styles(borderColor, isFocused, height).input}>
-
-        <TextInput
-          
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          secureTextEntry={secureTextEntry || false}
-          returnKeyType="done"
-          keyboardType={keyboardType}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-          </View>
+          <TextInput
+          style={styles(borderColor, isFocused, height).input}
+            onChangeText={onChangeText}
+            placeholder={placeholder}
+            secureTextEntry={secureTextEntry || false}
+            returnKeyType="done"
+            keyboardType={keyboardType}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+          />
       );
     }
   };

@@ -70,7 +70,6 @@ const Accueil3 = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    // Mettre à jour username lorsque profileData est disponible
     if (profileData !== null) {
       setUsername(profileData.user.username);
     }
@@ -436,7 +435,7 @@ const Accueil3 = ({ navigation }) => {
             nestedScrollEnabled={true}
             horizontal={true}
           >
-            {choice === 0 || choice == 1 ? (
+            {/* {choice === 0 || choice == 1 ? (
               <View
                 style={{
                   borderWidth: 1,
@@ -624,7 +623,7 @@ const Accueil3 = ({ navigation }) => {
               </View>
             ) : (
               <View></View>
-            )}
+            )} */}
 
             {choice == 2 || choice == 0 ? (
               <View

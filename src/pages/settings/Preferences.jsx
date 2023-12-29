@@ -12,6 +12,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import styles from "../../styles/styles2";
 
 const PreferencesUpdate = ({ navigation }) => {
+  const [preferences, setPreferences] = useState([]);
+  const [profileData, setProfileData] = useState(null);
+
   const [data, setData] = useState([
     {
       name: "Art",
@@ -87,10 +90,6 @@ const PreferencesUpdate = ({ navigation }) => {
   const [showModal, setShowModal] = useState(false);
   const [fadeInAnim] = useState(new Animated.Value(0));
 
-  useEffect(() => {
-    animate();
-  }, []);
-
   const animate = () => {
     Animated.timing(fadeInAnim, {
       toValue: 1,
@@ -98,6 +97,41 @@ const PreferencesUpdate = ({ navigation }) => {
       useNativeDriver: true,
     }).start();
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const authToken = await AsyncStorage.getItem("authToken");
+
+        const response = await fetch("http://20.216.143.86/profile/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        setProfileData(responseData);
+      } catch (error) {
+        console.error("Error updating profile:", error);
+      }
+    };
+    animate();
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (profileData !== null) {
+      setPreferences(profileData.user.preferences);
+    }
+  }, [profileData]);
+
+  if (profileData === null) {
+    return <Text>Loading bro</Text>;
+  }
 
   const handleProfileUpdate = async () => {
     const selectedPreferences = data.filter((item) => item.selected);
@@ -154,7 +188,6 @@ const PreferencesUpdate = ({ navigation }) => {
     const updatedData = data.map((item) =>
       item.name === name ? { ...item, selected } : item
     );
-
     setData(updatedData);
   };
 
@@ -183,7 +216,7 @@ const PreferencesUpdate = ({ navigation }) => {
       <Item
         item={item}
         onSelect={handlePreferenceSelection}
-        selectedItems={["Musique", "Soirée", "LoL"]}
+        selectedItems={preferences}
       />
     </Animated.View>
   );
