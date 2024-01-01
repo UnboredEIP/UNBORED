@@ -8,7 +8,10 @@ import {
   View,
   Image,
 } from "react-native";
-import { RootSiblingParent } from "react-native-root-siblings";
+import {
+  useFonts,
+  SourceSansPro_600SemiBold,
+} from "@expo-google-fonts/source-sans-pro";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -24,22 +27,41 @@ const Buttons = ({
   height = 50,
   hasIcon = false,
   iconPath = "https://cdn.discordapp.com/attachments/1017170044091908298/1080063443987611669/unBored.gif?ex=655341f7&is=6540ccf7&hm=956eddad32a5e7640ffceb2493fd78a3cb8fb535342dd982e9fff97c82f2bbaf&",
-  textSize = 16
-
+  textSize = 16,
 }) => {
+  const [fontsLoaded] = useFonts({
+    SourceSansPro_600SemiBold,
+  });
+
+  if (!fontsLoaded) {
+    return <Text> Font loading</Text>;
+  }
+
   if (hasIcon === false) {
     return (
       <TouchableOpacity
-        style={styles(textColor, backgroundColor, width, height, textSize).boutton}
+        style={
+          styles(textColor, backgroundColor, width, height, textSize).boutton
+        }
         onPress={onPress}
       >
-        <Text style={styles(textColor, backgroundColor, width, height, textSize).textButton}>{texte}</Text>
+        <Text
+          style={
+            styles(textColor, backgroundColor, width, height, textSize)
+              .textButton
+          }
+        >
+          {texte}
+        </Text>
       </TouchableOpacity>
     );
   } else {
     return (
       <TouchableOpacity
-        style={styles(textColor, backgroundColor, width, height, textSize).oauthButton}
+        style={
+          styles(textColor, backgroundColor, width, height, textSize)
+            .oauthButton
+        }
         onPress={onPress}
       >
         <Image

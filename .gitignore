@@ -159,3 +159,5 @@ package-lock.json
 eas.json
 
 node_modules
+
+.env
