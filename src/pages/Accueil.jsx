@@ -130,19 +130,25 @@ const Accueil3 = ({ navigation }) => {
                 {" "}
                 Bonjour {username} !
               </Text>
+              <View
+                style={{
+                  marginHorizontal: 5,
+                }}
+              ></View>
+              <View style={{ flexDirection: "row" }}>
               <Buttons
                 texte="deco"
-                width="20%"
+                width="30%"
                 onPress={async () => {
                   await AsyncStorage.removeItem("authToken");
                   navigation.replace("Login2");
                 }}
               />
-              <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
                   style={{
                     width: 44,
                     height: 44,
+                    marginHorizontal: 15,
                     justifyContent: "center",
                     backgroundColor: "#5265FF1A",
                     borderRadius: 12,

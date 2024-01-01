@@ -148,6 +148,12 @@ const AppNavigator = createStackNavigator(
         ...TransitionPresets.ScaleFromCenterAndroid,
       },
     },
+    PreferencesUpdate: {
+      screen: PreferencesUpdate,
+      navigationOptions: {
+        ...TransitionPresets.ScaleFromCenterAndroid,
+      },
+    },
     Calendar: {
       screen: Calendar,
       navigationOptions: {
