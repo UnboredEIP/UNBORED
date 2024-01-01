@@ -28,6 +28,7 @@ async function makeRegisterRequest(
   password,
   gender,
   number,
+  description,
   birthdate,
   preferences
 ) {
@@ -43,6 +44,7 @@ async function makeRegisterRequest(
         password,
         gender,
         number,
+        description,
         birthdate,
         preferences,
       }),
@@ -95,6 +97,7 @@ const Register2 = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("M");
   const [number, setNumber] = useState("");
+  const [description, setDescription] = useState("");
   const [birthdate, setBirthdate] = useState("");
 
   if (!fontsLoaded) {
@@ -199,6 +202,12 @@ const Register2 = ({ navigation }) => {
               }}
             />
             <View style={{ marginTop: 20 }} />
+            <Text style={styles().titleTextField}>Description</Text>
+            <MyTextInput
+              height={screenHeight / 8}
+              placeholder="Description"
+              onChangeText={(description) => setDescription(description)}
+            />
             <RootSiblingParent>
               <Buttons
                 texte={"S'inscrire"}
@@ -216,6 +225,7 @@ const Register2 = ({ navigation }) => {
                       password,
                       gender,
                       number,
+                      description,
                       birthdate,
                       []
                     );
@@ -229,7 +239,7 @@ const Register2 = ({ navigation }) => {
                         animation: true,
                         hideOnPress: true,
                       });
-                      navigation.navigate("Login2");
+                      navigation.replace("Login2");
                     } else {
                       Toast.show(`Inscription échouée: identifiants déjà utilisé.`, {
                         duration: Toast.durations.LONG,
@@ -264,6 +274,7 @@ const Register2 = ({ navigation }) => {
                 }}
               />
             </RootSiblingParent>
+
             <Text
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
             >
@@ -296,7 +307,7 @@ const Register2 = ({ navigation }) => {
 
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}
-              <TouchableOpacity onPress={() => navigation.navigate("Login2")}>
+              <TouchableOpacity onPress={() => navigation.replace("Login2")}>
                 <Text style={styles().colorStar}>Se connecter</Text>
               </TouchableOpacity>
             </Text>

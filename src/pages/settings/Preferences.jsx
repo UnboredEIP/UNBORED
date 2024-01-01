@@ -9,9 +9,12 @@ import {
   Animated,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import styles from "./styles/styles2";
+import styles from "../../styles/styles2";
 
-const ChoosePreferences = ({ navigation }) => {
+const PreferencesUpdate = ({ navigation }) => {
+  const [preferences, setPreferences] = useState([]);
+  const [profileData, setProfileData] = useState(null);
+
   const [data, setData] = useState([
     {
       name: "Art",
@@ -87,10 +90,6 @@ const ChoosePreferences = ({ navigation }) => {
   const [showModal, setShowModal] = useState(false);
   const [fadeInAnim] = useState(new Animated.Value(0));
 
-  useEffect(() => {
-    animate();
-  }, []);
-
   const animate = () => {
     Animated.timing(fadeInAnim, {
       toValue: 1,
@@ -98,6 +97,41 @@ const ChoosePreferences = ({ navigation }) => {
       useNativeDriver: true,
     }).start();
   };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const authToken = await AsyncStorage.getItem("authToken");
+
+        const response = await fetch("http://20.216.143.86/profile/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const responseData = await response.json();
+        setProfileData(responseData);
+      } catch (error) {
+        console.error("Error updating profile:", error);
+      }
+    };
+    animate();
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (profileData !== null) {
+      setPreferences(profileData.user.preferences);
+    }
+  }, [profileData]);
+
+  if (profileData === null) {
+    return <Text>Loading bro</Text>;
+  }
 
   const handleProfileUpdate = async () => {
     const selectedPreferences = data.filter((item) => item.selected);
@@ -129,7 +163,7 @@ const ChoosePreferences = ({ navigation }) => {
   const renderModalContent = () => (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
       <Image
-        source={require("../assets/logo2.gif")}
+        source={require("../../../assets/logo2.gif")}
         style={{ width: 300, height: 300 }}
       />
       <Text>
@@ -154,7 +188,6 @@ const ChoosePreferences = ({ navigation }) => {
     const updatedData = data.map((item) =>
       item.name === name ? { ...item, selected } : item
     );
-
     setData(updatedData);
   };
 
@@ -180,13 +213,17 @@ const ChoosePreferences = ({ navigation }) => {
         },
       ]}
     >
-      <Item item={item} onSelect={handlePreferenceSelection} />
+      <Item
+        item={item}
+        onSelect={handlePreferenceSelection}
+        selectedItems={preferences}
+      />
     </Animated.View>
   );
 
   return (
     <View style={styles.container4}>
-      <Text style={styles.headerText}>Selectionner vos intérêts</Text>
+      <Text style={styles.headerText}>Mettez à jours</Text>
       <FlatList
         data={data}
         renderItem={renderItem}
@@ -209,7 +246,7 @@ const ChoosePreferences = ({ navigation }) => {
         }}
         onPress={handleProfileUpdate}
       >
-        <Text style={{ fontSize: 20 }}>Suivant</Text>
+        <Text style={{ fontSize: 20 }}>Mettre à jour</Text>
       </TouchableOpacity>
       <Modal visible={showModal} transparent={false}>
         {renderModalContent()}
@@ -218,9 +255,19 @@ const ChoosePreferences = ({ navigation }) => {
   );
 };
 
-const Item = ({ item, onSelect }) => {
+const Item = ({ item, onSelect, selectedItems }) => {
   const [click, setClick] = useState(false);
 
+  useEffect(() => {
+    // Vérifie si l'élément est dans la liste des éléments sélectionnés
+    if (selectedItems.includes(item.name)) {
+      setClick(true);
+    }
+  }, [selectedItems, item.name]);
+  if (click) {
+    console.log("ALL PREFERENCES: ", item.name);
+  }
+  // console.log(`${item.name}`, click);
   const togglePhoto = () => {
     setClick(!click);
     onSelect(item.name, !click);
@@ -264,4 +311,4 @@ const Item = ({ item, onSelect }) => {
   );
 };
 
-export default ChoosePreferences;
+export default PreferencesUpdate;

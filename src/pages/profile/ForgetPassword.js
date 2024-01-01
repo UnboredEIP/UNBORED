@@ -23,7 +23,7 @@ const ForgetPasswordScreen = ({ navigation }) => {
         </View>
         <TouchableOpacity
           style={styles.loginBtn}
-          onPress={() => navigation.navigate("OTP3")}
+          onPress={() => navigation.replace("OTP3")}
         >
           <Text style={styles.loginText}>Confirmer</Text>
         </TouchableOpacity>

@@ -12,18 +12,17 @@ import Accueil3 from "./src/pages/Accueil";
 import OnBoarding3 from "./src/pages/OnBoarding";
 import Settings from "./src/pages/profile/Settings";
 import Register2 from "./src/pages/auth/Register2";
-import CreateAccount from "./src/pages/auth/Register";
 import ChoosePreferences from "./src/ChoosePreferences";
 import ForgetPasswordScreen from "./src/pages/profile/ForgetPassword";
 import Login2 from "./src/pages/auth/Login2";
-import LoginScreen from "./src/pages/auth/Login";
 import Profile from "./src/pages/profile/Profile";
 import styles from "./src/styles/styles2";
 import Description from "./src/pages/profile/description";
 import Calendar from "./src/pages/Calendar";
 import MotDePasse from "./src/pages/profile/mdp";
 import { NavigationContainer } from "@react-navigation/native";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import PreferencesUpdate from "./src/pages/settings/Preferences";
 class OTP2 extends React.Component {
   render() {
     return (
@@ -34,8 +33,54 @@ class OTP2 extends React.Component {
   }
 }
 
+const checkKeys = async (prefix) => {
+  try {
+    const keys = await AsyncStorage.getAllKeys();
+    const filteredKeys = keys.filter((key) => key.startsWith(prefix));
+    return filteredKeys.length > 0;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const checkFirstLaunch = async () => {
+  try {
+    // await AsyncStorage.removeItem("first");
+    // const keys = await AsyncStorage.getAllKeys();
+    // await AsyncStorage.multiRemove(keys);
+    const firstLaunch = await AsyncStorage.getItem("firstLaunch");
+    if (firstLaunch === null) {
+      // L'application n'a jamais été lancée auparavant
+      await AsyncStorage.setItem("firstLaunch", "true");
+      return true;
+    }
+    // L'application a déjà été lancée auparavant
+    return false;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+class InitialScreen extends React.Component {
+  async componentDidMount() {
+    if (await checkFirstLaunch()) {
+      this.props.navigation.replace("OnBoarding3");
+      return;
+    }
+    const initialRoute = await checkKeys("authToken");
+    this.props.navigation.replace(initialRoute ? "Accueil3" : "Home");
+  }
+
+  render() {
+    return null;
+  }
+}
+
 const AppNavigator = createStackNavigator(
   {
+    Initial: {
+      screen: InitialScreen,
+    },
     Home: {
       screen: Register2,
       navigationOptions: {
@@ -52,12 +97,6 @@ const AppNavigator = createStackNavigator(
       screen: ChoosePreferences,
       navigationOptions: {
         ...TransitionPresets.FadeFromBottomAndroid,
-      },
-    },
-    Register2: {
-      screen: Register2,
-      navigationOptions: {
-        ...TransitionPresets.SlideFromRightIOS,
       },
     },
     Login2: {
@@ -100,6 +139,7 @@ const AppNavigator = createStackNavigator(
       screen: Settings,
       navigationOptions: {
         ...TransitionPresets.SlideFromRightIOS,
+        ...TransitionPresets.ScaleFromCenterAndroid,
       },
     },
     Profile: {
@@ -123,7 +163,7 @@ const AppNavigator = createStackNavigator(
   },
   {
     headerMode: false,
-    initialRouteName: "Login2",
+    initialRouteName: "Initial",
     defaultNavigationOptions: {
       cardStyle: { backgroundColor: "white" },
     },
@@ -134,7 +174,17 @@ const AppContainer = createAppContainer(AppNavigator);
 export default class App extends React.Component {
   render() {
     console.disableYellowBox = true;
-    console.error = (error) => error; 
+    console.error = (error) => error;
+    const prefix = "authToken";
+    checkKeys(prefix).then((hasKey) => {
+      if (hasKey) {
+        console.log("AsyncStorage has a key that starts with " + prefix);
+      } else {
+        console.log(
+          "AsyncStorage does not have a key that starts with " + prefix
+        );
+      }
+    });
     return <AppContainer />;
   }
 }

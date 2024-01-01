@@ -43,7 +43,7 @@ const LoginScreen = ({ navigation }) => {
       console.log(responseData); // Handle success
       const authToken = responseData.token;
       await AsyncStorage.setItem("authToken", authToken);
-      navigation.navigate("Choose");
+      navigation.replace("Choose");
     } catch (error) {
       console.error("Error during login:", error);
     }
@@ -77,7 +77,7 @@ const LoginScreen = ({ navigation }) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.FPBtn}
-          onPress={() => navigation.navigate("ForgetPassword")}
+          onPress={() => navigation.replace("ForgetPassword")}
         >
           <Text style={styles.ForgetText}>Mot de passe oublié?</Text>
         </TouchableOpacity>

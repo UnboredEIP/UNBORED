@@ -157,3 +157,7 @@ package-lock.json
 
 .expo
 eas.json
+
+node_modules
+
+.env
