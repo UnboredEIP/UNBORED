@@ -14,87 +14,27 @@ import {
   SourceSansPro_600SemiBold,
 } from "@expo-google-fonts/source-sans-pro";
 import { ScrollView } from "react-native-gesture-handler";
-import MyTextInput from "../../components/TextField";
+import MyTextInput from "../../../components/TextField";
 import RNPickerSelect from "react-native-picker-select";
 import Toast from "react-native-root-toast";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 import { RootSiblingParent } from "react-native-root-siblings";
-import Buttons from "../../components/Buttons";
+import Buttons from "../../../components/Buttons";
+import { AuthService } from "../../../services/AuthService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-async function makeRegisterRequest(
-  username,
-  email,
-  password,
-  gender,
-  number,
-  description,
-  birthdate,
-  preferences
-) {
-  try {
-    const response = await fetch("http://20.216.143.86/auth/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        email,
-        password,
-        gender,
-        number,
-        description,
-        birthdate,
-        preferences,
-      }),
-    });
-    if (response.status === 201) {
-      console.log("User created");
-      return true;
-    } else {
-      console.error(response.json);
-      return response.json();
-    }
-  } catch (error) {
-    console.error("Request error: ", error);
-    return false;
-  }
-}
+global.RegisterData = [];
 
-// async function makeRLoginRequest(email, password) {
-//   try {
-//     const response = await fetch("http://20.216.143.86/auth/login", {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         email,
-//         password,
-//       }),
-//     });
-//     if (response.status === 201) {
-//       console.log("User created");
-//       return true;
-//     } else {
-//       const errorResponse = await response.json();
-//       console.error(errorResponse);
-//       return {success: false, error: errorResponse.error};
-//     }
-//   } catch (error) {
-//     console.error("Request error: ", error);
-//     return false;
-//   }
-// }
-
-const Register2 = ({ navigation }) => {
+const Register = ({ navigation }) => {
+  const authService = new AuthService();
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [gender, setGender] = useState("M");
   const [number, setNumber] = useState("");
   const [description, setDescription] = useState("");
@@ -117,7 +57,7 @@ const Register2 = ({ navigation }) => {
         <ScrollView>
           <View style={styles().Mainbox}>
             <Image
-              source={require("../../../assets/logo2.gif")}
+              source={require("../../../../assets/logo2.gif")}
               style={{ height: 200, width: 200 }}
             />
 
@@ -138,7 +78,7 @@ const Register2 = ({ navigation }) => {
               onChangeText={(username) => setUsername(username)}
             />
 
-            <Text style={styles().titleTextField}>
+            {/* <Text style={styles().titleTextField}>
               Mot de passe<Text style={styles().colorStar}>*</Text>
             </Text>
             <MyTextInput
@@ -147,7 +87,90 @@ const Register2 = ({ navigation }) => {
               onChangeText={(password) => setPassword(password)}
             />
 
-            <Text style={styles().titleTextField}>Numéro de téléphone</Text>
+            <Text style={styles().titleTextField}>
+              Confirmer votre mot de passe
+              <Text style={styles().colorStar}>*</Text>
+            </Text>
+            <MyTextInput
+              placeholder="Mot de passe"
+              secureTextEntry={true}
+              onChangeText={(password2) => setPassword2(password2)}
+              handleOnBlur={() => {
+                if (password2 !== password) {
+                  Toast.show("Mot de passe non similaire !", {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+                  setPassword("");
+                  setPassword2("");
+                } else console.log("MATCH !");
+              }}
+            /> */}
+
+            <Text style={styles().titleTextField}>Date de naissance</Text>
+            <MyTextInput
+              placeholder="Date de naissance"
+              isDatepicker
+              onDateChange={(birthdate) => setBirthdate(birthdate)}
+              onChangeText={(birthdate) => setBirthdate(birthdate)}
+            />
+
+            <View style={{ marginTop: 20 }} />
+
+            <Buttons
+              texte={"S'inscrire"}
+              backgroundColor="#E1604D"
+              onPress={async () => {
+                if (email !== "") {
+                  if (email) {
+                    global.RegisterData = JSON.stringify({
+                      email: email,
+                      username: username,
+                      birthdate: birthdate,
+                    });
+                    // console.log(global.RegisterData);
+                    navigation.replace("RegisterStep2");
+                  } else {
+                    Toast.show(
+                      `Inscription échouée: identifiants déjà utilisé.`,
+                      {
+                        duration: Toast.durations.LONG,
+                        position: Toast.positions.BOTTOM,
+                        backgroundColor: "red",
+                        shadow: true,
+                        animation: true,
+                        hideOnPress: true,
+                      }
+                    );
+                  }
+                } else {
+                  let errorMessage3 =
+                    "\nInscription échouée, champs manquant(s) :\n";
+                  if (username.trim() === "") {
+                    errorMessage3 += " Nom d'utilisateur \n";
+                  }
+                  if (email.trim() === "") {
+                    errorMessage3 += " Email \n";
+                  }
+                  if (password.trim() === "") {
+                    errorMessage3 += " Mot de passe \n";
+                  }
+                  Toast.show(errorMessage3, {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+                }
+              }}
+            />
+            {/* <Text style={styles().titleTextField}>Numéro de téléphone</Text>
             <MyTextInput
               placeholder="Numéro de téléphone"
               keyboardType={"numeric"}
@@ -219,7 +242,7 @@ const Register2 = ({ navigation }) => {
                     password !== "" &&
                     gender !== ""
                   ) {
-                    const response = await makeRegisterRequest(
+                    const response = await authService.getRegister(
                       username,
                       email,
                       password,
@@ -241,26 +264,29 @@ const Register2 = ({ navigation }) => {
                       });
                       navigation.replace("Login2");
                     } else {
-                      Toast.show(`Inscription échouée: identifiants déjà utilisé.`, {
-                        duration: Toast.durations.LONG,
-                        position: Toast.positions.BOTTOM,
-                        backgroundColor: "red",
-                        shadow: true,
-                        animation: true,
-                        hideOnPress: true,
-                      });
+                      Toast.show(
+                        `Inscription échouée: identifiants déjà utilisé.`,
+                        {
+                          duration: Toast.durations.LONG,
+                          position: Toast.positions.BOTTOM,
+                          backgroundColor: "red",
+                          shadow: true,
+                          animation: true,
+                          hideOnPress: true,
+                        }
+                      );
                     }
-                  }
-                  else {
-                    let errorMessage3 = "\nInscription échouée, champs manquant(s) :\n";
+                  } else {
+                    let errorMessage3 =
+                      "\nInscription échouée, champs manquant(s) :\n";
                     if (username.trim() === "") {
                       errorMessage3 += " Nom d'utilisateur \n";
-                    }                
+                    }
                     if (email.trim() === "") {
                       errorMessage3 += " Email \n";
                     }
-                    if (password.trim() === "" ) {
-                      errorMessage3 += " Mot de passe \n"
+                    if (password.trim() === "") {
+                      errorMessage3 += " Mot de passe \n";
                     }
                     Toast.show(errorMessage3, {
                       duration: Toast.durations.LONG,
@@ -273,7 +299,7 @@ const Register2 = ({ navigation }) => {
                   }
                 }}
               />
-            </RootSiblingParent>
+            </RootSiblingParent> */}
 
             <Text
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
@@ -295,7 +321,7 @@ const Register2 = ({ navigation }) => {
                 <Buttons
                   hasIcon={true}
                   iconPath={
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png"
+                    "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
                   }
                   textColor="black"
                   width={screenWidth < 350 ? 145 : 160}
@@ -392,4 +418,4 @@ const styles = (textColor) => {
   });
 };
 
-export default Register2;
+export default Register;

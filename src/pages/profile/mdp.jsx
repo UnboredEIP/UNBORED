@@ -35,11 +35,9 @@ async function makeRLoginRequest(email) {
         email,
       }),
     });
-    }
-    catch
-    {
-        console.log("error");
-    }
+  } catch {
+    console.log("error");
+  }
 }
 
 const MotDePasse = ({ navigation }) => {
@@ -72,7 +70,8 @@ const MotDePasse = ({ navigation }) => {
             <Text
               style={(styles().loginText, { marginTop: 10, marginBottom: 20 })}
             >
-              Nous allons vous envoyez un E-mail sur l'adresse que vous remplissez si nous trouvons un compte lié à cette adresse
+              Nous allons vous envoyez un E-mail sur l'adresse que vous
+              remplissez si nous trouvons un compte lié à cette adresse
             </Text>
             <Text style={styles().titleTextField}>
               Email<Text style={styles().colorStar}>*</Text>
@@ -91,8 +90,7 @@ const MotDePasse = ({ navigation }) => {
                   if (email !== "") {
                     const response = await makeRLoginRequest(email);
                     navigation.navigate("Login2");
-                  }
-                  else {
+                  } else {
                     Toast.show("Veuillez remplir l'Email", {
                       duration: Toast.durations.LONG,
                       position: Toast.positions.BOTTOM,
@@ -137,9 +135,7 @@ const MotDePasse = ({ navigation }) => {
             <View style={{ marginTop: 15 }} />
             <Text style={styles().loginText}>
               Pas encore de compte ?{" "}
-              <TouchableOpacity
-                onPress={() => navigation.navigate("Register2")}
-              >
+              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
                 <Text style={styles().colorStar}>S'inscire</Text>
               </TouchableOpacity>
             </Text>

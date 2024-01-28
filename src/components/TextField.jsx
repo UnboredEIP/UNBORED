@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Button from "./Buttons";
+import Icon from "react-native-elements";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -21,6 +22,9 @@ const MyTextInput = ({
   onChangeText,
   borderColor = "#AEB3BE",
   dateSelect = new Date(),
+  hasIcon = false,
+  iconPath,
+  handleOnBlur = () => {},
   height = screenHeight / 17,
 }) => {
   const [date, setDate] = useState(dateSelect);
@@ -58,16 +62,19 @@ const MyTextInput = ({
       } else return null;
     } else {
       return (
-          <TextInput
+        <TextInput
           style={styles(borderColor, isFocused, height).input}
-            onChangeText={onChangeText}
-            placeholder={placeholder}
-            secureTextEntry={secureTextEntry || false}
-            returnKeyType="done"
-            keyboardType={keyboardType}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-          />
+          onChangeText={onChangeText}
+          placeholder={placeholder}
+          secureTextEntry={secureTextEntry || false}
+          returnKeyType="done"
+          keyboardType={keyboardType}
+          onFocus={handleFocus}
+          onBlur={() => {
+            handleBlur();
+            handleOnBlur();
+          }}
+        />
       );
     }
   };

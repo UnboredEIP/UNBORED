@@ -4,14 +4,14 @@ import {
   createStackNavigator,
   TransitionPresets,
 } from "react-navigation-stack";
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import OTP from "./src/pages/OTP";
 import "./asset/SourceSansPro-Regular.otf";
 import OTP3 from "./src/pages/OTP";
 import Accueil3 from "./src/pages/Accueil";
 import OnBoarding3 from "./src/pages/OnBoarding";
 import Settings from "./src/pages/profile/Settings";
-import Register2 from "./src/pages/auth/Register2";
+import Register from "./src/pages/auth/Register_Pages/Register";
 import ChoosePreferences from "./src/ChoosePreferences";
 import ForgetPasswordScreen from "./src/pages/profile/ForgetPassword";
 import Login2 from "./src/pages/auth/Login2";
@@ -20,9 +20,9 @@ import styles from "./src/styles/styles2";
 import Description from "./src/pages/profile/description";
 import Calendar from "./src/pages/Calendar";
 import MotDePasse from "./src/pages/profile/mdp";
-import { NavigationContainer } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PreferencesUpdate from "./src/pages/settings/Preferences";
+import RegisterStep2 from "./src/pages/auth/Register_Pages/Register_step2";
 class OTP2 extends React.Component {
   render() {
     return (
@@ -82,7 +82,13 @@ const AppNavigator = createStackNavigator(
       screen: InitialScreen,
     },
     Home: {
-      screen: Register2,
+      screen: Register,
+      navigationOptions: {
+        ...TransitionPresets.SlideFromRightIOS,
+      },
+    },
+    RegisterStep2: {
+      screen: RegisterStep2,
       navigationOptions: {
         ...TransitionPresets.SlideFromRightIOS,
       },
