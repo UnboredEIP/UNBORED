@@ -49,18 +49,9 @@ export class UbService {
     }
   };
 
-  getRegister = async (
-    username,
-    email,
-    password,
-    gender,
-    number,
-    description,
-    birthdate,
-    preferences
-  ) => {
+  getRegister = async (username, email, password, gender, birthdate) => {
     try {
-      const response = await fetch("http://20.216.143.86/auth/register", {
+      const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -70,10 +61,7 @@ export class UbService {
           email,
           password,
           gender,
-          number,
-          description,
           birthdate,
-          preferences,
         }),
       });
       if (response.status === 201) {
@@ -91,8 +79,8 @@ export class UbService {
 
   getLogin = async (email, password) => {
     try {
-      // http://20.216.143.86
-      const response = await fetch("http://20.216.143.86/auth/login", {
+      // ${API_URL}
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

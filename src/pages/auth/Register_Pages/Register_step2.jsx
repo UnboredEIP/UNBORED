@@ -31,6 +31,7 @@ const RegisterStep2 = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
   const [gender, setGender] = useState("M");
   const [number, setNumber] = useState("");
   const [description, setDescription] = useState("");
@@ -60,21 +61,6 @@ const RegisterStep2 = ({ navigation }) => {
             <Text style={styles().h1}>S'inscrire gratuitement</Text>
 
             <Text style={styles().titleTextField}>
-              Email<Text style={styles().colorStar}>*</Text>
-            </Text>
-            <MyTextInput
-              placeholder="Email"
-              keyboardType={"email-address"}
-              onChangeText={(email) => setEmail(email)}
-            />
-
-            <Text style={styles().titleTextField}>Nom d'utilisateur</Text>
-            <MyTextInput
-              placeholder="Nom d'utilisateur"
-              onChangeText={(username) => setUsername(username)}
-            />
-
-            <Text style={styles().titleTextField}>
               Mot de passe<Text style={styles().colorStar}>*</Text>
             </Text>
             <MyTextInput
@@ -83,23 +69,32 @@ const RegisterStep2 = ({ navigation }) => {
               onChangeText={(password) => setPassword(password)}
             />
 
-            <Text style={styles().titleTextField}>Numéro de téléphone</Text>
+            <Text style={styles().titleTextField}>
+              Confirmer mot de passe<Text style={styles().colorStar}>*</Text>
+            </Text>
             <MyTextInput
-              placeholder="Numéro de téléphone"
-              keyboardType={"numeric"}
-              onChangeText={(number) => setNumber(number)}
+              placeholder="Mot de passe"
+              secureTextEntry={true}
+              onChangeText={(password2) => setPassword2(password2)}
+              handleOnBlur={() => {
+                if (password2 !== password) {
+                  Toast.show("Mot de passe non similaire !", {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+                  setPassword("");
+                  setPassword2("");
+                } else console.log("MATCH !");
+              }}
             />
 
-            <Text style={styles().titleTextField}>Date de naissance</Text>
-            <MyTextInput
-              placeholder="Date de naissance"
-              isDatepicker
-              onDateChange={(birthdate) => setBirthdate(birthdate)}
-              onChangeText={(birthdate) => setBirthdate(birthdate)}
-            />
-            <Text style={styles().titleTextField}>
+            {/* <Text style={styles().titleTextField}>
               {JSON.parse(global.RegisterData).username}
-            </Text>
+            </Text> */}
             <RNPickerSelect
               onValueChange={(value) => {
                 setGender(value);
@@ -140,31 +135,23 @@ const RegisterStep2 = ({ navigation }) => {
               }}
             />
             <View style={{ marginTop: 20 }} />
-            <Text style={styles().titleTextField}>Description</Text>
-            <MyTextInput
-              height={screenHeight / 8}
-              placeholder="Description"
-              onChangeText={(description) => setDescription(description)}
-            />
             <RootSiblingParent>
               <Buttons
                 texte={"S'inscrire"}
                 backgroundColor="#E1604D"
                 onPress={async () => {
                   if (
-                    username !== "" &&
-                    email !== "" &&
+                    JSON.parse(global.RegisterData).username !== "" &&
+                    JSON.parse(global.RegisterData).email !== "" &&
                     password !== "" &&
                     gender !== ""
                   ) {
-                    const response = await ubservice.getStep2(
-                      username,
-                      email,
+                    const response = await ubservice.getRegister(
+                      JSON.parse(global.RegisterData).username,
+                      JSON.parse(global.RegisterData).email,
                       password,
                       gender,
-                      number,
-                      description,
-                      birthdate,
+                      JSON.parse(global.RegisterData).birthdate,
                       []
                     );
                     if (response === true) {
@@ -194,10 +181,10 @@ const RegisterStep2 = ({ navigation }) => {
                   } else {
                     let errorMessage3 =
                       "\nInscription échouée, champs manquant(s) :\n";
-                    if (username.trim() === "") {
+                    if (JSON.parse(global.RegisterData).username === "") {
                       errorMessage3 += " Nom d'utilisateur \n";
                     }
-                    if (email.trim() === "") {
+                    if (JSON.parse(global.RegisterData).email === "") {
                       errorMessage3 += " Email \n";
                     }
                     if (password.trim() === "") {
@@ -216,12 +203,10 @@ const RegisterStep2 = ({ navigation }) => {
               />
             </RootSiblingParent>
 
-            <Text
+            <View
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
-            >
-              ou continuer avec
-            </Text>
-            <View style={{ flexDirection: "row", marginBottom: 32 }}>
+            ></View>
+            {/* <View style={{ flexDirection: "row", marginBottom: 32 }}>
               <RootSiblingParent>
                 <Buttons
                   hasIcon={true}
@@ -244,7 +229,7 @@ const RegisterStep2 = ({ navigation }) => {
                   texte="Google"
                 />
               </RootSiblingParent>
-            </View>
+            </View> */}
 
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}

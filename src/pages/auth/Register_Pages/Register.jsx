@@ -120,149 +120,21 @@ const Register = ({ navigation }) => {
             />
 
             <View style={{ marginTop: 20 }} />
-
-            <Buttons
-              texte={"S'inscrire"}
-              backgroundColor="#E1604D"
-              onPress={async () => {
-                if (email !== "") {
-                  if (email) {
-                    global.RegisterData = JSON.stringify({
-                      email: email,
-                      username: username,
-                      birthdate: birthdate,
-                    });
-                    // console.log(global.RegisterData);
-                    navigation.replace("RegisterStep2");
-                  } else {
-                    Toast.show(
-                      `Inscription échouée: identifiants déjà utilisé.`,
-                      {
-                        duration: Toast.durations.LONG,
-                        position: Toast.positions.BOTTOM,
-                        backgroundColor: "red",
-                        shadow: true,
-                        animation: true,
-                        hideOnPress: true,
-                      }
-                    );
-                  }
-                } else {
-                  let errorMessage3 =
-                    "\nInscription échouée, champs manquant(s) :\n";
-                  if (username.trim() === "") {
-                    errorMessage3 += " Nom d'utilisateur \n";
-                  }
-                  if (email.trim() === "") {
-                    errorMessage3 += " Email \n";
-                  }
-                  if (password.trim() === "") {
-                    errorMessage3 += " Mot de passe \n";
-                  }
-                  Toast.show(errorMessage3, {
-                    duration: Toast.durations.LONG,
-                    position: Toast.positions.BOTTOM,
-                    backgroundColor: "red",
-                    shadow: true,
-                    animation: true,
-                    hideOnPress: true,
-                  });
-                }
-              }}
-            />
-            {/* <Text style={styles().titleTextField}>Numéro de téléphone</Text>
-            <MyTextInput
-              placeholder="Numéro de téléphone"
-              keyboardType={"numeric"}
-              onChangeText={(number) => setNumber(number)}
-            />
-
-            <Text style={styles().titleTextField}>Date de naissance</Text>
-            <MyTextInput
-              placeholder="Date de naissance"
-              isDatepicker
-              onDateChange={(birthdate) => setBirthdate(birthdate)}
-              onChangeText={(birthdate) => setBirthdate(birthdate)}
-            />
-            <Text style={styles().titleTextField}>Genre</Text>
-            <RNPickerSelect
-              onValueChange={(value) => {
-                setGender(value);
-                console.log(gender);
-              }}
-              items={[
-                { label: "Homme", value: "Homme" },
-                { label: "Femme", value: "Femme" },
-              ]}
-              placeholder={{ label: "Sélectionnez un genre", value: null }}
-              style={{
-                inputIOS: {
-                  marginTop: 10,
-                  fontSize: 16,
-                  padding: 12,
-                  alignItems: "center",
-                  width: "auto",
-                  alignSelf: "center",
-                  textAlign: "center",
-                  borderWidth: 2,
-                  borderColor: "#E1604D",
-                  borderRadius: 20,
-                  color: "white",
-                  paddingRight: 30,
-                  backgroundColor: "#E1604D",
-                  opacity: 0.8,
-                },
-                inputAndroid: {
-                  fontSize: 16,
-                  paddingVertical: 8,
-                  paddingHorizontal: 10,
-                  borderWidth: 0.5,
-                  borderColor: "#E1604D",
-                  borderRadius: 8,
-                  color: "black",
-                  paddingRight: 30,
-                },
-              }}
-            />
-            <View style={{ marginTop: 20 }} />
-            <Text style={styles().titleTextField}>Description</Text>
-            <MyTextInput
-              height={screenHeight / 8}
-              placeholder="Description"
-              onChangeText={(description) => setDescription(description)}
-            />
             <RootSiblingParent>
               <Buttons
                 texte={"S'inscrire"}
                 backgroundColor="#E1604D"
                 onPress={async () => {
-                  if (
-                    username !== "" &&
-                    email !== "" &&
-                    password !== "" &&
-                    gender !== ""
-                  ) {
-                    const response = await authService.getRegister(
-                      username,
-                      email,
-                      password,
-                      gender,
-                      number,
-                      description,
-                      birthdate,
-                      []
-                    );
-                    if (response === true) {
-                      console.log("success");
-                      Toast.show("Registration succeed", {
-                        duration: Toast.durations.LONG,
-                        position: Toast.positions.BOTTOM,
-                        backgroundColor: "green",
-                        shadow: true,
-                        animation: true,
-                        hideOnPress: true,
+                  if (email !== "") {
+                    if (email) {
+                      global.RegisterData = JSON.stringify({
+                        email: email,
+                        username: username,
+                        birthdate: birthdate,
+                        gender: gender,
                       });
-                      navigation.replace("Login2");
+                      // console.log(global.RegisterData);
+                      navigation.replace("RegisterStep2");
                     } else {
                       Toast.show(
                         `Inscription échouée: identifiants déjà utilisé.`,
@@ -299,7 +171,7 @@ const Register = ({ navigation }) => {
                   }
                 }}
               />
-            </RootSiblingParent> */}
+            </RootSiblingParent>
 
             <Text
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
