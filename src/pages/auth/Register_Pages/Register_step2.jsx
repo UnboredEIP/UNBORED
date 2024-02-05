@@ -21,6 +21,7 @@ const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
+import OTPInput from "../../../components/OTP_intputs";
 import { UbService } from "../../../services/UbServices";
 
 const RegisterStep2 = ({ navigation }) => {
@@ -58,150 +59,15 @@ const RegisterStep2 = ({ navigation }) => {
               style={{ height: 200, width: 200 }}
             />
 
-            <Text style={styles().h1}>S'inscrire gratuitement</Text>
-
-            <Text style={styles().titleTextField}>
-              Mot de passe<Text style={styles().colorStar}>*</Text>
+            <Text style={styles().h1}>
+              Veuillez entrer le code reçu sur l'addresse mail indiqué
             </Text>
-            <MyTextInput
-              placeholder="Mot de passe"
-              secureTextEntry={true}
-              onChangeText={(password) => setPassword(password)}
-            />
-
-            <Text style={styles().titleTextField}>
-              Confirmer mot de passe<Text style={styles().colorStar}>*</Text>
-            </Text>
-            <MyTextInput
-              placeholder="Mot de passe"
-              secureTextEntry={true}
-              onChangeText={(password2) => setPassword2(password2)}
-              handleOnBlur={() => {
-                if (password2 !== password) {
-                  Toast.show("Mot de passe non similaire !", {
-                    duration: Toast.durations.LONG,
-                    position: Toast.positions.BOTTOM,
-                    backgroundColor: "red",
-                    shadow: true,
-                    animation: true,
-                    hideOnPress: true,
-                  });
-                  setPassword("");
-                  setPassword2("");
-                } else console.log("MATCH !");
-              }}
-            />
-
+            <OTPInput />
+            <View style={{ marginTop: 20 }} />
+            <Buttons texte="Confirmer" />
             {/* <Text style={styles().titleTextField}>
               {JSON.parse(global.RegisterData).username}
             </Text> */}
-            <RNPickerSelect
-              onValueChange={(value) => {
-                setGender(value);
-                console.log(gender);
-              }}
-              items={[
-                { label: "Homme", value: "Homme" },
-                { label: "Femme", value: "Femme" },
-              ]}
-              placeholder={{ label: "Sélectionnez un genre", value: null }}
-              style={{
-                inputIOS: {
-                  marginTop: 10,
-                  fontSize: 16,
-                  padding: 12,
-                  alignItems: "center",
-                  width: "auto",
-                  alignSelf: "center",
-                  textAlign: "center",
-                  borderWidth: 2,
-                  borderColor: "#E1604D",
-                  borderRadius: 20,
-                  color: "white",
-                  paddingRight: 30,
-                  backgroundColor: "#E1604D",
-                  opacity: 0.8,
-                },
-                inputAndroid: {
-                  fontSize: 16,
-                  paddingVertical: 8,
-                  paddingHorizontal: 10,
-                  borderWidth: 0.5,
-                  borderColor: "#E1604D",
-                  borderRadius: 8,
-                  color: "black",
-                  paddingRight: 30,
-                },
-              }}
-            />
-            <View style={{ marginTop: 20 }} />
-            <RootSiblingParent>
-              <Buttons
-                texte={"S'inscrire"}
-                backgroundColor="#E1604D"
-                onPress={async () => {
-                  if (
-                    JSON.parse(global.RegisterData).username !== "" &&
-                    JSON.parse(global.RegisterData).email !== "" &&
-                    password !== "" &&
-                    gender !== ""
-                  ) {
-                    const response = await ubservice.getRegister(
-                      JSON.parse(global.RegisterData).username,
-                      JSON.parse(global.RegisterData).email,
-                      password,
-                      gender,
-                      JSON.parse(global.RegisterData).birthdate,
-                      []
-                    );
-                    if (response === true) {
-                      console.log("success");
-                      Toast.show("Registration succeed", {
-                        duration: Toast.durations.LONG,
-                        position: Toast.positions.BOTTOM,
-                        backgroundColor: "green",
-                        shadow: true,
-                        animation: true,
-                        hideOnPress: true,
-                      });
-                      navigation.replace("Login2");
-                    } else {
-                      Toast.show(
-                        `Inscription échouée: identifiants déjà utilisé.`,
-                        {
-                          duration: Toast.durations.LONG,
-                          position: Toast.positions.BOTTOM,
-                          backgroundColor: "red",
-                          shadow: true,
-                          animation: true,
-                          hideOnPress: true,
-                        }
-                      );
-                    }
-                  } else {
-                    let errorMessage3 =
-                      "\nInscription échouée, champs manquant(s) :\n";
-                    if (JSON.parse(global.RegisterData).username === "") {
-                      errorMessage3 += " Nom d'utilisateur \n";
-                    }
-                    if (JSON.parse(global.RegisterData).email === "") {
-                      errorMessage3 += " Email \n";
-                    }
-                    if (password.trim() === "") {
-                      errorMessage3 += " Mot de passe \n";
-                    }
-                    Toast.show(errorMessage3, {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.BOTTOM,
-                      backgroundColor: "red",
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                    });
-                  }
-                }}
-              />
-            </RootSiblingParent>
 
             <View
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
@@ -261,7 +127,7 @@ const styles = (textColor) => {
       // backgroundColor: "white",
     },
     h1: {
-      fontSize: screenHeight < 768 ? 20 : 24,
+      fontSize: screenHeight < 768 ? 15 : 19,
       fontFamily: "SourceSansPro_600SemiBold",
       textAlign: "center",
       //   marginHorizontal: screenWidth / 30,

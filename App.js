@@ -11,7 +11,6 @@ import OTP3 from "./src/pages/OTP";
 import Accueil3 from "./src/pages/Accueil";
 import OnBoarding3 from "./src/pages/OnBoarding";
 import Settings from "./src/pages/profile/Settings";
-import Register from "./src/pages/auth/Register_Pages/Register";
 import ChoosePreferences from "./src/ChoosePreferences";
 import ForgetPasswordScreen from "./src/pages/profile/ForgetPassword";
 import Login2 from "./src/pages/auth/Login2";
@@ -22,7 +21,10 @@ import Calendar from "./src/pages/Calendar";
 import MotDePasse from "./src/pages/profile/mdp";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PreferencesUpdate from "./src/pages/settings/Preferences";
+import Register from "./src/pages/auth/Register_Pages/Register";
 import RegisterStep2 from "./src/pages/auth/Register_Pages/Register_step2";
+import RegisterStep3 from "./src/pages/auth/Register_Pages/Register_step3";
+
 class OTP2 extends React.Component {
   render() {
     return (
@@ -89,6 +91,12 @@ const AppNavigator = createStackNavigator(
     },
     RegisterStep2: {
       screen: RegisterStep2,
+      navigationOptions: {
+        ...TransitionPresets.SlideFromRightIOS,
+      },
+    },
+    RegisterStep3: {
+      screen: RegisterStep3,
       navigationOptions: {
         ...TransitionPresets.SlideFromRightIOS,
       },
