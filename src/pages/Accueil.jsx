@@ -103,7 +103,7 @@ const Accueil3 = ({ navigation }) => {
   }, [profileData, events, images]);
   // console.log("ALL EVENTS:", events);
 
-  if (profileData === null || events.length === 0) {
+  if (profileData === null) {
     return <Text>Loading bro</Text>;
   }
 

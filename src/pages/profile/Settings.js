@@ -21,7 +21,6 @@ const Settings = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
-  const [number, setNumber] = useState("");
   const [birthdate, setBirthdate] = useState(new Date());
   const [defaultImageUri] = useState(
     "https://camo.githubusercontent.com/c870c9266f63ef17356bc6356d7c2df99d8a9889644352d4fe854f37f5c13693/68747470733a2f2f692e706f7374696d672e63632f5071674c68726e582f756e626f7265642e706e67" // Replace with the actual default image URL
@@ -42,7 +41,7 @@ const Settings = ({ navigation }) => {
   const pickImage = async () => {
     let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      quality: 1,
+      quality: 0.0001,
     });
   
     if (!result.canceled) {
@@ -57,7 +56,7 @@ const Settings = ({ navigation }) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
-      quality: 1,
+      quality: 0.0001,
     });
   
     if (!result.canceled) {
@@ -121,10 +120,9 @@ const Settings = ({ navigation }) => {
       }
 
       const profileData = await response.json();
-      setUsername(profileData.user.username.trim());
-      setNumber(profileData.user.number.trim());
-      setBirthdate(new Date(profileData.user.birthdate.trim()));
       setImage(`http://20.216.143.86/getimage?imageName=${profileData.user.profilPhoto}`);
+      setUsername(profileData.user.username.trim());
+      setBirthdate(new Date(profileData.user.birthdate.trim()));
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -134,6 +132,9 @@ const Settings = ({ navigation }) => {
   }
   const navigatetodescr = async () => {
     navigation.navigate("Description");
+  }
+  const navigatetoavatar = async () => {
+    navigation.navigate("Avatar");
   }
   const handleSave = async () => {
     try {
@@ -148,10 +149,9 @@ const Settings = ({ navigation }) => {
         body: JSON.stringify({
           username,
           birthdate,
-          number,
         }),
       });
-      if (!username || !number) {
+      if (!username) {
         Toast.show(`Nom d'utilisateur ou numéro de téléphone vide, merci de remplir ces champs`, {
           duration: Toast.durations.LONG,
           position: Toast.positions.BOTTOM,
@@ -180,7 +180,7 @@ const Settings = ({ navigation }) => {
     } catch (error) {
       console.error("Error updating profile:", error);
     }
-  if (username && number) {
+  if (username) {
     navigation.navigate("Accueil3");
   }
     
@@ -241,13 +241,6 @@ const Settings = ({ navigation }) => {
             value={username}
             onChangeText={setUsername}
           />
-          <Text style={styles.username}>Number </Text>
-          <TextInput
-            style={styles.input}
-            placeholder="number"
-            value={number}
-            onChangeText={setNumber}
-          />
           <Text style={styles.username}>Birthdate</Text>
           <MyTextInput
             dateSelect={new Date(birthdate)}
@@ -264,6 +257,9 @@ const Settings = ({ navigation }) => {
             <Text style={styles.loginBtnText}>Change your description !</Text>
           </TouchableOpacity>
           </View>
+          <TouchableOpacity style={styles.loginBtn3} onPress={navigatetoavatar}>
+            <Text style={styles.loginBtnText2}>Créer ton avatar !</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
             <Text style={styles.loginBtnText}>Sauvegarder</Text>
           </TouchableOpacity>
@@ -332,8 +328,23 @@ const styles = StyleSheet.create({
     borderColor: "#b3b3b3",
     borderWidth: 1,
   },
+  loginBtn3: {
+    marginTop: 20,
+    width: "100%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 10,
+    backgroundColor: "#FFF",
+    borderColor: "#b3b3b3",
+    borderWidth: 1,
+  },
   loginBtnText: {
     color: "white",
+  },
+  loginBtnText2: {
+    color: "#E1604D",
   },
   oauthBtn: {
     width: "30%",
@@ -356,15 +367,15 @@ const styles = StyleSheet.create({
     position: "relative",
     right: 110,
     marginTop: 20,
-    marginBottom: -10,
+    marginBottom: -5,
     color: "grey",
   },
   horizontalLine: {
     width: "100%",
-    height: 1, // Adjust the height as needed
-    backgroundColor: "#ccc", // Grey color
-    marginTop: 10, // Adjust the margin as needed
-    marginBottom: 10, // Adjust the margin as needed
+    height: 1,
+    backgroundColor: "#ccc", 
+    marginTop: 10, 
+    marginBottom: 10, 
   },
 });
 
