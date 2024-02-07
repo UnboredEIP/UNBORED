@@ -21,10 +21,10 @@ const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
-import { UbService } from "../../../services/UbServices";
+import { AuthService } from "../../../services/AuthService";
 
 const RegisterStep3 = ({ navigation }) => {
-  const ubservice = new UbService();
+  const ubservice = new AuthService();
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
@@ -70,7 +70,8 @@ const RegisterStep3 = ({ navigation }) => {
             />
 
             <Text style={styles().titleTextField}>
-              Confirmer mot de passe<Text style={styles().colorStar}>*</Text>
+              Confirmer mot de passe
+              <Text style={styles().colorStar}>*</Text>
             </Text>
             <MyTextInput
               placeholder="Mot de passe"
@@ -166,6 +167,11 @@ const RegisterStep3 = ({ navigation }) => {
                       });
                       navigation.replace("Login2");
                     } else {
+                      console.log(JSON.parse(global.RegisterData).username);
+                      console.log(JSON.parse(global.RegisterData).email);
+                      console.log(password),
+                        console.log(gender),
+                        console.log(JSON.parse(global.RegisterData).birthdate);
                       Toast.show(
                         `Inscription échouée: identifiants déjà utilisé.`,
                         {

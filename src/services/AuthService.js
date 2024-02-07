@@ -7,10 +7,7 @@ export class AuthService {
     email,
     password,
     gender,
-    number,
-    description,
     birthdate,
-    preferences
   ) => {
     try {
       const response = await fetch("http://20.216.143.86/auth/register", {
@@ -23,10 +20,7 @@ export class AuthService {
           email,
           password,
           gender,
-          number,
-          description,
           birthdate,
-          preferences,
         }),
       });
       if (response.status === 201) {

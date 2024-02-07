@@ -1,26 +1,10 @@
-import React, { useRef, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  TextInput,
-  Dimensions,
-  View,
-} from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import Button from "./Buttons";
-import Icon from "react-native-elements";
+import React, { useRef } from "react";
+import { StyleSheet, TextInput, Dimensions, View } from "react-native";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const OTPInput = ({ isDisabled, onChange, number, value, length = 6 }) => {
-  const handleFocus = () => {
-    setIsFocused(true);
-  };
-
-  const handleBlur = () => {
-    setIsFocused(false);
-  };
+const OTPInput = ({ isDisabled, length = 6 }) => {
   const inputsRefs = useRef([]);
 
   const handleChangeText = (text, index) => {

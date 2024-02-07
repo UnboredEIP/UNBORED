@@ -64,7 +64,9 @@ const RegisterStep2 = ({ navigation }) => {
             </Text>
             <OTPInput />
             <View style={{ marginTop: 20 }} />
-            <Buttons texte="Confirmer" />
+            <Buttons texte="Confirmer" onPress={() => {
+              navigation.replace('RegisterStep3')
+            }}/>
             {/* <Text style={styles().titleTextField}>
               {JSON.parse(global.RegisterData).username}
             </Text> */}
