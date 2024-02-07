@@ -165,7 +165,7 @@ const RegisterStep3 = ({ navigation }) => {
                         animation: true,
                         hideOnPress: true,
                       });
-                      navigation.replace("Login2");
+                      navigation.replace("Login");
                     } else {
                       console.log(JSON.parse(global.RegisterData).username);
                       console.log(JSON.parse(global.RegisterData).email);
@@ -239,7 +239,7 @@ const RegisterStep3 = ({ navigation }) => {
 
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}
-              <TouchableOpacity onPress={() => navigation.replace("Login2")}>
+              <TouchableOpacity onPress={() => navigation.replace("Login")}>
                 <Text style={styles().colorStar}>Se connecter</Text>
               </TouchableOpacity>
             </Text>

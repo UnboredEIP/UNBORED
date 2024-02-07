@@ -13,7 +13,7 @@ import OnBoarding3 from "./src/pages/OnBoarding";
 import Settings from "./src/pages/profile/Settings";
 import ChoosePreferences from "./src/ChoosePreferences";
 import ForgetPasswordScreen from "./src/pages/profile/ForgetPassword";
-import Login2 from "./src/pages/auth/Login2";
+import Login from "./src/pages/auth/Login";
 import Profile from "./src/pages/profile/Profile";
 import styles from "./src/styles/styles2";
 import Description from "./src/pages/profile/description";
@@ -113,8 +113,8 @@ const AppNavigator = createStackNavigator(
         ...TransitionPresets.FadeFromBottomAndroid,
       },
     },
-    Login2: {
-      screen: Login2,
+    Login: {
+      screen: Login,
       navigationOptions: {
         ...TransitionPresets.SlideFromRightIOS,
       },

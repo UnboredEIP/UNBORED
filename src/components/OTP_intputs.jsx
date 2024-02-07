@@ -34,7 +34,6 @@ const OTPInput = ({ isDisabled, length = 6 }) => {
           onChangeText={(text) => handleChangeText(text, index)}
           onKeyPress={({ nativeEvent }) => {
             if (nativeEvent.key === "Backspace") {
-              console.log("TEST:", inputsRefs);
               handleChangeText("", 0);
             }
           }}
@@ -61,8 +60,8 @@ const styles = () => {
       height: 55,
       color: "black",
       backgroundColor: "white",
-      borderRadius: "10",
-      borderWidth: "3",
+      borderRadius: 10,
+      borderWidth: 3,
       borderColor: "#E1604D",
     },
   });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -21,8 +21,6 @@ const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Buttons from "../../components/Buttons";
-import Accueil3 from "../Accueil";
-import ChoosePreferences from "../../ChoosePreferences";
 import { UbService } from "../../services/UbServices";
 import { AuthService } from "../../services/AuthService";
 
@@ -51,7 +49,7 @@ async function navigateTo() {
   }
 }
 
-const Login2 = ({ navigation }) => {
+const Login = ({ navigation }) => {
   const ubservice = new UbService();
   const authService = new AuthService();
   const [fontsLoaded] = useFonts({
@@ -167,7 +165,7 @@ const Login2 = ({ navigation }) => {
             </Text>
             <View style={{ flexDirection: "row" }}>
               <RootSiblingParent>
-                <Buttons
+                {/* <Buttons
                   hasIcon={true}
                   iconPath={
                     "https://www.facebook.com/images/fb_icon_325x325.png"
@@ -176,11 +174,11 @@ const Login2 = ({ navigation }) => {
                   width={screenWidth < 350 ? 145 : 160}
                   backgroundColor="white"
                   texte="Facebook"
-                />
+                /> */}
                 <Buttons
                   hasIcon={true}
                   iconPath={
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png"
+                    "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
                   }
                   textColor="black"
                   width={screenWidth < 350 ? 145 : 160}
@@ -259,4 +257,4 @@ const styles = (textColor) => {
   });
 };
 
-export default Login2;
+export default Login;

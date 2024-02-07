@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -14,12 +14,8 @@ import {
   SourceSansPro_600SemiBold,
 } from "@expo-google-fonts/source-sans-pro";
 import { ScrollView } from "react-native-gesture-handler";
-import MyTextInput from "../../../components/TextField";
-import RNPickerSelect from "react-native-picker-select";
-import Toast from "react-native-root-toast";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
-import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import OTPInput from "../../../components/OTP_intputs";
 import { UbService } from "../../../services/UbServices";
@@ -64,9 +60,12 @@ const RegisterStep2 = ({ navigation }) => {
             </Text>
             <OTPInput />
             <View style={{ marginTop: 20 }} />
-            <Buttons texte="Confirmer" onPress={() => {
-              navigation.replace('RegisterStep3')
-            }}/>
+            <Buttons
+              texte="Confirmer"
+              onPress={() => {
+                navigation.replace("RegisterStep3");
+              }}
+            />
             {/* <Text style={styles().titleTextField}>
               {JSON.parse(global.RegisterData).username}
             </Text> */}
@@ -101,7 +100,7 @@ const RegisterStep2 = ({ navigation }) => {
 
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}
-              <TouchableOpacity onPress={() => navigation.replace("Login2")}>
+              <TouchableOpacity onPress={() => navigation.replace("Login")}>
                 <Text style={styles().colorStar}>Se connecter</Text>
               </TouchableOpacity>
             </Text>

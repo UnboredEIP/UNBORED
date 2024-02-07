@@ -122,7 +122,7 @@ const Register = ({ navigation }) => {
             <View style={{ marginTop: 20 }} />
             <RootSiblingParent>
               <Buttons
-                texte={"S'inscrire"}
+                texte={"Suivant"}
                 backgroundColor="#E1604D"
                 onPress={async () => {
                   if (email !== "") {
@@ -180,7 +180,7 @@ const Register = ({ navigation }) => {
             </Text>
             <View style={{ flexDirection: "row", marginBottom: 32 }}>
               <RootSiblingParent>
-                <Buttons
+                {/* <Buttons
                   hasIcon={true}
                   iconPath={
                     "https://www.facebook.com/images/fb_icon_325x325.png"
@@ -189,7 +189,7 @@ const Register = ({ navigation }) => {
                   width={screenWidth < 350 ? 145 : 160}
                   backgroundColor="white"
                   texte="Facebook"
-                />
+                /> */}
                 <Buttons
                   hasIcon={true}
                   iconPath={
@@ -205,7 +205,7 @@ const Register = ({ navigation }) => {
 
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}
-              <TouchableOpacity onPress={() => navigation.replace("Login2")}>
+              <TouchableOpacity onPress={() => navigation.replace("Login")}>
                 <Text style={styles().colorStar}>Se connecter</Text>
               </TouchableOpacity>
             </Text>

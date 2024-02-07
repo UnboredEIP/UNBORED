@@ -89,7 +89,7 @@ const MotDePasse = ({ navigation }) => {
                 onPress={async () => {
                   if (email !== "") {
                     const response = await makeRLoginRequest(email);
-                    navigation.navigate("Login2");
+                    navigation.navigate("Login");
                   } else {
                     Toast.show("Veuillez remplir l'Email", {
                       duration: Toast.durations.LONG,

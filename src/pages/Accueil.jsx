@@ -85,7 +85,7 @@ const Accueil3 = ({ navigation }) => {
       } catch (error) {
         console.error("Error fetchdata:", error);
         await AsyncStorage.removeItem("authToken");
-        navigation.replace("Login2");
+        navigation.replace("Login");
       }
     };
 
@@ -103,7 +103,7 @@ const Accueil3 = ({ navigation }) => {
   }, [profileData, events, images]);
   // console.log("ALL EVENTS:", events);
 
-  if (profileData === null || events.length === 0) {
+  if (profileData === null || events.length === 0 || username === "Greenzer") {
     return <Text>Loading bro</Text>;
   }
 
@@ -141,7 +141,7 @@ const Accueil3 = ({ navigation }) => {
                   width="30%"
                   onPress={async () => {
                     await AsyncStorage.removeItem("authToken");
-                    navigation.replace("Login2");
+                    navigation.replace("Login");
                   }}
                 />
                 <TouchableOpacity
