@@ -119,7 +119,6 @@ const ChoosePreferences = ({ navigation }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
       navigation.replace("Accueil3");
     } catch (error) {
       console.error("Error updating profile:", error);

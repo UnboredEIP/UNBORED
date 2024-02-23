@@ -14,37 +14,30 @@ import {
   SourceSansPro_600SemiBold,
 } from "@expo-google-fonts/source-sans-pro";
 import { ScrollView } from "react-native-gesture-handler";
-import MyTextInput from "../../components/TextField";
-import { RootSiblingParent } from "react-native-root-siblings";
+import MyTextInput from "../../../components/TextField";
+import RNPickerSelect from "react-native-picker-select";
 import Toast from "react-native-root-toast";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Buttons from "../../components/Buttons";
-import Accueil3 from "../Accueil";
-import ChoosePreferences from "../../ChoosePreferences";
+import { RootSiblingParent } from "react-native-root-siblings";
+import Buttons from "../../../components/Buttons";
+import OTPInput from "../../../components/OTP_intputs";
+import { UbService } from "../../../services/UbServices";
 
-async function makeRLoginRequest(email) {
-  try {
-    const response = await fetch("http://20.216.143.86/auth/askreset", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-      }),
-    });
-  } catch {
-    console.log("error");
-  }
-}
-
-const MotDePasse = ({ navigation }) => {
+const RegisterStep2 = ({ navigation }) => {
+  const ubservice = new UbService();
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [gender, setGender] = useState("M");
+  const [number, setNumber] = useState("");
+  const [description, setDescription] = useState("");
+  const [birthdate, setBirthdate] = useState("");
+
   if (!fontsLoaded) {
     return (
       <View>
@@ -62,53 +55,26 @@ const MotDePasse = ({ navigation }) => {
         <ScrollView>
           <View style={styles().Mainbox}>
             <Image
-              source={require("../../../assets/logo2.gif")}
+              source={require("../../../../assets/logo2.gif")}
               style={{ height: 200, width: 200 }}
-            ></Image>
-
-            <Text style={styles().h1}>Mot de Passe Oublié ?</Text>
-            <Text
-              style={(styles().loginText, { marginTop: 10, marginBottom: 20 })}
-            >
-              Nous allons vous envoyez un E-mail sur l'adresse que vous
-              remplissez si nous trouvons un compte lié à cette adresse
-            </Text>
-            <Text style={styles().titleTextField}>
-              Email<Text style={styles().colorStar}>*</Text>
-            </Text>
-            <MyTextInput
-              placeholder="Email"
-              keyboardType={"email-address"}
-              onChangeText={(email) => setEmail(email)}
             />
 
-            <RootSiblingParent>
-              <View style={{ marginBottom: 10 }}></View>
-              <Buttons
-                texte={"Changer son mot de passe"}
-                onPress={async () => {
-                  if (email !== "") {
-                    const response = await makeRLoginRequest(email);
-                    navigation.navigate("Login2");
-                  } else {
-                    Toast.show("Veuillez remplir l'Email", {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.BOTTOM,
-                      backgroundColor: "red",
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                    });
-                  }
-                }}
-              />
-            </RootSiblingParent>
-            <Text
-              style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
-            >
-              ou continuer avec
+            <Text style={styles().h1}>
+              Veuillez entrer le code reçu sur l'addresse mail indiqué
             </Text>
-            <View style={{ flexDirection: "row" }}>
+            <OTPInput />
+            <View style={{ marginTop: 20 }} />
+            <Buttons texte="Confirmer" onPress={() => {
+              navigation.replace('RegisterStep3')
+            }}/>
+            {/* <Text style={styles().titleTextField}>
+              {JSON.parse(global.RegisterData).username}
+            </Text> */}
+
+            <View
+              style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
+            ></View>
+            {/* <View style={{ flexDirection: "row", marginBottom: 32 }}>
               <RootSiblingParent>
                 <Buttons
                   hasIcon={true}
@@ -131,12 +97,12 @@ const MotDePasse = ({ navigation }) => {
                   texte="Google"
                 />
               </RootSiblingParent>
-            </View>
-            <View style={{ marginTop: 15 }} />
+            </View> */}
+
             <Text style={styles().loginText}>
-              Pas encore de compte ?{" "}
-              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-                <Text style={styles().colorStar}>S'inscire</Text>
+              J'ai déjà un compte{" "}
+              <TouchableOpacity onPress={() => navigation.replace("Login2")}>
+                <Text style={styles().colorStar}>Se connecter</Text>
               </TouchableOpacity>
             </Text>
           </View>
@@ -163,7 +129,7 @@ const styles = (textColor) => {
       // backgroundColor: "white",
     },
     h1: {
-      fontSize: screenHeight < 768 ? 20 : 24,
+      fontSize: screenHeight < 768 ? 15 : 19,
       fontFamily: "SourceSansPro_600SemiBold",
       textAlign: "center",
       //   marginHorizontal: screenWidth / 30,
@@ -199,7 +165,25 @@ const styles = (textColor) => {
       fontSize: 16,
       color: "white",
     },
+    oauthButton: {
+      borderRadius: 25,
+      borderWidth: 1,
+      borderColor: "#F4F6F9",
+      height: 50,
+      width: screenWidth < 350 ? 145 : 160,
+      alignItems: "center",
+      justifyContent: "center",
+      marginHorizontal: 10,
+      flexDirection: "row",
+      shadowColor: "black",
+      shadowOffset: {
+        width: 2,
+        height: 1,
+      },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+    },
   });
 };
 
-export default MotDePasse;
+export default RegisterStep2;
