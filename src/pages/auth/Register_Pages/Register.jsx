@@ -26,6 +26,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 global.RegisterData = [];
 
+function generateSixDigitNumber() {
+  let num = Math.floor(Math.random() * 900000);
+  return num.toString().padStart(6, "0");
+}
+
+global.SecretCode = generateSixDigitNumber();
+
 const Register = ({ navigation }) => {
   const authService = new AuthService();
   const [fontsLoaded] = useFonts({

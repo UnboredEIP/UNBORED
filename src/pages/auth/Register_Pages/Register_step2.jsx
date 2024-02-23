@@ -29,14 +29,6 @@ const RegisterStep2 = ({ navigation }) => {
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [gender, setGender] = useState("M");
-  const [number, setNumber] = useState("");
-  const [description, setDescription] = useState("");
-  const [birthdate, setBirthdate] = useState("");
 
   if (!fontsLoaded) {
     return (
@@ -64,9 +56,19 @@ const RegisterStep2 = ({ navigation }) => {
             </Text>
             <OTPInput />
             <View style={{ marginTop: 20 }} />
-            <Buttons texte="Confirmer" onPress={() => {
-              navigation.replace('RegisterStep3')
-            }}/>
+            <Buttons
+              texte="Confirmer"
+              onPress={() => {
+                console.log(`SECRET CODE:-${global.SecretCode}-`);
+                console.log(`OTP VALUE:-${global.OTPValue}-`);
+                console.log(
+                  "IS IS EQUAL ? ",
+                  global.SecretCode === global.OTPValue
+                );
+                if (global.SecretCode === global.OTPValue)
+                  navigation.replace("RegisterStep3");
+              }}
+            />
             {/* <Text style={styles().titleTextField}>
               {JSON.parse(global.RegisterData).username}
             </Text> */}
