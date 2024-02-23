@@ -19,12 +19,15 @@ import styles from "./src/styles/styles2";
 import Description from "./src/pages/profile/description";
 import Calendar from "./src/pages/Calendar";
 import MotDePasse from "./src/pages/profile/mdp";
+import Avatar from "./src/pages/avatar";
+import avatareyes from "./src/pages/avatareyes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PreferencesUpdate from "./src/pages/settings/Preferences";
 import Register from "./src/pages/auth/Register_Pages/Register";
 import RegisterStep2 from "./src/pages/auth/Register_Pages/Register_step2";
 import RegisterStep3 from "./src/pages/auth/Register_Pages/Register_step3";
 
+import { ImagePickerIOS } from "react-native";
 class OTP2 extends React.Component {
   render() {
     return (
@@ -113,6 +116,18 @@ const AppNavigator = createStackNavigator(
         ...TransitionPresets.FadeFromBottomAndroid,
       },
     },
+    Avatar: {
+      screen: Avatar,
+      navigationOptions: {
+        ...TransitionPresets.FadeFromBottomAndroid,
+      }
+    },
+    avatareyes: {
+      screen: avatareyes,
+      navigationOptions: {
+        ...TransitionPresets.FadeFromBottomAndroid,
+      }
+    },
     Login2: {
       screen: Login2,
       navigationOptions: {
@@ -193,8 +208,6 @@ const AppContainer = createAppContainer(AppNavigator);
 
 export default class App extends React.Component {
   render() {
-    console.disableYellowBox = true;
-    console.error = (error) => error;
     const prefix = "authToken";
     checkKeys(prefix).then((hasKey) => {
       if (hasKey) {
