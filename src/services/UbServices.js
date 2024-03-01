@@ -5,7 +5,7 @@ export class UbService {
   getEvents = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/lists`, {
+      const response = await fetch(`${API_URL}/events/lists`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

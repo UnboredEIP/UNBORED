@@ -23,20 +23,14 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import OTPInput from "../../../components/OTP_intputs";
 import { UbService } from "../../../services/UbServices";
+import { AuthService } from "../../../services/AuthService";
 
 const RegisterStep2 = ({ navigation }) => {
   const ubservice = new UbService();
+  const authService = new AuthService();
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [password2, setPassword2] = useState("");
-  const [gender, setGender] = useState("M");
-  const [number, setNumber] = useState("");
-  const [description, setDescription] = useState("");
-  const [birthdate, setBirthdate] = useState("");
 
   if (!fontsLoaded) {
     return (
@@ -64,12 +58,30 @@ const RegisterStep2 = ({ navigation }) => {
             </Text>
             <OTPInput />
             <View style={{ marginTop: 20 }} />
-            <Buttons texte="Confirmer" onPress={() => {
-              navigation.replace('RegisterStep3')
-            }}/>
-            {/* <Text style={styles().titleTextField}>
-              {JSON.parse(global.RegisterData).username}
-            </Text> */}
+            <Buttons
+              texte="Confirmer"
+              onPress={async () => {
+                console.log(
+                  "Value EMAIL",
+                  JSON.parse(global.RegisterData).email
+                );
+                console.log("Value OTP", global.OTPValue);
+                const response = await authService.checkOTP(
+                  JSON.parse(global.RegisterData).email,
+                  global.OTPValue
+                );
+                if (response) navigation.replace("RegisterStep3");
+                else
+                  Toast.show(`OTP Invalide`, {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+              }}
+            />
 
             <View
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}

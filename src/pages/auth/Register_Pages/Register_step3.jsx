@@ -24,7 +24,7 @@ import Buttons from "../../../components/Buttons";
 import { AuthService } from "../../../services/AuthService";
 
 const RegisterStep3 = ({ navigation }) => {
-  const ubservice = new AuthService();
+  const authService = new AuthService();
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
@@ -147,13 +147,13 @@ const RegisterStep3 = ({ navigation }) => {
                     password !== "" &&
                     gender !== ""
                   ) {
-                    const response = await ubservice.getRegister(
+                    const response = await authService.getRegister(
                       JSON.parse(global.RegisterData).username,
                       JSON.parse(global.RegisterData).email,
                       password,
                       gender,
                       JSON.parse(global.RegisterData).birthdate,
-                      []
+                      global.OTPValue
                     );
                     if (response === true) {
                       console.log("success");

@@ -22,9 +22,18 @@ const screenHeight = Dimensions.get("screen").height;
 import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import { AuthService } from "../../../services/AuthService";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import {
+//   GoogleSignin,
+//   GoogleSigninButton,
+// } from "@react-native-google-signin/google-signin";
 
 global.RegisterData = [];
+function generateSixDigitNumber() {
+  let num = Math.floor(Math.random() * 900000);
+  return num.toString().padStart(6, "0");
+}
+
+global.SecretCode = generateSixDigitNumber();
 
 const Register = ({ navigation }) => {
   const authService = new AuthService();
@@ -78,39 +87,6 @@ const Register = ({ navigation }) => {
               onChangeText={(username) => setUsername(username)}
             />
 
-            {/* <Text style={styles().titleTextField}>
-              Mot de passe<Text style={styles().colorStar}>*</Text>
-            </Text>
-            <MyTextInput
-              placeholder="Mot de passe"
-              secureTextEntry={true}
-              onChangeText={(password) => setPassword(password)}
-            />
-
-            <Text style={styles().titleTextField}>
-              Confirmer votre mot de passe
-              <Text style={styles().colorStar}>*</Text>
-            </Text>
-            <MyTextInput
-              placeholder="Mot de passe"
-              secureTextEntry={true}
-              onChangeText={(password2) => setPassword2(password2)}
-              handleOnBlur={() => {
-                if (password2 !== password) {
-                  Toast.show("Mot de passe non similaire !", {
-                    duration: Toast.durations.LONG,
-                    position: Toast.positions.BOTTOM,
-                    backgroundColor: "red",
-                    shadow: true,
-                    animation: true,
-                    hideOnPress: true,
-                  });
-                  setPassword("");
-                  setPassword2("");
-                } else console.log("MATCH !");
-              }}
-            /> */}
-
             <Text style={styles().titleTextField}>Date de naissance</Text>
             <MyTextInput
               placeholder="Date de naissance"
@@ -125,8 +101,13 @@ const Register = ({ navigation }) => {
                 texte={"S'inscrire"}
                 backgroundColor="#E1604D"
                 onPress={async () => {
-                  if (email !== "") {
-                    if (email) {
+                  if (email && username && birthdate) {
+                    const response = await authService.checkUsernameEmail(
+                      username,
+                      email
+                    );
+                    console.log("STATUS:", response);
+                    if (response) {
                       global.RegisterData = JSON.stringify({
                         email: email,
                         username: username,
@@ -134,6 +115,7 @@ const Register = ({ navigation }) => {
                         gender: gender,
                       });
                       // console.log(global.RegisterData);
+
                       navigation.replace("RegisterStep2");
                     } else {
                       Toast.show(
