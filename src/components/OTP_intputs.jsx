@@ -70,7 +70,7 @@ const styles = () => {
       height: 55,
       color: "black",
       backgroundColor: "white",
-      borderRadius: "10",
+      borderRadius: 10,
       borderWidth: "3",
       borderColor: "#E1604D",
     },

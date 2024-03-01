@@ -23,9 +23,11 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import OTPInput from "../../../components/OTP_intputs";
 import { UbService } from "../../../services/UbServices";
+import { AuthService } from "../../../services/AuthService";
 
 const RegisterStep2 = ({ navigation }) => {
   const ubservice = new UbService();
+  const authService = new AuthService();
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
@@ -58,20 +60,28 @@ const RegisterStep2 = ({ navigation }) => {
             <View style={{ marginTop: 20 }} />
             <Buttons
               texte="Confirmer"
-              onPress={() => {
-                console.log(`SECRET CODE:-${global.SecretCode}-`);
-                console.log(`OTP VALUE:-${global.OTPValue}-`);
+              onPress={async () => {
                 console.log(
-                  "IS IS EQUAL ? ",
-                  global.SecretCode === global.OTPValue
+                  "Value EMAIL",
+                  JSON.parse(global.RegisterData).email
                 );
-                if (global.SecretCode === global.OTPValue)
-                  navigation.replace("RegisterStep3");
+                console.log("Value OTP", global.OTPValue);
+                const response = await authService.checkOTP(
+                  JSON.parse(global.RegisterData).email,
+                  global.OTPValue
+                );
+                if (response) navigation.replace("RegisterStep3");
+                else
+                  Toast.show(`OTP Invalide`, {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
               }}
             />
-            {/* <Text style={styles().titleTextField}>
-              {JSON.parse(global.RegisterData).username}
-            </Text> */}
 
             <View
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
