@@ -136,14 +136,14 @@ const Accueil3 = ({ navigation }) => {
                   }}
                 ></View>
                 <View style={{ flexDirection: "row" }}>
-                  <Buttons
+                  {/* <Buttons
                     texte="deco"
                     width="30%"
                     onPress={async () => {
                       await AsyncStorage.removeItem("authToken");
                       navigation.replace("Login2");
                     }}
-                  />
+                  /> */}
                   <TouchableOpacity
                     style={{
                       width: 44,
