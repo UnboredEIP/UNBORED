@@ -71,7 +71,7 @@ const styles = () => {
       color: "black",
       backgroundColor: "white",
       borderRadius: 10,
-      borderWidth: "3",
+      borderWidth: 3,
       borderColor: "#E1604D",
     },
   });

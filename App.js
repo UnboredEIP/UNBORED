@@ -84,7 +84,8 @@ class InitialScreen extends React.Component {
 const AppNavigator = createStackNavigator(
   {
     Initial: {
-      screen: InitialScreen,
+      // screen: InitialScreen,
+      screen: Login2,
     },
     Home: {
       screen: Register,
@@ -120,13 +121,13 @@ const AppNavigator = createStackNavigator(
       screen: Avatar,
       navigationOptions: {
         ...TransitionPresets.FadeFromBottomAndroid,
-      }
+      },
     },
     avatareyes: {
       screen: avatareyes,
       navigationOptions: {
         ...TransitionPresets.FadeFromBottomAndroid,
-      }
+      },
     },
     Login2: {
       screen: Login2,

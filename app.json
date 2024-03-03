@@ -1,6 +1,7 @@
 {
   "expo": {
     "name": "UnBored",
+    "scheme": "unboredapp",
     "plugins": [
       [
         "expo-image-picker",
@@ -10,14 +11,13 @@
           "//": "Disables the microphone permission",
           "microphonePermission": false
         }
-      ]
-      ,
+      ],
       [
-      "@react-native-google-signin/google-signin",
-      {
-        "iosUrlScheme": "com.unboredeip.UnBored"
-      }
-    ]
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.unboredeip.unboredapp"
+        }
+      ]
     ],
     "slug": "unbored2",
     "version": "1.0.0",
@@ -34,22 +34,22 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.unboredeip.UnBored"
+      "bundleIdentifier": "com.unboredeip.unboredapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.unboredeip.UnBored"
+      "package": "com.unboredeip.unboredapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
+        "projectId": "2e4041b2-993d-4456-8957-0ecbc313625e"
       }
-    },
-    "owner": "remisaleh"
+    }
   }
 }

@@ -4,7 +4,6 @@ import Swiper from "react-native-swiper";
 import Navbar from "../components/NavigationBar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-
 const Avatar = ({ navigation }) => {
   const [selectedOutfit, setSelectedOutfit] = useState(null); // Pour stocker la tenue sélectionnée
   const [selectedFace, setSelectedFace] = useState(null); // Pour stocker le visage sélectionné
@@ -27,26 +26,28 @@ const Avatar = ({ navigation }) => {
       const authToken = await AsyncStorage.getItem("authToken");
 
       // Step 2: Save selected face in the database
-      const avatarDataResponse = await fetch("http://20.216.143.86/profile/avatar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          style: {
-            head: selectedFace === null ? "0" : selectedFace.toString(),
-            shoes: "0", // Set the appropriate value for shoes
-            pants: "0", // Set the appropriate value for pants
-            body: "0", // Set the appropriate value for body
+      const avatarDataResponse = await fetch(
+        "http://20.216.143.86/profile/avatar",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
           },
-        }),
-      });
+          body: JSON.stringify({
+            style: {
+              head: selectedFace === null ? "0" : selectedFace.toString(),
+              shoes: "0", // Set the appropriate value for shoes
+              pants: "0", // Set the appropriate value for pants
+              body: "0", // Set the appropriate value for body
+            },
+          }),
+        }
+      );
 
       // Handle the response if needed
       const avatarDataResult = await avatarDataResponse.json();
       console.log("Avatar data saved:", avatarDataResult);
-
     } catch (error) {
       console.error("Error saving avatar data:", error);
     }
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
   },
   swiper: {
-    marginTop:20,
+    marginTop: 20,
     height: 150,
   },
   slide: {
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: "#3498db",
     borderRadius: 5,
-    marginBottom:29,
+    marginBottom: 29,
   },
   buttonText: {
     color: "#fff",
