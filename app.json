@@ -12,12 +12,7 @@
           "microphonePermission": false
         }
       ],
-      [
-        "@react-native-google-signin/google-signin",
-        {
-          "iosUrlScheme": "com.unboredeip.unboredapp"
-        }
-      ]
+        "@react-native-google-signin/google-signin"
     ],
     "slug": "unbored2",
     "version": "1.0.0",

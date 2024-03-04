@@ -26,11 +26,9 @@ import Accueil3 from "../Accueil";
 import ChoosePreferences from "../../ChoosePreferences";
 import { UbService } from "../../services/UbServices";
 import { AuthService } from "../../services/AuthService";
-import * as webBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
-import { CLIENT_ID_ANDROID, CLIENT_ID_IOS } from "@env";
+import { CLIENT_ID_ANDROID, CLIENT_ID_IOS, CLIENT_ID_WEB } from "@env";
 
-webBrowser.maybeCompleteAuthSession();
+// import Auth from "../../components/Auth";
 
 async function navigateTo() {
   try {
@@ -65,42 +63,6 @@ const Login2 = ({ navigation }) => {
   });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userInfo, setUserInfo] = useState(null);
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    // androidClientId: CLIENT_ID_ANDROID,
-    iosClientId:
-      "216056008491-vc6uu7ror2iecpgdno39lfreor8hs7ov.apps.googleusercontent.com",
-  });
-
-  const handleLoginGoogle = async () => {
-    try {
-      const user = await AsyncStorage.getItem("@user");
-
-      if (!user) {
-        if (response?.type === "success") {
-          await getUserInfo(response.authentication.accessToken);
-        }
-      } else setUserInfo(JSON.parse(user));
-    } catch (error) {}
-  };
-
-  const getUserInfo = async (token) => {
-    try {
-      const response = fetch("https://www.googleapis.com/userinfo/v2/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const user = await response.json();
-      await AsyncStorage.setItem("@user", JSON.stringify(user));
-      setUserInfo(user);
-    } catch (error) {}
-  };
-
-  useEffect(() => {
-    handleLoginGoogle();
-  }, [response]);
 
   if (!fontsLoaded) {
     return (
@@ -118,7 +80,7 @@ const Login2 = ({ navigation }) => {
       >
         <ScrollView>
           <View style={styles().Mainbox}>
-            <Button title="Googleeee" onPress={promptAsync}></Button>
+            {/* <Auth /> */}
             <Image
               source={require("../../../assets/logo2.gif")}
               style={{ height: 200, width: 200 }}
@@ -229,7 +191,7 @@ const Login2 = ({ navigation }) => {
                   textColor="black"
                   width={screenWidth < 350 ? 145 : 160}
                   backgroundColor="white"
-                  onPress={promptAsync}
+                  onPress={() => {}}
                   texte="Google"
                 />
               </RootSiblingParent>

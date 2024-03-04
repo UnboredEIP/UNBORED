@@ -136,14 +136,14 @@ const Accueil3 = ({ navigation }) => {
                   }}
                 ></View>
                 <View style={{ flexDirection: "row" }}>
-                  <Buttons
+                  {/* <Buttons
                     texte="deco"
                     width="30%"
                     onPress={async () => {
                       await AsyncStorage.removeItem("authToken");
                       navigation.replace("Login2");
                     }}
-                  />
+                  /> */}
                   <TouchableOpacity
                     style={{
                       width: 44,
@@ -497,6 +497,8 @@ const Accueil3 = ({ navigation }) => {
                     pictures={images[index]}
                     categories={event.categories}
                     date={event.date}
+                    participents={event.participents.length}
+                    heure={event.hours + ":" + event.minutes}
                   />
                 ))
               ) : (
@@ -508,7 +510,7 @@ const Accueil3 = ({ navigation }) => {
                   borderWidth: 1,
                   borderColor: "#EBEEF2",
                   marginRight: 10,
-                  height: 267,
+                  height: 290,
                   width: 220,
                   borderRadius: 20,
                   overflow: "hidden",
@@ -698,7 +700,7 @@ const Accueil3 = ({ navigation }) => {
                     borderWidth: 1,
                     borderColor: "#EBEEF2",
                     marginRight: 10,
-                    height: 267,
+                    height: 290,
                     width: 220,
                     borderRadius: 20,
                     overflow: "hidden",
@@ -887,7 +889,7 @@ const Accueil3 = ({ navigation }) => {
                     borderWidth: 1,
                     borderColor: "#EBEEF2",
                     marginRight: 10,
-                    height: 267,
+                    height: 290,
                     width: 220,
                     borderRadius: 20,
                     overflow: "hidden",
@@ -1105,7 +1107,7 @@ const Accueil3 = ({ navigation }) => {
                     borderWidth: 1,
                     borderColor: "#EBEEF2",
                     marginRight: 10,
-                    height: 267,
+                    height: 290,
                     width: 220,
                     borderRadius: 20,
                     overflow: "hidden",
@@ -1295,7 +1297,7 @@ const Accueil3 = ({ navigation }) => {
                     borderWidth: 1,
                     borderColor: "#EBEEF2",
                     marginRight: 10,
-                    height: 267,
+                    height: 290,
                     width: 220,
                     borderRadius: 20,
                     overflow: "hidden",
@@ -1485,7 +1487,7 @@ const Accueil3 = ({ navigation }) => {
                     borderWidth: 1,
                     borderColor: "#EBEEF2",
                     marginRight: 10,
-                    height: 267,
+                    height: 290,
                     width: 220,
                     borderRadius: 20,
                     overflow: "hidden",
@@ -1726,7 +1728,7 @@ const Accueil3 = ({ navigation }) => {
                       borderWidth: 1,
                       borderColor: "#EBEEF2",
                       marginRight: 10,
-                      height: 267,
+                      height: 290,
                       width: 220,
                       borderRadius: 20,
                       overflow: "hidden",
@@ -1915,7 +1917,7 @@ const Accueil3 = ({ navigation }) => {
                       borderWidth: 1,
                       borderColor: "#EBEEF2",
                       marginRight: 10,
-                      height: 267,
+                      height: 290,
                       width: 220,
                       borderRadius: 20,
                       overflow: "hidden",
@@ -2104,7 +2106,7 @@ const Accueil3 = ({ navigation }) => {
                       borderWidth: 1,
                       borderColor: "#EBEEF2",
                       marginRight: 10,
-                      height: 267,
+                      height: 290,
                       width: 220,
                       borderRadius: 20,
                       overflow: "hidden",

@@ -18,9 +18,12 @@ const screenHeight = Dimensions.get("screen").height;
 const ubService = new UbService();
 
 function formatDate(dateString) {
-  const [year, month, day] = dateString.split("-");
-  const formattedDate = `${day}/${month}/${year.slice(-2)}`;
-  return formattedDate;
+  const dateObj = new Date(dateString);
+
+  // Extraction de la date au format 'YYYY-MM-DD'
+  const dateExtraite = dateObj.toISOString().split("T")[0];
+
+  return dateExtraite;
 }
 
 const fetchImage = async () => {
@@ -38,6 +41,8 @@ const EventCard = ({
   pictures,
   categories = ["Football", "Sport"],
   date = "2024-01-28",
+  participents,
+  heure = "00:00",
 }) => {
   return (
     <View
@@ -45,7 +50,7 @@ const EventCard = ({
         borderWidth: 1,
         borderColor: "#EBEEF2",
         marginRight: 10,
-        height: 267,
+        height: 290,
         width: 220,
         borderRadius: 20,
         overflow: "hidden",
@@ -76,7 +81,7 @@ const EventCard = ({
             textAlign: "center",
             color: "#E1604D",
             fontWeight: 600,
-            fontSize: 12,
+            fontSize: 8,
           }}
         >
           {formatDate(date)}
@@ -85,15 +90,26 @@ const EventCard = ({
       <View style={{ marginLeft: 18, width: 83 + "%", top: 20 }}>
         <Text
           style={{
-            textAlign: "left",
-            color: "black",
+            textAlign: "center",
+            color: "#E1604D",
             fontWeight: 600,
-            fontSize: 15,
+            fontSize: 20,
           }}
         >
           {name}
         </Text>
-        <View style={{ marginTop: 15, flexDirection: "row" }}>
+        <Text
+          style={{
+            textAlign: "left",
+            color: "black",
+            fontWeight: 500,
+            fontSize: 10,
+            marginTop: 5,
+          }}
+        >
+          Heure début: {heure}
+        </Text>
+        <View style={{ marginTop: 10, flexDirection: "row" }}>
           <View
             style={{
               width: 66,
@@ -193,7 +209,7 @@ const EventCard = ({
               left: -12,
             }}
           >
-            15 personnes y vont
+            {participents} personne(s)
             {/* {data[0]["1"]["going"] + "K+ y vont"} */}
           </Text>
         </View>
