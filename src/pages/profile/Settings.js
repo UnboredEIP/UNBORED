@@ -234,14 +234,22 @@ const Settings = ({ navigation }) => {
             </View>
           )}
           <View style={styles.horizontalLine} />
-          <Text style={styles.username}>Username</Text>
+          <Text style={styles.username}>Nom d'utilisateur</Text>
           <TextInput
             style={styles.input}
             placeholder="username"
             value={username}
             onChangeText={setUsername}
           />
-          <Text style={styles.username}>Birthdate</Text>
+          <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.loginBtn2} onPress={navigatetotamere}>
+            <Text style={styles.loginBtnText2}>Change tes préférences !</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.loginBtn2} onPress={navigatetodescr}>
+            <Text style={styles.loginBtnText2}>Change ta description !</Text>
+          </TouchableOpacity>
+          </View>
+          {/* <Text style={styles.username}>Birthdate</Text> */}
           <MyTextInput
             dateSelect={new Date(birthdate)}
             placeholder="Date de naissance"
@@ -249,14 +257,6 @@ const Settings = ({ navigation }) => {
             onDateChange={(birthdate) => setBirthdate(birthdate)}
             onChangeText={(birthdate) => setBirthdate(birthdate)}
           />
-          <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginBtn2} onPress={navigatetotamere}>
-            <Text style={styles.loginBtnText}>Change your preferences !</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.loginBtn2} onPress={navigatetodescr}>
-            <Text style={styles.loginBtnText}>Change your description !</Text>
-          </TouchableOpacity>
-          </View>
           <TouchableOpacity style={styles.loginBtn3} onPress={navigatetoavatar}>
             <Text style={styles.loginBtnText2}>Créer ton avatar !</Text>
           </TouchableOpacity>
@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 20,
-    backgroundColor: "#E1604D",
+    backgroundColor: "#FFF",
     borderColor: "#b3b3b3",
     borderWidth: 1,
   },
@@ -341,7 +341,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   loginBtnText: {
-    color: "white",
+    color: "#FFF",
   },
   loginBtnText2: {
     color: "#E1604D",

@@ -81,11 +81,11 @@ const MyTextInput = ({
   return (
     <SafeAreaView>
       {isDatepicker == false ? null : (
-        <View style={{ marginTop: 10, alignSelf: "center" }}>
+        <View style={{ marginTop: 10, alignSelf: "center", }}>
           <Button
             title="Show Date Picker"
             // width="100%"
-            texte={show === false ? "Sélectionner birthdate" : "Close Picker"}
+            texte={show === false ? "Sélectionner l'anniversaire !" : "Fermer"}
             width={screenWidth / 2}
             onPress={() => {
               if (show === true) setShow(false);

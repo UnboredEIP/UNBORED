@@ -20,6 +20,7 @@ import Description from "./src/pages/profile/description";
 import Calendar from "./src/pages/Calendar";
 import MotDePasse from "./src/pages/profile/mdp";
 import Avatar from "./src/pages/avatar";
+import NewEvent from "./src/pages/NewEvent";
 import avatareyes from "./src/pages/avatareyes";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import PreferencesUpdate from "./src/pages/settings/Preferences";
@@ -160,6 +161,12 @@ const AppNavigator = createStackNavigator(
     },
     Accueil3: {
       screen: Accueil3,
+      navigationOptions: {
+        ...TransitionPresets.SlideFromRightIOS,
+      },
+    },
+    NewEvent: {
+      screen: NewEvent,
       navigationOptions: {
         ...TransitionPresets.SlideFromRightIOS,
       },

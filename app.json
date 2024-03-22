@@ -10,7 +10,18 @@
           "//": "Disables the microphone permission",
           "microphonePermission": false
         }
-      ]
+      ],
+      [
+      "expo-build-properties",
+    {
+      "android": {
+        "usesCleartextTraffic": true
+      }
+    }
+  ],
+  [
+    "expo-notifications"
+  ]
     ],
     "slug": "unbored2",
     "version": "1.0.0",
@@ -30,6 +41,7 @@
       "bundleIdentifier": "com.remisaleh.AwesomeProject"
     },
     "android": {
+      "useNextNetworkingApis": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -41,6 +53,7 @@
     },
     "extra": {
       "eas": {
+        "projectId": "df2f28a1-374e-4e2c-852e-855f117615d9"
       }
     },
     "owner": "remisaleh"

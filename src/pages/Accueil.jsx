@@ -59,7 +59,7 @@ const Accueil3 = ({ navigation }) => {
       try {
         const authToken = await AsyncStorage.getItem("authToken");
 
-        const response = await fetch(`${API_URL}/profile/`, {
+        const response = await fetch("http://20.216.143.86/profile/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -136,14 +136,14 @@ const Accueil3 = ({ navigation }) => {
                 }}
               ></View>
               <View style={{ flexDirection: "row" }}>
-                <Buttons
+                {/* <Buttons
                   texte="deco"
                   width="30%"
                   onPress={async () => {
                     await AsyncStorage.removeItem("authToken");
                     navigation.replace("Login2");
                   }}
-                />
+                /> */}
                 <TouchableOpacity
                   style={{
                     width: 44,

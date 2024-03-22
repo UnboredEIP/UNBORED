@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import Navbar from '../components/NavigationBar';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -11,7 +11,14 @@ const Calendar = ({ navigation }) => {
   const [image, setImage] = useState(defaultImageUri);
   const [dayDetails, setDayDetails] = useState([]);
   const [viewMode, setViewMode] = useState('week'); // Ajout du mode d'affichage
+  const [loading, setLoading] = useState(true);
 
+  const navigatetotamere = async () => {
+    navigation.navigate("NewEvent");
+  }
+  const navigatetodescr = async () => {
+    navigation.navigate("Description");
+  }
   useEffect(() => {
     const getDaysOfWeek = () => {
       const today = new Date();
@@ -57,8 +64,10 @@ const Calendar = ({ navigation }) => {
         const profileData = await response.json();
         setUsername(profileData.user.username.trim());
         setImage(`http://20.216.143.86/getimage?imageName=${profileData.user.profilPhoto}`);
+        setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
         console.error("Error fetching profile info:", error);
+        setLoading(false); // Set loading to false in case of error
       }
     };
 
@@ -119,21 +128,27 @@ const Calendar = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.profileContainer}>
-        <View style={styles.usernameContainer}>
-          <Text style={styles.usernameLabel}>Bonjour </Text>
-          <Text style={styles.username}>{username}</Text>
-          <Text style={styles.usernameLabel}> !</Text>
-        </View>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: image }}
-            style={{
-              width: 100,
-              height: 120,
-              borderRadius: 10,
-            }}
-          />
-        </View>
+        {loading ? (
+          <ActivityIndicator size="small" color="#E1604D" />
+        ) : (
+          <>
+            <View style={styles.usernameContainer}>
+              <Text style={styles.usernameLabel}>Bonjour </Text>
+              <Text style={styles.username}>{username}</Text>
+              <Text style={styles.usernameLabel}> !</Text>
+            </View>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: image }}
+                style={{
+                  width: 100,
+                  height: 120,
+                  borderRadius: 10,
+                }}
+              />
+            </View>
+          </>
+        )}
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -187,9 +202,18 @@ const Calendar = ({ navigation }) => {
           <Text style={styles.detailsText}>Sélectionnez un jour pour voir les détails</Text>
         )}
       </View>
-
-      <Navbar navigation={navigation} />
-    </View>
+      <View style={styles.buttonContainer2}>
+      <TouchableOpacity style={styles.loginBtn2} onPress={navigatetotamere}>
+            <Text style={styles.loginBtnText2}>Ajouter des activités !</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.loginBtn2} onPress={navigatetodescr}>
+            <Text style={styles.loginBtnText2}>Remplir Automatiquement !</Text>
+          </TouchableOpacity>
+          </View>
+      <View style={styles.bottomNavbarContainer}>
+        <Navbar navigation={navigation} />
+      </View>    
+      </View>
   );
 };
 
@@ -198,6 +222,31 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 50,
     padding: 16,
+  },
+  loginBtnText2: {
+    color: "#FFF",
+    textAlign: "center",
+  },
+  loginBtn2: {
+    marginTop: 20,
+    marginLeft:5,
+    marginRight:5,
+    width: "50%",
+    borderRadius: 25,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "justify",
+    marginBottom: 20,
+    backgroundColor: "#E1604D",
+    borderColor: "#b3b3b3",
+    borderWidth: 1,
+  },
+  bottomNavbarContainer: {
+    position: 'center',
+    top: 17,
+    right: 10,
+    width: '105%',
   },
   daysOfWeekContainer: {
     marginTop: 16,
@@ -317,6 +366,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginBottom: 10,
     marginTop: -50,
+  },
+  buttonContainer2: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   buttonText: {
     color: 'black',

@@ -5,7 +5,7 @@ export class UbService {
   getEvents = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/lists`, {
+      const response = await fetch("http://20.216.143.86/events/lists", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export class UbService {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
       const response = await fetch(
-        `${API_URL}/getimage?imageName=${imageName}`,
+        "http://20.216.143.86/getimage?imageName=${imageName}",
         {
           method: "GET",
           headers: {
@@ -51,7 +51,7 @@ export class UbService {
 
   getRegister = async (username, email, password, gender, birthdate) => {
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
+      const response = await fetch("http://20.216.143.86/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ export class UbService {
   getLogin = async (email, password) => {
     try {
       // ${API_URL}
-      const response = await fetch(`${API_URL}/auth/login`, {
+      const response = await fetch("http://20.216.143.86/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
