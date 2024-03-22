@@ -186,7 +186,7 @@ const Login2 = ({ navigation }) => {
                 <Buttons
                   hasIcon={true}
                   iconPath={
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png"
+                    "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
                   }
                   textColor="black"
                   width={screenWidth < 350 ? 145 : 160}

@@ -42,9 +42,9 @@ const Profile = ({ navigation }) => {
 
       const profileData = await response.json();
       console.log("Profile Data:", profileData);
-      setUsername(profileData.user.username.trim());
+      setUsername(profileData.user.username);
       setPreferences(profileData.user.preferences);
-      setDescription(profileData.user.description.trim());
+      setDescription(profileData.user.description);
       setImage(
         `http://20.216.143.86/getimage?imageName=${profileData.user.profilPhoto}`
       );

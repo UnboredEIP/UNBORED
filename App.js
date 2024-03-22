@@ -84,8 +84,8 @@ class InitialScreen extends React.Component {
 const AppNavigator = createStackNavigator(
   {
     Initial: {
-      // screen: InitialScreen,
-      screen: Login2,
+      screen: InitialScreen,
+      // screen: Login2,
     },
     Home: {
       screen: Register,

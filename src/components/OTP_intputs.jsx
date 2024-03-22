@@ -48,7 +48,6 @@ const OTPInput = ({ isDisabled, length = 6 }) => {
           />
         ))}
       </View>
-      <Text>ACTUAL OTP {global.OTPValue}</Text>
     </View>
   );
 };

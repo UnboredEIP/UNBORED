@@ -26,15 +26,6 @@ function formatDate(dateString) {
   return dateExtraite;
 }
 
-const fetchImage = async () => {
-  try {
-    const tmpObj = await ubService.getImage("c86eeb74adeeeccdf43a54a00ddb0344");
-    return tmpObj;
-  } catch (error) {
-    console.error("Error get image:", error);
-  }
-};
-
 const EventCard = ({
   name = "Five Ivry",
   address = "Ivry-sur-seine",
@@ -62,7 +53,8 @@ const EventCard = ({
           width: 100 + "%",
           resizeMode: "cover",
         }}
-        source={pictures}
+        // source={pictures}
+        source={{ uri: pictures }}
       ></Image>
       <View
         style={{

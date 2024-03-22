@@ -51,7 +51,12 @@ const Accueil3 = ({ navigation }) => {
   const [username, setUsername] = useState("Citoyen");
   const [profileData, setProfileData] = useState(null);
   const [events, setEvents] = useState([]);
-  const [images, setImages] = useState([]);
+  const defaultImage = {
+    id: 1,
+    url: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
+    description: "Default Image",
+  };
+  const [images, setImages] = useState([defaultImage]);
   const ubService = new UbService();
 
   useEffect(() => {
@@ -76,13 +81,13 @@ const Accueil3 = ({ navigation }) => {
         // console.log(profileData);
         const tmpObj = await ubService.getEvents();
         setEvents(tmpObj);
-        console.log(tmpObj);
+        // console.log(tmpObj);
         const imagePromises = tmpObj.map(async (event) => {
           const img = await ubService.getImage(event.pictures[0].id);
           return img;
         });
-
         const imageResults = await Promise.all(imagePromises);
+        // console.log("ALL IMAGES:", JSON.stringify(imageResults));
         setImages(imageResults);
       } catch (error) {
         console.error("Error fetchdata:", error);
@@ -101,7 +106,11 @@ const Accueil3 = ({ navigation }) => {
   }, [profileData, events, images]);
   // console.log("ALL EVENTS:", events);
 
-  if (profileData === null || events.length < 0) {
+  if (
+    profileData === null ||
+    events.length < 0 ||
+    images.length !== events.length
+  ) {
     return <Text> Loading </Text>;
   } else
     return (
@@ -494,7 +503,7 @@ const Accueil3 = ({ navigation }) => {
                     key={index}
                     name={event.name}
                     address={event.address}
-                    pictures={images[index]}
+                    pictures={images[index].url}
                     categories={event.categories}
                     date={event.date}
                     participents={event.participents.length}
@@ -712,7 +721,7 @@ const Accueil3 = ({ navigation }) => {
                       width: 100 + "%",
                       resizeMode: "cover",
                     }}
-                    source={img2}
+                    source={images[0].url}
                   ></Image>
                   <View
                     style={{
