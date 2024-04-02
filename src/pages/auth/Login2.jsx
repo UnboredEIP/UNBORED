@@ -18,15 +18,15 @@ import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../components/TextField";
 import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
-const screenWidth = Dimensions.get("screen").width;
-const screenHeight = Dimensions.get("screen").height;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Buttons from "../../components/Buttons";
 import Accueil3 from "../Accueil";
 import ChoosePreferences from "../../ChoosePreferences";
 import { UbService } from "../../services/UbServices";
 import { AuthService } from "../../services/AuthService";
-import { CLIENT_ID_ANDROID, CLIENT_ID_IOS, CLIENT_ID_WEB } from "@env";
+import { CLIENT_ID_ANDROID, CLIENT_ID_IOS, CLIENT_ID_WEB, API_URL } from "@env";
+const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
 
 // import Auth from "../../components/Auth";
 
@@ -34,7 +34,7 @@ async function navigateTo() {
   try {
     const authToken = await AsyncStorage.getItem("authToken");
     if (authToken) {
-      const response = await fetch("http://20.216.143.86/profile", {
+      const response = await fetch(`${API_URL}/profile`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

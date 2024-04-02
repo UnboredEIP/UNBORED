@@ -19,8 +19,6 @@ const ubService = new UbService();
 
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
-
-  // Extraction de la date au format 'YYYY-MM-DD'
   const dateExtraite = dateObj.toISOString().split("T")[0];
 
   return dateExtraite;
@@ -34,23 +32,24 @@ const EventCard = ({
   date = "2024-01-28",
   participents,
   heure = "00:00",
+  size = 290,
 }) => {
   return (
     <View
       style={{
         borderWidth: 1,
         borderColor: "#EBEEF2",
-        marginRight: 10,
-        height: 290,
-        width: 220,
+        height: size,
+        width: size / 1.4,
         borderRadius: 20,
         overflow: "hidden",
+        marginHorizontal: 5,
       }}
     >
       <Image
         style={{
-          height: 50 + "%",
-          width: 100 + "%",
+          height: size / 6 + "%",
+          width: size / 2.2 + "%",
           resizeMode: "cover",
         }}
         // source={pictures}
@@ -59,12 +58,12 @@ const EventCard = ({
       <View
         style={{
           position: "absolute",
-          top: 16,
-          height: 29,
-          width: 56,
-          right: 10 + "%",
+          top: size * 0.055,
+          height: size * 0.1,
+          width: size * 0.2,
+          right: size * 0.035,
           backgroundColor: "white",
-          borderRadius: 8,
+          borderRadius: size * 0.027,
           justifyContent: "center",
         }}
       >
@@ -73,19 +72,25 @@ const EventCard = ({
             textAlign: "center",
             color: "#E1604D",
             fontWeight: 600,
-            fontSize: 8,
+            fontSize: size * 0.034,
           }}
         >
           {formatDate(date)}
         </Text>
       </View>
-      <View style={{ marginLeft: 18, width: 83 + "%", top: 20 }}>
+      <View
+        style={{
+          marginLeft: size * 0.062,
+          width: size * 0.6,
+          top: size * 0.029,
+        }}
+      >
         <Text
           style={{
             textAlign: "center",
             color: "#E1604D",
             fontWeight: 600,
-            fontSize: 20,
+            fontSize: size * 0.069,
           }}
         >
           {name}
@@ -95,17 +100,17 @@ const EventCard = ({
             textAlign: "left",
             color: "black",
             fontWeight: 500,
-            fontSize: 10,
-            marginTop: 5,
+            fontSize: size * 0.04,
+            marginTop: size * 0.017,
           }}
         >
           Heure début: {heure}
         </Text>
-        <View style={{ marginTop: 10, flexDirection: "row" }}>
+        <View style={{ marginTop: size * 0.054, flexDirection: "row" }}>
           <View
             style={{
-              width: 66,
-              height: 22,
+              width: size * 0.227,
+              height: size * 0.076,
               borderWidth: 1,
               borderColor: "#E1604D",
               borderRadius: 100,
@@ -115,7 +120,7 @@ const EventCard = ({
             <Text
               style={{
                 fontWeight: 600,
-                fontSize: 9,
+                fontSize: size * 0.031,
                 color: "#E1604D",
                 textAlign: "center",
               }}
@@ -123,13 +128,13 @@ const EventCard = ({
               {categories[0]}
             </Text>
           </View>
-          <View style={{ flexDirection: "row", marginLeft: 7 }}>
+          <View style={{ flexDirection: "row", marginLeft: size * 0.024 }}>
             <View
               style={{
                 backgroundColor: "grey",
                 zIndex: 2,
-                width: 24,
-                height: 24,
+                width: size * 0.069,
+                height: size * 0.069,
                 borderRadius: 100,
                 borderWidth: 1,
                 borderColor: "white",
@@ -138,7 +143,7 @@ const EventCard = ({
             >
               <Text
                 style={{
-                  fontSize: 10,
+                  fontSize: size * 0.034,
                   textAlign: "center",
                   color: "white",
                 }}
@@ -150,9 +155,9 @@ const EventCard = ({
               style={{
                 backgroundColor: "grey",
                 zIndex: 1,
-                width: 24,
-                left: -10,
-                height: 24,
+                width: size * 0.069,
+                left: -size * 0.035,
+                height: size * 0.069,
                 borderRadius: 100,
                 borderWidth: 1,
                 borderColor: "white",
@@ -161,7 +166,7 @@ const EventCard = ({
             >
               <Text
                 style={{
-                  fontSize: 10,
+                  fontSize: size * 0.034,
                   textAlign: "center",
                   color: "white",
                 }}
@@ -172,9 +177,9 @@ const EventCard = ({
             <View
               style={{
                 backgroundColor: "grey",
-                width: 24,
-                left: -20,
-                height: 24,
+                width: size * 0.069,
+                left: -size * 0.069,
+                height: size * 0.069,
                 borderRadius: 100,
                 borderWidth: 1,
                 borderColor: "white",
@@ -183,7 +188,7 @@ const EventCard = ({
             >
               <Text
                 style={{
-                  fontSize: 10,
+                  fontSize: size * 0.034,
                   textAlign: "center",
                   color: "white",
                 }}
@@ -195,10 +200,10 @@ const EventCard = ({
           <Text
             style={{
               textAlign: "center",
-              marginTop: 5,
+              marginTop: size * 0.017,
               fontWeight: 500,
-              fontSize: 8,
-              left: -12,
+              fontSize: size * 0.027,
+              left: -size * 0.041,
             }}
           >
             {participents} personne(s)
@@ -207,24 +212,39 @@ const EventCard = ({
         </View>
         <View
           style={{
-            marginTop: 20,
+            marginTop: size * 0.069,
             flexDirection: "row",
             justifyContent: "space-between",
           }}
         >
           <View style={{ flexDirection: "row" }}>
-            <Image style={{ width: 8, height: 11 }} source={loc}></Image>
+            <Image
+              style={{
+                width: size * 0.04,
+                height: size * 0.04,
+                marginTop: size * 0.015,
+              }}
+              source={loc}
+            ></Image>
             <Text
               style={{
-                marginLeft: 8,
-                fontSize: 10,
+                marginLeft: size * 0.041,
+                fontSize: size * 0.042,
+                fontWeight: "bold",
                 textAlign: "center",
               }}
             >
               {address}
             </Text>
           </View>
-          <Image style={{ width: 11, height: 15 }} source={vector}></Image>
+          <Image
+            style={{
+              width: size * 0.03,
+              height: size * 0.04,
+              marginTop: size * 0.015,
+            }}
+            source={vector}
+          ></Image>
         </View>
       </View>
     </View>
