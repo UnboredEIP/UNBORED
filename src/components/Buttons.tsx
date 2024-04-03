@@ -75,6 +75,7 @@ const Buttons = ({
               color: textColor,
               fontSize: 16,
               fontFamily: "SourceSansPro_600SemiBold",
+              textAlign: "center",
             })
           }
         >

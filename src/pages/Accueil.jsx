@@ -52,6 +52,8 @@ const Accueil3 = ({ navigation }) => {
   const [username, setUsername] = useState("Citoyen");
   const [profileData, setProfileData] = useState(null);
   const [events, setEvents] = useState([]);
+  const [preferences, setPreferences] = useState([]);
+
   const defaultImage = {
     id: 1,
     url: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
@@ -79,19 +81,33 @@ const Accueil3 = ({ navigation }) => {
 
         const responseData = await response.json();
         setProfileData(responseData);
-        // console.log(profileData);
-        const tmpObj = await ubService.getEvents();
-        setEvents(tmpObj);
-        // console.log(tmpObj);
-        const imagePromises = tmpObj.map(async (event) => {
-          const img = await ubService.getImage(event.pictures[0].id);
-          return img;
-        });
-        const imageResults = await Promise.all(imagePromises);
-        // console.log("ALL IMAGES:", JSON.stringify(imageResults));
-        setImages(imageResults);
+
+        if (responseData !== null) {
+          const preferences = responseData.user.preferences.map(function (
+            string
+          ) {
+            return string.toLowerCase();
+          });
+
+          setUsername(responseData.user.username);
+          setPreferences(preferences);
+          console.log("USER PREFERENCES:", preferences);
+
+          const tmpObj = await ubService.getEvents();
+          const filteredEvents = tmpObj.filter((event) =>
+            event.categories.some((category) => preferences.includes(category))
+          );
+          setEvents(filteredEvents);
+
+          const imagePromises = filteredEvents.map(async (event) => {
+            const img = await ubService.getImage(event.pictures[0].id);
+            return img;
+          });
+          const imageResults = await Promise.all(imagePromises);
+          setImages(imageResults);
+        }
       } catch (error) {
-        console.error("Error fetchdata:", error);
+        console.error("Error fetchData:", error);
         await AsyncStorage.removeItem("authToken");
         navigation.replace("Login2");
       }
@@ -100,11 +116,6 @@ const Accueil3 = ({ navigation }) => {
     fetchData();
   }, [navigation]);
 
-  useEffect(() => {
-    if (profileData !== null) {
-      setUsername(profileData.user.username);
-    }
-  }, [profileData, events, images]);
   // console.log("ALL EVENTS:", events);
 
   if (
@@ -201,6 +212,18 @@ const Accueil3 = ({ navigation }) => {
                   onPress={async () => {
                     await AsyncStorage.removeItem("authToken");
                     navigation.replace("Login2");
+                  }}
+                />
+                <View
+                  style={{
+                    marginHorizontal: 10,
+                  }}
+                />
+                <Buttons
+                  texte="màj preferences"
+                  width="30%"
+                  onPress={async () => {
+                    navigation.navigate("PreferencesUpdate");
                   }}
                 />
                 {/* <View>
@@ -304,18 +327,14 @@ const Accueil3 = ({ navigation }) => {
                 style={{
                   top: 38 + "%",
                   flexDirection: "row",
-                  justifyContent: "space-between",
+
+                  alignSelf: "center",
                   width: 85 + "%",
                 }}
               >
-                <Text style={{ fontWeight: "bold" }}>En tendance</Text>
-                <TouchableOpacity
-                  onPress={() => navigation.replace("PreferencesUpdate")}
-                >
-                  <Text style={{ fontWeight: "bold", color: "#E1604D" }}>
-                    Voir tout
-                  </Text>
-                </TouchableOpacity>
+                <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+                  Ces activités sont faites pour toi !
+                </Text>
               </View>
               {/* <View style={{position:'relative', height:1000}}></View> */}
             </View>
@@ -324,7 +343,7 @@ const Accueil3 = ({ navigation }) => {
           <View
             style={{
               position: "relative",
-              top: 200,
+              marginTop: 200,
               flex: 1,
               height: 50 + "%",
               // width: 90 + "%",
@@ -339,18 +358,24 @@ const Accueil3 = ({ navigation }) => {
               horizontal={true}
             >
               {events.length > 0 ? (
-                events.map((event, index) => (
-                  <EventCard
-                    key={index}
-                    name={event.name}
-                    address={event.address}
-                    pictures={images[index].url}
-                    categories={event.categories}
-                    date={event.date}
-                    participents={event.participents.length}
-                    heure={event.hours + ":" + event.minutes}
-                  />
-                ))
+                events
+                  .filter((event) =>
+                    event.categories.some((category) =>
+                      preferences.includes(category)
+                    )
+                  )
+                  .map((event, index) => (
+                    <EventCard
+                      key={index}
+                      name={event.name}
+                      address={event.address}
+                      pictures={images[index].url}
+                      categories={event.categories}
+                      date={event.date}
+                      participents={event.participents.length}
+                      heure={event.hours + ":" + event.minutes}
+                    />
+                  ))
               ) : (
                 <EventCard />
               )}

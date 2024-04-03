@@ -46,24 +46,31 @@ const EventCard = ({
         marginHorizontal: 5,
       }}
     >
-      <Image
-        style={{
-          height: size / 6 + "%",
-          width: size / 2.2 + "%",
-          resizeMode: "cover",
-        }}
-        // source={pictures}
-        source={{ uri: pictures }}
-      ></Image>
+      <TouchableOpacity>
+        <Image
+          style={{
+            height: size / 2.5,
+            width: size / 2.2 + "%",
+            resizeMode: "cover",
+          }}
+          // source={pictures}
+          source={{ uri: pictures }}
+        />
+      </TouchableOpacity>
       <View
         style={{
           position: "absolute",
-          top: size * 0.055,
-          height: size * 0.1,
-          width: size * 0.2,
-          right: size * 0.035,
+          bottom: 0,
+          left: size * 0.035,
           backgroundColor: "white",
           borderRadius: size * 0.027,
+
+          top: size * 0.28,
+          height: size * 0.1,
+          width: size * 0.2,
+          // right: size * 0.035,
+          // backgroundColor: "white",
+          // borderRadius: size * 0.027,
           justifyContent: "center",
         }}
       >
@@ -72,7 +79,7 @@ const EventCard = ({
             textAlign: "center",
             color: "#E1604D",
             fontWeight: 600,
-            fontSize: size * 0.034,
+            fontSize: size * 0.02,
           }}
         >
           {formatDate(date)}
@@ -107,27 +114,29 @@ const EventCard = ({
           Heure début: {heure}
         </Text>
         <View style={{ marginTop: size * 0.054, flexDirection: "row" }}>
-          <View
-            style={{
-              width: size * 0.227,
-              height: size * 0.076,
-              borderWidth: 1,
-              borderColor: "#E1604D",
-              borderRadius: 100,
-              justifyContent: "center",
-            }}
-          >
-            <Text
+          <TouchableOpacity>
+            <View
               style={{
-                fontWeight: 600,
-                fontSize: size * 0.031,
-                color: "#E1604D",
-                textAlign: "center",
+                width: size * 0.227,
+                height: size * 0.076,
+                borderWidth: 1,
+                borderColor: "#E1604D",
+                borderRadius: 100,
+                justifyContent: "center",
               }}
             >
-              {categories[0]}
-            </Text>
-          </View>
+              <Text
+                style={{
+                  fontWeight: 600,
+                  fontSize: size * 0.031,
+                  color: "#E1604D",
+                  textAlign: "center",
+                }}
+              >
+                {categories[0]}
+              </Text>
+            </View>
+          </TouchableOpacity>
           <View style={{ flexDirection: "row", marginLeft: size * 0.024 }}>
             <View
               style={{
@@ -222,14 +231,14 @@ const EventCard = ({
               style={{
                 width: size * 0.04,
                 height: size * 0.04,
-                marginTop: size * 0.015,
+                marginTop: size * 0.001,
               }}
               source={loc}
             ></Image>
             <Text
               style={{
                 marginLeft: size * 0.041,
-                fontSize: size * 0.042,
+                fontSize: size * 0.036,
                 fontWeight: "bold",
                 textAlign: "center",
               }}
@@ -241,7 +250,7 @@ const EventCard = ({
             style={{
               width: size * 0.03,
               height: size * 0.04,
-              marginTop: size * 0.015,
+              marginTop: size * 0.001,
             }}
             source={vector}
           ></Image>
