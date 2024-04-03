@@ -4,13 +4,13 @@ import Navbar from '../components/NavigationBar';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
-const NewEvent = ({ navigation }) => {
-  const [selectedDay, setSelectedDay] = useState(null);
-  const [activityName, setActivityName] = useState("");
-  const [address, setAddress] = useState("");
-  const [startHour, setStartHour] = useState("");
-  const [endHour, setEndHour] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState(""); // State to hold the selected category
+const EditEvent = ({navigation }) => {
+  const [selectedDay, setSelectedDay] = useState(Globalitem.Date);
+  const [activityName, setActivityName] = useState(Globalitem.name);
+  const [address, setAddress] = useState(Globalitem.address);
+  const [startHour, setStartHour] = useState(Globalitem.heuredebut);
+  const [endHour, setEndHour] = useState(Globalitem.minutesdebut);
+  const [selectedCategory, setSelectedCategory] = useState(Globalitem.category[0]);
 
   const handleDaySelection = (day) => {
     setSelectedDay(day);
@@ -56,7 +56,6 @@ const goToNextDays = () => {
   
     const currentDate = new Date();
   
-    // Calculate the displayedDate based on the current day and the selected day
     let displayedDate = new Date(currentDate);
     const selectedDayIndex = displayedDays.findIndex(dayOffset => {
       const tempDate = new Date(currentDate);
@@ -64,48 +63,39 @@ const goToNextDays = () => {
       return getDayName(tempDate) === selectedDay;
     });
     displayedDate.setDate(displayedDate.getDate() + displayedDays[selectedDayIndex]);
-    // displayedDate.setDate(displayedDate.getDate() - 1);
-    // Prepare the data to send to the backend
+
     const formattedDate = displayedDate.toISOString().split('T')[0];
+    let startDate = new Date(formattedDate);
+    startDate.setUTCHours(startDate.getUTCHours() + startHour);
+    const formattedStartDate = startDate.toISOString();  
     console.log(formattedDate);
-    // Prepare the categories as an array
     const selectedCategories = selectedCategory ? [selectedCategory] : [];
   
     const eventData = {
-      start_date: formattedDate,
+      start_date: formattedStartDate,
       name: activityName,
       address: address,
       categories: selectedCategories,
-      //rewards
     };
-
+  
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      let startDate = new Date(formattedDate);
-
-      // Add the hours to the date
-      startDate.setUTCHours(startDate.getUTCHours() + startHour);
-      // Convert the date back to the desired format
-      const formattedStartDate = startDate.toISOString();
-      console.log("zizi", formattedStartDate);
-
-      const response = await fetch('http://20.216.143.86/events/create/private', {
-        method: 'POST',
+      const response = await fetch(`http://20.216.143.86/events/edit?id=${Globalitem.id}`, {
+        method: 'PUT',
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ ...eventData, start_date: formattedStartDate }), // Replace the start_date field with the formatted date including hours
+        body: JSON.stringify(eventData),
       });
   
       if (response.ok) {
-        // Handle success
-        console.log('Event created successfully');
+        console.log('Event edited successfully');
         navigatetocalendar();
         // You can also navigate to another screen or perform any other action upon successful creation
       } else {
         // Handle errors
-        console.error('Failed to create event', response.status);
+        console.error('Failed to create event', response);
       }
     } catch (error) {
       // Handle network errors
@@ -120,7 +110,7 @@ const goToNextDays = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.inner}>
-            <Text style={styles.title}>Ajoute une activité dans ton calendrier !</Text>
+            <Text style={styles.title}>Modifie ton activité !</Text>
             <Text style={styles.username}>Titre</Text>
             <TextInput
               style={styles.input}
@@ -189,7 +179,7 @@ const goToNextDays = () => {
               ))}
             </View>
             <View style={styles.hourSelectionContainer}>
-              <Text style={styles.username}>Sélectionnez l'heure de début de l'evenement :</Text>
+              <Text style={styles.username}>Sélectionnez l'heure de début et de fin :</Text>
               <View style={styles.hoursContainer}>
                 <TextInput
                   style={styles.hourInput}
@@ -202,7 +192,7 @@ const goToNextDays = () => {
                 </View>
                 <TextInput
                   style={styles.hourInput}
-                  placeholder="Mintues"
+                  placeholder="Minutes"
                   value={endHour}
                   onChangeText={setEndHour}
                 />
@@ -373,4 +363,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewEvent;
+export default EditEvent;

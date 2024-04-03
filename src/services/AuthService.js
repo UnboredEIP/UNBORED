@@ -37,9 +37,9 @@ export class AuthService {
   };
 
   getLogin = async (email, password) => {
-    try {
+    try { 
       // http://20.216.143.86
-      const response = await fetch("http://20.216.143.86/auth/login", {
+      const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
