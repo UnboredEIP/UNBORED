@@ -52,7 +52,9 @@ const Accueil3 = ({ navigation }) => {
   const [username, setUsername] = useState("Citoyen");
   const [profileData, setProfileData] = useState(null);
   const [events, setEvents] = useState([]);
+  const [favouritesEvents, setFavouritesEvents] = useState([]);
   const [preferences, setPreferences] = useState([]);
+  const [refresh, handleRefresh] = useState(0);
 
   const defaultImage = {
     id: 1,
@@ -60,11 +62,40 @@ const Accueil3 = ({ navigation }) => {
     description: "Default Image",
   };
   const [images, setImages] = useState([defaultImage]);
+  const [favouritesImages, setFavouritesImages] = useState([defaultImage]);
   const ubService = new UbService();
 
   useEffect(() => {
+    const getEvents = async () => {
+      try {
+        const tmpObj = await ubService.getEvents();
+        const filteredEvents = tmpObj.filter((event) =>
+          event.categories.some((category) => preferences.includes(category))
+        );
+        setEvents(filteredEvents);
+
+        const imagePromises = filteredEvents.map(async (event) => {
+          const img = await ubService.getImage(event.pictures[0].id);
+          return img;
+        });
+        const imageResults = await Promise.all(imagePromises);
+        setImages(imageResults);
+      } catch (error) {
+        console.error("Error get events:", error);
+      }
+    };
+    const getFavouritesEvents = async () => {
+      try {
+        setFavouritesEvents(
+          JSON.parse(await AsyncStorage.getItem("favourites"))
+        );
+      } catch (error) {
+        console.error("Error get events:", error);
+      }
+    };
     const fetchData = async () => {
       try {
+        // await AsyncStorage.removeItem("favourites");
         const authToken = await AsyncStorage.getItem("authToken");
 
         const response = await fetch(`${API_URL}/profile/`, {
@@ -91,8 +122,7 @@ const Accueil3 = ({ navigation }) => {
 
           setUsername(responseData.user.username);
           setPreferences(preferences);
-          console.log("USER PREFERENCES:", preferences);
-
+          // await getEvents();
           const tmpObj = await ubService.getEvents();
           const filteredEvents = tmpObj.filter((event) =>
             event.categories.some((category) => preferences.includes(category))
@@ -105,6 +135,36 @@ const Accueil3 = ({ navigation }) => {
           });
           const imageResults = await Promise.all(imagePromises);
           setImages(imageResults);
+          //
+
+          const storageFavourites = await AsyncStorage.getItem("favourites");
+          // setFavouritesEvents(JSON.parse(storageFavourites));
+          if (storageFavourites !== null) {
+            const favouritesEvents2 = JSON.parse(storageFavourites);
+            // console.log("FAV EVENTS:", favouritesEvents[1].id);
+
+            if (favouritesEvents2.length > 0 && refresh === 0) {
+              // console.log(favouritesEvents);
+              const favourites = [];
+              for (const favourite of favouritesEvents2) {
+                const event = await ubService.getEventById(favourite.id);
+                // console.log(event);
+                if (event) {
+                  favourites.push(event);
+                }
+              }
+              setFavouritesEvents(favourites);
+              console.log("ALL FAV EVENT", favourites);
+              // console.log("FAVOURITES EVENTS", favourites);
+              const imagePromises2 = favouritesEvents.map(async (event) => {
+                const img = await ubService.getImage(event.pictures[0].id);
+                return img;
+              });
+              const imageResults2 = await Promise.all(imagePromises2);
+              setFavouritesImages(imageResults2);
+            }
+            handleRefresh(1);
+          }
         }
       } catch (error) {
         console.error("Error fetchData:", error);
@@ -114,14 +174,17 @@ const Accueil3 = ({ navigation }) => {
     };
 
     fetchData();
-  }, [navigation]);
+    // getFavouritesEvents();
+  }, [navigation, favouritesEvents, refresh]);
 
   // console.log("ALL EVENTS:", events);
 
   if (
     profileData === null ||
     events.length < 0 ||
-    images.length !== events.length
+    images.length !== events.length ||
+    (favouritesEvents.length !== 0 &&
+      favouritesImages.length !== favouritesEvents.length)
   ) {
     return <Text> Loading </Text>;
   } else
@@ -210,8 +273,8 @@ const Accueil3 = ({ navigation }) => {
                   texte="deco"
                   width="30%"
                   onPress={async () => {
-                    await AsyncStorage.removeItem("authToken");
                     navigation.replace("Login2");
+                    await AsyncStorage.removeItem("authToken");
                   }}
                 />
                 <View
@@ -357,13 +420,33 @@ const Accueil3 = ({ navigation }) => {
               nestedScrollEnabled={true}
               horizontal={true}
             >
-              {events.length > 0 ? (
+              {favouritesEvents.length > 0 ? (
+                favouritesEvents.map((event, index) => (
+                  <EventCard
+                    key={index}
+                    name={event.name}
+                    address={event.address}
+                    pictures={favouritesImages[index].url}
+                    categories={event.categories}
+                    date={event.date}
+                    participents={event.participents.length}
+                    heure={event.hours + ":" + event.minutes}
+                    id={event._id}
+                    handleRefresh={() => {
+                      handleRefresh(0);
+                    }}
+                  />
+                ))
+              ) : (
+                <View />
+              )}
+              {/* {events.length > 0 ? (
                 events
-                  .filter((event) =>
-                    event.categories.some((category) =>
-                      preferences.includes(category)
-                    )
-                  )
+                  // .filter((event) =>
+                  //   event.categories.some((category) =>
+                  //     preferences.includes(category)
+                  //   )
+                  // )
                   .map((event, index) => (
                     <EventCard
                       key={index}
@@ -374,11 +457,13 @@ const Accueil3 = ({ navigation }) => {
                       date={event.date}
                       participents={event.participents.length}
                       heure={event.hours + ":" + event.minutes}
+                      id={event._id}
+                      handleRefresh={handleRefresh}
                     />
                   ))
               ) : (
                 <EventCard />
-              )}
+              )} */}
             </ScrollView>
           </View>
           {/* <View style={{backgroundColor:'blue', width:100+'%', top:300, height:1000}}></View> */}

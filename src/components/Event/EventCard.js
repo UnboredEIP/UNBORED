@@ -11,7 +11,7 @@ import {
 import vector from "../../../asset/Vector.png";
 import loc from "../../../asset/location_on.png";
 import { UbService } from "../../services/UbServices";
-import { RootSiblingParent } from "react-native-root-siblings";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -24,6 +24,40 @@ function formatDate(dateString) {
   return dateExtraite;
 }
 
+async function updateFavourites(name, id) {
+  try {
+    // await AsyncStorage.removeItem("favourites");
+    let favourites = await AsyncStorage.getItem("favourites");
+
+    if (favourites === null) {
+      console.log("No favourites yet");
+      favourites = [];
+    } else {
+      favourites = JSON.parse(favourites);
+    }
+
+    const existingFavourite = favourites.findIndex(
+      (preference) => preference.id === id
+    );
+
+    if (existingFavourite !== -1) {
+      console.log("Remove from favourites:", favourites[existingFavourite]);
+
+      favourites.splice(existingFavourite, 1);
+      await AsyncStorage.setItem("favourites", JSON.stringify(favourites));
+      // console.log("Updated favourites:", favourites);
+      // console.log("ALL FAVOURITES:", await AsyncStorage.getItem("favourites"));
+      return;
+    }
+    favourites.push({ name, id });
+    await AsyncStorage.setItem("favourites", JSON.stringify(favourites));
+    // console.log("Updated favourites:", favourites);
+    console.log("ALL FAVOURITES:", await AsyncStorage.getItem("favourites"));
+  } catch (error) {
+    console.error("Error updating favourites:", error);
+  }
+}
+
 const EventCard = ({
   name = "Five Ivry",
   address = "Ivry-sur-seine",
@@ -33,6 +67,8 @@ const EventCard = ({
   participents,
   heure = "00:00",
   size = 290,
+  id,
+  handleRefresh = () => {},
 }) => {
   return (
     <View
@@ -46,7 +82,12 @@ const EventCard = ({
         marginHorizontal: 5,
       }}
     >
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={async () => {
+          updateFavourites(name, id);
+          handleRefresh();
+        }}
+      >
         <Image
           style={{
             height: size / 2.5,
@@ -246,14 +287,21 @@ const EventCard = ({
               {address}
             </Text>
           </View>
-          <Image
-            style={{
-              width: size * 0.03,
-              height: size * 0.04,
-              marginTop: size * 0.001,
+          <TouchableOpacity
+            onPress={async () => {
+              updateFavourites(name, id);
+              handleRefresh();
             }}
-            source={vector}
-          ></Image>
+          >
+            <Image
+              style={{
+                width: size * 0.05,
+                height: size * 0.07,
+                marginTop: size * 0.001,
+              }}
+              source={vector}
+            />
+          </TouchableOpacity>
         </View>
       </View>
     </View>

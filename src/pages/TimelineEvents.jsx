@@ -327,6 +327,7 @@ const TimelineEventsPage = ({ navigation }) => {
                             date={event.date}
                             participents={event.participents.length}
                             heure={event.hours + ":" + event.minutes}
+                            id={event._id}
                           />
                         </View>
                       )

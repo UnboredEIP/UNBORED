@@ -23,6 +23,26 @@ export class UbService {
       console.error("Error when try to get events:", error);
     }
   };
+  getEventById = async (id) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/events/show?id=${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      return responseData.event;
+    } catch (error) {
+      console.error("Error when try to get event:", error);
+    }
+  };
 
   getImage = async (imageName) => {
     try {
