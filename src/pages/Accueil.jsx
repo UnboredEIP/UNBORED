@@ -140,7 +140,6 @@ const Accueil3 = ({ navigation }) => {
                 }
               }
               setFavouritesEvents(favourites);
-              console.log("ALL FAV EVENT", favourites);
               // console.log("FAVOURITES EVENTS", favourites);
               const imagePromises2 = favouritesEvents.map(async (event) => {
                 const img = await ubService.getImage(event.pictures[0].id);
@@ -260,13 +259,13 @@ const Accueil3 = ({ navigation }) => {
                     marginHorizontal: 10,
                   }}
                 />
-                <Buttons
+                {/* <Buttons
                   texte="màj"
                   width="30%"
                   onPress={async () => {
                     navigation.navigate("PreferencesUpdate");
                   }}
-                />
+                /> */}
                 {/* <View>
                   <TextInput
                     style={{
@@ -311,7 +310,7 @@ const Accueil3 = ({ navigation }) => {
                   ></Image>
                 </TouchableOpacity>
               </View>
-              <MyAvatar
+              {/* <MyAvatar
                 top={300}
                 clothTop="hoodie"
                 colorClothingTop="orange"
@@ -319,11 +318,10 @@ const Accueil3 = ({ navigation }) => {
               />
               <MyAvatar
                 top={400}
-                clothTop="hoodie"
-                colorClothingTop="orange"
+                clothTop="polo"
+                colorClothingTop="red"
                 size={75}
-              />
-              <MyAvatar top={550} clothTop="vneck" colorClothingTop="blue" />
+              /> */}
               <View
                 style={{
                   top: screenHeight / 8,

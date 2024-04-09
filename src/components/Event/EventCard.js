@@ -54,7 +54,7 @@ async function updateFavourites(name, id) {
     favourites.push({ name, id });
     await AsyncStorage.setItem("favourites", JSON.stringify(favourites));
     // console.log("Updated favourites:", favourites);
-    console.log("ALL FAVOURITES:", await AsyncStorage.getItem("favourites"));
+    // console.log("ALL FAVOURITES:", await AsyncStorage.getItem("favourites"));
   } catch (error) {
     console.error("Error updating favourites:", error);
   }
