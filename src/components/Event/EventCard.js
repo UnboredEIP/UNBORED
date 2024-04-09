@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import vector from "../../../asset/Vector.png";
 import loc from "../../../asset/location_on.png";
+import startFilled from "../../../assets/star_filled.png";
+import startUnfilled from "../../../assets/star_unfilled.png";
 import { UbService } from "../../services/UbServices";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -68,8 +70,33 @@ const EventCard = ({
   heure = "00:00",
   size = 290,
   id,
+  rate = 4,
   handleRefresh = () => {},
 }) => {
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        stars.push(
+          <Image
+            key={i}
+            style={{ width: size * 0.04, height: size * 0.04 }}
+            source={startFilled}
+          />
+        );
+      } else {
+        stars.push(
+          <Image
+            key={i}
+            style={{ width: size * 0.04, height: size * 0.04 }}
+            source={startUnfilled}
+          />
+        );
+      }
+    }
+    return stars;
+  };
+
   return (
     <View
       style={{
@@ -303,6 +330,15 @@ const EventCard = ({
             />
           </TouchableOpacity>
         </View>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: size * 0.02,
+        }}
+      >
+        {renderStars(rate)}
       </View>
     </View>
   );

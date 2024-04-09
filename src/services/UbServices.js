@@ -44,6 +44,57 @@ export class UbService {
     }
   };
 
+  getEventRate = async (id) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/events/show?id=${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      // console.log("reponseData", responseData);
+      if (
+        responseData.event.rate !== undefined ||
+        responseData.event.rate !== undefined
+      ) {
+        console.log("HIHIHIHI:", responseData.event);
+        const eventRate = responseData.event.rate;
+        let totalStars = 0;
+        let totalRatings = 0;
+
+        // console.log("eventRate:", eventRate);
+        if (Array.isArray(eventRate)) {
+          eventRate.forEach((rating) => {
+            const stars = parseInt(rating.stars);
+            console.log("HIHI:", stars);
+            if (!isNaN(stars)) {
+              totalStars += stars;
+              totalRatings++;
+            }
+          });
+        }
+
+        let averageRating = 0;
+        if (totalRatings > 0) {
+          averageRating = totalStars / totalRatings;
+        }
+        // console.log("AVERAGE:", totalRatings);
+        // console.log("STARS", totalStars);
+        return averageRating;
+      }
+      return 5;
+    } catch (error) {
+      console.error("Error when try to get event:", error);
+    }
+  };
+
   getImage = async (imageName) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");

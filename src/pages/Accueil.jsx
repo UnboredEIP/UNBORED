@@ -1,41 +1,27 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   View,
   Text,
-  TouchableHighlight,
   TouchableWithoutFeedback,
   Keyboard,
   Image,
   ScrollView,
-  FlatList,
-  TextInput,
   Dimensions,
   TouchableOpacity,
+  StyleSheet,
 } from "react-native";
 import Navbar from "../components/NavigationBar";
 import "../../asset/SourceSansPro-Regular.otf";
 import book from "../../asset/bookmark.png";
 import notifications from "../../asset/notifications.png";
 import filter from "../../asset/filter.png";
-import search from "../../asset/search.png";
-import pir from "../../asset/pir.jpg";
 
-import data from "../value.json";
+import MyAvatar from "../components/Avatar";
+import { BodySvg, shirt } from "../../assets/avatars/avatars/index";
 
-import img1 from "../../asset/img-1.png";
-import img2 from "../../asset/img-2.png";
-import img3 from "../../asset/img-3.png";
-import img4 from "../../asset/img-4.png";
-import img5 from "../../asset/img-5.png";
-import img6 from "../../asset/img-6.png";
-
-import loc from "../../asset/location_on.png";
-import vector from "../../asset/Vector.png";
 import Buttons from "../components/Buttons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { jwtDecode } from "jwt-decode";
-import base64 from "react-native-base64";
 import { API_URL } from "@env";
 import { UbService } from "../services/UbServices";
 import EventCard from "../components/Event/EventCard";
@@ -269,21 +255,13 @@ const Accueil3 = ({ navigation }) => {
                   width: 85 + "%",
                 }}
               >
-                <Buttons
-                  texte="deco"
-                  width="30%"
-                  onPress={async () => {
-                    navigation.replace("Login2");
-                    await AsyncStorage.removeItem("authToken");
-                  }}
-                />
                 <View
                   style={{
                     marginHorizontal: 10,
                   }}
                 />
                 <Buttons
-                  texte="màj preferences"
+                  texte="màj"
                   width="30%"
                   onPress={async () => {
                     navigation.navigate("PreferencesUpdate");
@@ -333,70 +311,143 @@ const Accueil3 = ({ navigation }) => {
                   ></Image>
                 </TouchableOpacity>
               </View>
+              <MyAvatar
+                top={300}
+                clothTop="hoodie"
+                colorClothingTop="orange"
+                size={50}
+              />
+              <MyAvatar
+                top={400}
+                clothTop="hoodie"
+                colorClothingTop="orange"
+                size={75}
+              />
+              <MyAvatar top={550} clothTop="vneck" colorClothingTop="blue" />
               <View
                 style={{
-                  top: 26 + "%",
-                  flexDirection: "row",
+                  top: screenHeight / 8,
+                  flexDirection: "column",
+                  flex: 1,
                   justifyContent: "space-between",
                   width: 85 + "%",
+                  // alignItems: "center",
                 }}
               >
-                <Text style={{ fontWeight: "bold" }}>Recommandé</Text>
+                {/* <Image src="../../assets/avatars/avatars/body/blazer.svg"></Image> */}
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: screenHeight / 40,
+                    alignSelf: "center",
+                    marginBottom: 10,
+                    textAlign: "center",
+                  }}
+                >
+                  Ces activités sont faites pour toi !
+                </Text>
                 <TouchableOpacity
                   onPress={() => navigation.navigate("TimelineEventsPage")}
                 >
-                  <Text style={{ fontWeight: "bold", color: "#E1604D" }}>
+                  <Text
+                    style={{
+                      fontWeight: "bold",
+                      color: "#E1604D",
+                      flex: 1,
+                      textAlign: "right",
+                      justifyContent: "flex-end",
+                    }}
+                  >
                     Voir toutes les activités
                   </Text>
                 </TouchableOpacity>
               </View>
+
               <View
                 style={{
-                  top: 40 + "%",
-                  height: 160,
-                  width: 370,
-                  borderRadius: 20,
-                  overflow: "hidden",
+                  position: "relative",
+                  marginTop: 120,
+                  flex: 1,
+                  height: 50 + "%",
+                  // width: 90 + "%",
+                  // paddingHorizontal: 20,
+                  alignItems: "center",
+                  marginBottom: 7 + "%",
                 }}
               >
-                <Image
-                  style={{ height: 90 + "%", width: "90%" }}
-                  source={pir}
-                ></Image>
-                <View style={{ position: "absolute", left: 40, top: "30%" }}>
-                  <Text
-                    style={{ color: "white", fontSize: 20, fontWeight: 600 }}
-                  >
-                    Musée du Louvre
-                  </Text>
-                  <TouchableHighlight
-                    onPress={() => console.log("Reserver")}
-                    style={{
-                      marginTop: 20,
-                      width: 103,
-                      height: 37,
-                      borderRadius: 20,
-                      backgroundColor: "#E1604D",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <Text style={{ textAlign: "center", color: "white" }}>
-                      Réserver
-                    </Text>
-                  </TouchableHighlight>
-                </View>
+                <ScrollView
+                  showsHorizontalScrollIndicator={false}
+                  nestedScrollEnabled={true}
+                  horizontal={true}
+                >
+                  {events.length > 0 ? (
+                    events
+                      // .filter((event) =>
+                      //   event.categories.some((category) =>
+                      //     preferences.includes(category)
+                      //   )
+                      // )
+                      .map((event, index) => (
+                        <EventCard
+                          key={index}
+                          name={event.name}
+                          address={event.address}
+                          pictures={images[index].url}
+                          categories={event.categories}
+                          date={event.date}
+                          participents={event.participents.length}
+                          heure={event.hours + ":" + event.minutes}
+                          id={event._id}
+                          handleRefresh={() => {
+                            handleRefresh(0);
+                          }}
+                          // rate={ubService.getEventRate(event._id)}
+                        />
+                      ))
+                  ) : (
+                    <View />
+                  )}
+                  {/* {events.length > 0 ? (
+                events
+                  // .filter((event) =>
+                  //   event.categories.some((category) =>
+                  //     preferences.includes(category)
+                  //   )
+                  // )
+                  .map((event, index) => (
+                    <EventCard
+                      key={index}
+                      name={event.name}
+                      address={event.address}
+                      pictures={images[index].url}
+                      categories={event.categories}
+                      date={event.date}
+                      participents={event.participents.length}
+                      heure={event.hours + ":" + event.minutes}
+                      id={event._id}
+                      handleRefresh={handleRefresh}
+                    />
+                  ))
+              ) : (
+                <EventCard />
+              )} */}
+                </ScrollView>
               </View>
+
               <View
                 style={{
-                  top: 38 + "%",
-                  flexDirection: "row",
-
                   alignSelf: "center",
                   width: 85 + "%",
                 }}
               >
-                <Text style={{ fontWeight: "bold", textAlign: "center" }}>
-                  Ces activités sont faites pour toi !
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    fontSize: screenHeight / 40,
+                  }}
+                >
+                  Tes activités enregistrés
                 </Text>
               </View>
               {/* <View style={{position:'relative', height:1000}}></View> */}
@@ -406,7 +457,7 @@ const Accueil3 = ({ navigation }) => {
           <View
             style={{
               position: "relative",
-              marginTop: 200,
+              marginTop: 20,
               flex: 1,
               height: 50 + "%",
               // width: 90 + "%",
@@ -435,6 +486,7 @@ const Accueil3 = ({ navigation }) => {
                     handleRefresh={() => {
                       handleRefresh(0);
                     }}
+                    // rate={ubService.getEventRate(event._id)}
                   />
                 ))
               ) : (
@@ -473,6 +525,25 @@ const Accueil3 = ({ navigation }) => {
         </View>
       </View>
     );
+};
+
+const styles = (top = screenHeight / 3, left = 100, right, bottom) => {
+  return StyleSheet.create({
+    svgBody: {
+      position: "absolute",
+      top: top,
+      left: left,
+      right: right,
+      bottom: bottom,
+    },
+    svgTop: {
+      position: "absolute",
+      top: top + 134,
+      left: left - 32,
+      right: right,
+      bottom: bottom,
+    },
+  });
 };
 
 export default Accueil3;
