@@ -10,8 +10,10 @@ import {
 } from "react-native";
 import vector from "../../../asset/Vector.png";
 import loc from "../../../asset/location_on.png";
+import startFilled from "../../../assets/star_filled.png";
+import startUnfilled from "../../../assets/star_unfilled.png";
 import { UbService } from "../../services/UbServices";
-import { RootSiblingParent } from "react-native-root-siblings";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -19,11 +21,43 @@ const ubService = new UbService();
 
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
-
-  // Extraction de la date au format 'YYYY-MM-DD'
   const dateExtraite = dateObj.toISOString().split("T")[0];
 
   return dateExtraite;
+}
+
+async function updateFavourites(name, id) {
+  try {
+    // await AsyncStorage.removeItem("favourites");
+    let favourites = await AsyncStorage.getItem("favourites");
+
+    if (favourites === null) {
+      console.log("No favourites yet");
+      favourites = [];
+    } else {
+      favourites = JSON.parse(favourites);
+    }
+
+    const existingFavourite = favourites.findIndex(
+      (preference) => preference.id === id
+    );
+
+    if (existingFavourite !== -1) {
+      console.log("Remove from favourites:", favourites[existingFavourite]);
+
+      favourites.splice(existingFavourite, 1);
+      await AsyncStorage.setItem("favourites", JSON.stringify(favourites));
+      // console.log("Updated favourites:", favourites);
+      // console.log("ALL FAVOURITES:", await AsyncStorage.getItem("favourites"));
+      return;
+    }
+    favourites.push({ name, id });
+    await AsyncStorage.setItem("favourites", JSON.stringify(favourites));
+    // console.log("Updated favourites:", favourites);
+    // console.log("ALL FAVOURITES:", await AsyncStorage.getItem("favourites"));
+  } catch (error) {
+    console.error("Error updating favourites:", error);
+  }
 }
 
 const EventCard = ({
@@ -34,37 +68,77 @@ const EventCard = ({
   date = "2024-01-28",
   participents,
   heure = "00:00",
+  size = 290,
+  id,
+  rate = 4,
+  handleRefresh = () => {},
 }) => {
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      if (i <= rating) {
+        stars.push(
+          <Image
+            key={i}
+            style={{ width: size * 0.04, height: size * 0.04 }}
+            source={startFilled}
+          />
+        );
+      } else {
+        stars.push(
+          <Image
+            key={i}
+            style={{ width: size * 0.04, height: size * 0.04 }}
+            source={startUnfilled}
+          />
+        );
+      }
+    }
+    return stars;
+  };
+
   return (
     <View
       style={{
         borderWidth: 1,
         borderColor: "#EBEEF2",
-        marginRight: 10,
-        height: 290,
-        width: 220,
+        height: size,
+        width: size / 1.4,
         borderRadius: 20,
         overflow: "hidden",
+        marginHorizontal: 5,
       }}
     >
-      <Image
-        style={{
-          height: 50 + "%",
-          width: 100 + "%",
-          resizeMode: "cover",
+      <TouchableOpacity
+        onPress={async () => {
+          updateFavourites(name, id);
+          handleRefresh();
         }}
-        // source={pictures}
-        source={{ uri: pictures }}
-      ></Image>
+      >
+        <Image
+          style={{
+            height: size / 2.5,
+            width: size / 2.2 + "%",
+            resizeMode: "cover",
+          }}
+          // source={pictures}
+          source={{ uri: pictures }}
+        />
+      </TouchableOpacity>
       <View
         style={{
           position: "absolute",
-          top: 16,
-          height: 29,
-          width: 56,
-          right: 10 + "%",
+          bottom: 0,
+          left: size * 0.035,
           backgroundColor: "white",
-          borderRadius: 8,
+          borderRadius: size * 0.027,
+
+          top: size * 0.28,
+          height: size * 0.1,
+          width: size * 0.2,
+          // right: size * 0.035,
+          // backgroundColor: "white",
+          // borderRadius: size * 0.027,
           justifyContent: "center",
         }}
       >
@@ -73,19 +147,25 @@ const EventCard = ({
             textAlign: "center",
             color: "#E1604D",
             fontWeight: 600,
-            fontSize: 8,
+            fontSize: size * 0.02,
           }}
         >
           {formatDate(date)}
         </Text>
       </View>
-      <View style={{ marginLeft: 18, width: 83 + "%", top: 20 }}>
+      <View
+        style={{
+          marginLeft: size * 0.062,
+          width: size * 0.6,
+          top: size * 0.029,
+        }}
+      >
         <Text
           style={{
             textAlign: "center",
             color: "#E1604D",
             fontWeight: 600,
-            fontSize: 20,
+            fontSize: size * 0.069,
           }}
         >
           {name}
@@ -95,41 +175,43 @@ const EventCard = ({
             textAlign: "left",
             color: "black",
             fontWeight: 500,
-            fontSize: 10,
-            marginTop: 5,
+            fontSize: size * 0.04,
+            marginTop: size * 0.017,
           }}
         >
           Heure début: {heure}
         </Text>
-        <View style={{ marginTop: 10, flexDirection: "row" }}>
-          <View
-            style={{
-              width: 66,
-              height: 22,
-              borderWidth: 1,
-              borderColor: "#E1604D",
-              borderRadius: 100,
-              justifyContent: "center",
-            }}
-          >
-            <Text
+        <View style={{ marginTop: size * 0.054, flexDirection: "row" }}>
+          <TouchableOpacity>
+            <View
               style={{
-                fontWeight: 600,
-                fontSize: 9,
-                color: "#E1604D",
-                textAlign: "center",
+                width: size * 0.227,
+                height: size * 0.076,
+                borderWidth: 1,
+                borderColor: "#E1604D",
+                borderRadius: 100,
+                justifyContent: "center",
               }}
             >
-              {categories[0]}
-            </Text>
-          </View>
-          <View style={{ flexDirection: "row", marginLeft: 7 }}>
+              <Text
+                style={{
+                  fontWeight: 600,
+                  fontSize: size * 0.031,
+                  color: "#E1604D",
+                  textAlign: "center",
+                }}
+              >
+                {categories[0]}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <View style={{ flexDirection: "row", marginLeft: size * 0.024 }}>
             <View
               style={{
                 backgroundColor: "grey",
                 zIndex: 2,
-                width: 24,
-                height: 24,
+                width: size * 0.069,
+                height: size * 0.069,
                 borderRadius: 100,
                 borderWidth: 1,
                 borderColor: "white",
@@ -138,7 +220,7 @@ const EventCard = ({
             >
               <Text
                 style={{
-                  fontSize: 10,
+                  fontSize: size * 0.034,
                   textAlign: "center",
                   color: "white",
                 }}
@@ -150,9 +232,9 @@ const EventCard = ({
               style={{
                 backgroundColor: "grey",
                 zIndex: 1,
-                width: 24,
-                left: -10,
-                height: 24,
+                width: size * 0.069,
+                left: -size * 0.035,
+                height: size * 0.069,
                 borderRadius: 100,
                 borderWidth: 1,
                 borderColor: "white",
@@ -161,7 +243,7 @@ const EventCard = ({
             >
               <Text
                 style={{
-                  fontSize: 10,
+                  fontSize: size * 0.034,
                   textAlign: "center",
                   color: "white",
                 }}
@@ -172,9 +254,9 @@ const EventCard = ({
             <View
               style={{
                 backgroundColor: "grey",
-                width: 24,
-                left: -20,
-                height: 24,
+                width: size * 0.069,
+                left: -size * 0.069,
+                height: size * 0.069,
                 borderRadius: 100,
                 borderWidth: 1,
                 borderColor: "white",
@@ -183,7 +265,7 @@ const EventCard = ({
             >
               <Text
                 style={{
-                  fontSize: 10,
+                  fontSize: size * 0.034,
                   textAlign: "center",
                   color: "white",
                 }}
@@ -195,10 +277,10 @@ const EventCard = ({
           <Text
             style={{
               textAlign: "center",
-              marginTop: 5,
+              marginTop: size * 0.017,
               fontWeight: 500,
-              fontSize: 8,
-              left: -12,
+              fontSize: size * 0.027,
+              left: -size * 0.041,
             }}
           >
             {participents} personne(s)
@@ -207,25 +289,56 @@ const EventCard = ({
         </View>
         <View
           style={{
-            marginTop: 20,
+            marginTop: size * 0.069,
             flexDirection: "row",
             justifyContent: "space-between",
           }}
         >
           <View style={{ flexDirection: "row" }}>
-            <Image style={{ width: 8, height: 11 }} source={loc}></Image>
+            <Image
+              style={{
+                width: size * 0.04,
+                height: size * 0.04,
+                marginTop: size * 0.001,
+              }}
+              source={loc}
+            ></Image>
             <Text
               style={{
-                marginLeft: 8,
-                fontSize: 10,
+                marginLeft: size * 0.041,
+                fontSize: size * 0.036,
+                fontWeight: "bold",
                 textAlign: "center",
               }}
             >
               {address}
             </Text>
           </View>
-          <Image style={{ width: 11, height: 15 }} source={vector}></Image>
+          <TouchableOpacity
+            onPress={async () => {
+              updateFavourites(name, id);
+              handleRefresh();
+            }}
+          >
+            <Image
+              style={{
+                width: size * 0.05,
+                height: size * 0.07,
+                marginTop: size * 0.001,
+              }}
+              source={vector}
+            />
+          </TouchableOpacity>
         </View>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginTop: size * 0.02,
+        }}
+      >
+        {renderStars(rate)}
       </View>
     </View>
   );

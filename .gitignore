@@ -161,3 +161,6 @@ eas.json
 node_modules
 
 .env
+.npmrc
+ios
+android

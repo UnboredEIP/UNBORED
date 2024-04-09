@@ -8,6 +8,7 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  Button,
 } from "react-native";
 import {
   useFonts,
@@ -17,20 +18,23 @@ import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../components/TextField";
 import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
-const screenWidth = Dimensions.get("screen").width;
-const screenHeight = Dimensions.get("screen").height;
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Buttons from "../../components/Buttons";
 import Accueil3 from "../Accueil";
 import ChoosePreferences from "../../ChoosePreferences";
 import { UbService } from "../../services/UbServices";
 import { AuthService } from "../../services/AuthService";
+import { CLIENT_ID_ANDROID, CLIENT_ID_IOS, CLIENT_ID_WEB, API_URL } from "@env";
+const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
+
+// import Auth from "../../components/Auth";
 
 async function navigateTo() {
   try {
     const authToken = await AsyncStorage.getItem("authToken");
     if (authToken) {
-      const response = await fetch("http://20.216.143.86/profile", {
+      const response = await fetch(`${API_URL}/profile`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -59,6 +63,7 @@ const Login2 = ({ navigation }) => {
   });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
   if (!fontsLoaded) {
     return (
       <View>
@@ -75,6 +80,7 @@ const Login2 = ({ navigation }) => {
       >
         <ScrollView>
           <View style={styles().Mainbox}>
+            {/* <Auth /> */}
             <Image
               source={require("../../../assets/logo2.gif")}
               style={{ height: 200, width: 200 }}
@@ -180,11 +186,12 @@ const Login2 = ({ navigation }) => {
                 <Buttons
                   hasIcon={true}
                   iconPath={
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png"
+                    "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
                   }
                   textColor="black"
                   width={screenWidth < 350 ? 145 : 160}
                   backgroundColor="white"
+                  onPress={() => {}}
                   texte="Google"
                 />
               </RootSiblingParent>

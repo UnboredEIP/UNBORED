@@ -28,6 +28,7 @@ import Register from "./src/pages/auth/Register_Pages/Register";
 import RegisterStep2 from "./src/pages/auth/Register_Pages/Register_step2";
 import RegisterStep3 from "./src/pages/auth/Register_Pages/Register_step3";
 import EditEvent from "./src/pages/EditEvent";
+import TimelineEventsPage from "./src/pages/TimelineEvents";
 
 import { ImagePickerIOS } from "react-native";
 class OTP2 extends React.Component {
@@ -87,6 +88,7 @@ const AppNavigator = createStackNavigator(
   {
     Initial: {
       screen: InitialScreen,
+      // screen: Login2,
     },
     Home: {
       screen: Register,
@@ -122,13 +124,13 @@ const AppNavigator = createStackNavigator(
       screen: Avatar,
       navigationOptions: {
         ...TransitionPresets.FadeFromBottomAndroid,
-      }
+      },
     },
     avatareyes: {
       screen: avatareyes,
       navigationOptions: {
         ...TransitionPresets.FadeFromBottomAndroid,
-      }
+      },
     },
     Login2: {
       screen: Login2,
@@ -205,6 +207,12 @@ const AppNavigator = createStackNavigator(
     },
     Description: {
       screen: Description,
+      navigationOptions: {
+        ...TransitionPresets.ScaleFromCenterAndroid,
+      },
+    },
+    TimelineEventsPage: {
+      screen: TimelineEventsPage,
       navigationOptions: {
         ...TransitionPresets.ScaleFromCenterAndroid,
       },

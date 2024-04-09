@@ -17,6 +17,7 @@ const Avatar = ({ navigation }) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
 
+      // Step 2: Save selected face in the database
       const avatarDataResponse = await fetch("http://20.216.143.86/profile/avatar", {
         method: "POST",
         headers: {
@@ -25,7 +26,7 @@ const Avatar = ({ navigation }) => {
         },
         body: JSON.stringify({
           style: {
-            head: selectedFace === null ? "#000000" : selectedFace,
+            head: selectedFace === null ? "0" : selectedFace.toString(),
             shoes: "0", // Set the appropriate value for shoes
             pants: "0", // Set the appropriate value for pants
             body: "0", // Set the appropriate value for body
@@ -35,7 +36,6 @@ const Avatar = ({ navigation }) => {
 
       const avatarDataResult = await avatarDataResponse.json();
       console.log("Avatar data saved:", avatarDataResult);
-
     } catch (error) {
       console.error("Error saving avatar data:", error);
     }

@@ -18,6 +18,7 @@ const screenHeight = Dimensions.get("screen").height;
 
 // Composants Boutton bien modulable my man
 const Buttons = ({
+  // @ts-ignore
   onPress,
   texte = "Boutton",
   textColor = "white",
@@ -75,6 +76,7 @@ const Buttons = ({
               color: textColor,
               fontSize: 16,
               fontFamily: "SourceSansPro_600SemiBold",
+              textAlign: "center",
             })
           }
         >
@@ -85,6 +87,7 @@ const Buttons = ({
   }
 };
 
+// @ts-ignore
 const styles = (textColor?, backgroundColor?, width?, height?, textSize?) => {
   return StyleSheet.create({
     boutton: {

@@ -11,8 +11,9 @@ import {
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "../../components/NavigationBar";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 import Accueil3 from "../Accueil";
+import Buttons from "../../components/Buttons";
 
 const Profile = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -41,10 +42,12 @@ const Profile = ({ navigation }) => {
 
       const profileData = await response.json();
       console.log("Profile Data:", profileData);
-      setUsername(profileData.user.username.trim());
+      setUsername(profileData.user.username);
       setPreferences(profileData.user.preferences);
-      setDescription(profileData.user.description.trim());
-      setImage(`http://20.216.143.86/getimage?imageName=${profileData.user.profilPhoto}`);
+      setDescription(profileData.user.description);
+      setImage(
+        `http://20.216.143.86/getimage?imageName=${profileData.user.profilPhoto}`
+      );
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
@@ -54,64 +57,78 @@ const Profile = ({ navigation }) => {
     handleProfileFetch();
   }, []);
 
-
   return (
-    <View style={{flex:1}}>
-    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled={true}>
-     <View style={styles.container}>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={styles.textAboveImage}>Mon profil UnBored</Text>
-            <TouchableOpacity style={styles.loginBtn} onPress={() => navigation.navigate("Settings")}>
-            <Icon name="gears" size={20} color= {'#E1604D'} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.imageContainer}>
-            <Image
-                source={{uri : image}}
+    <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        enabled={true}
+      >
+        <View style={styles.container}>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={styles.textAboveImage}>Mon profil UnBored</Text>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={() => navigation.navigate("Settings")}
+              >
+                <Icon name="gears" size={20} color={"#E1604D"} />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: image }}
                 style={{
-                width: 180,
-                height: 180,
-                borderRadius: 10,
-                marginBottom: 10,
+                  width: 180,
+                  height: 180,
+                  borderRadius: 10,
+                  marginBottom: 10,
+                }}
+              />
+            </View>
+            <Text style={styles.textBelowImage}>{username}</Text>
+            <View style={styles.numbersContainer}>
+              <View style={styles.numberItem}>
+                <Text style={styles.numberValue}>1234</Text>
+                <Text style={styles.numberLabel}>Followers</Text>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.numberItem}>
+                <Text style={styles.numberValue}>567</Text>
+                <Text style={styles.numberLabel}>Suivie</Text>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.numberItem}>
+                <Text style={styles.numberValue}>89</Text>
+                <Text style={styles.numberLabel}>Events</Text>
+              </View>
+            </View>
+            <View style={styles.dividerhorz} />
+            <Text style={styles.textPreferences}>À propos de moi</Text>
+            <Text style={styles.descriptionpersonne}>{description}</Text>
+            <Text style={styles.textPreferences}>Mes intérêts :</Text>
+            <ScrollView horizontal contentContainerStyle={styles.preferenceRow}>
+              {preferences.map((preference, index) => (
+                <Text key={index} style={styles.preferenceItem}>
+                  {preference}
+                </Text>
+              ))}
+            </ScrollView>
+            <Buttons
+              texte="deco"
+              width="30%"
+              onPress={async () => {
+                await AsyncStorage.removeItem("authToken");
+                navigation.replace("Login2");
               }}
             />
           </View>
-          <Text style={styles.textBelowImage}>{username}</Text>
-          <View style={styles.numbersContainer}>
-            <View style={styles.numberItem}>
-              <Text style={styles.numberValue}>1234</Text>
-              <Text style={styles.numberLabel}>Followers</Text>
-            </View>
-            <View style={styles.divider} />
-            <View style={styles.numberItem}>
-              <Text style={styles.numberValue}>567</Text>
-              <Text style={styles.numberLabel}>Suivie</Text>
-            </View>
-            <View style={styles.divider} />
-            <View style={styles.numberItem}>
-              <Text style={styles.numberValue}>89</Text>
-              <Text style={styles.numberLabel}>Events</Text>
-            </View>
-          </View>
-          <View style={styles.dividerhorz} />
-          <Text style={styles.textPreferences}>À propos de moi</Text>
-          <Text style={styles.descriptionpersonne}>{description}</Text>
-          <Text style={styles.textPreferences}>Mes intérêts :</Text>
-          <ScrollView horizontal contentContainerStyle={styles.preferenceRow}>
-            {preferences.map((preference, index) => (
-              <Text key={index} style={styles.preferenceItem}>
-                {preference}
-              </Text>
-            ))}
-          </ScrollView>
         </View>
-      </View>
-    </KeyboardAvoidingView>
-    <Navbar navigation={navigation} />
+      </KeyboardAvoidingView>
+      <Navbar navigation={navigation} />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -132,7 +149,7 @@ const styles = StyleSheet.create({
   textBelowImage: {
     textAlign: "center",
     marginTop: 15,
-    marginBottom:5,
+    marginBottom: 5,
     fontSize: 16,
   },
   numbersContainer: {
@@ -203,12 +220,12 @@ const styles = StyleSheet.create({
   },
   loginBtn: {
     width: 40,
-    top:8,
+    top: 8,
     borderRadius: 25,
     height: 40,
     alignItems: "center",
     justifyContent: "center",
-    marginLeft:30,
+    marginLeft: 30,
     backgroundColor: "#5265FF1A",
     borderColor: "#E1604D",
     borderWidth: 1,
