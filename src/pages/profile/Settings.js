@@ -12,8 +12,8 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyTextInput from "../../components/TextField";
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Toast from 'react-native-toast-message'; 
+import Icon from "react-native-vector-icons/FontAwesome";
+import Toast from "react-native-toast-message";
 import Navbar from "../../components/NavigationBar";
 
 const Settings = ({ navigation }) => {
@@ -43,7 +43,7 @@ const Settings = ({ navigation }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 0.0001,
     });
-  
+
     if (!result.canceled) {
       if (result.assets.length > 0) {
         setImage(result.assets[0].uri);
@@ -51,14 +51,14 @@ const Settings = ({ navigation }) => {
       }
     }
   };
-  
+
   const pickImage2 = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       quality: 0.0001,
     });
-  
+
     if (!result.canceled) {
       if (result.assets.length > 0) {
         setImage(result.assets[0].uri);
@@ -66,7 +66,7 @@ const Settings = ({ navigation }) => {
       }
     }
   };
-  
+
   const updateProfilePicture = async (uri) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -76,28 +76,35 @@ const Settings = ({ navigation }) => {
         type: "image/jpg",
         name: "profilePicture.jpg",
       });
-  
-      const imageResponse = await fetch("http://20.216.143.86/profile/profilepicture", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: formData,
-      });
-  
+
+      const imageResponse = await fetch(
+        "http://20.216.143.86/profile/profilepicture",
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: formData,
+        }
+      );
+
       if (imageResponse.ok) {
         console.log("Profile picture updated successfully");
       } else {
         const errorDescription = await imageResponse.text();
-        console.log("Failed to update profile picture:", imageResponse.status, errorDescription, formData);
+        console.log(
+          "Failed to update profile picture:",
+          imageResponse.status,
+          errorDescription,
+          formData
+        );
       }
     } catch (error) {
       console.error("Error updating profile picture:", error);
     }
   };
-  
 
   if (hasGalleryPermission === false) {
     return <Text>No access to internal Storage</Text>;
@@ -120,7 +127,9 @@ const Settings = ({ navigation }) => {
       }
 
       const profileData = await response.json();
-      setImage(`http://20.216.143.86/getimage?imageName=${profileData.user.profilPhoto}`);
+      setImage(
+        `http://20.216.143.86/getimage?imageName=${profileData.user.profilephoto}`
+      );
       setUsername(profileData.user.username.trim());
       setBirthdate(new Date(profileData.user.birthdate.trim()));
     } catch (error) {
@@ -129,63 +138,73 @@ const Settings = ({ navigation }) => {
   };
   const navigatetotamere = async () => {
     navigation.navigate("Choose");
-  }
+  };
   const navigatetodescr = async () => {
     navigation.navigate("Description");
-  }
+  };
   const navigatetoavatar = async () => {
     navigation.navigate("Avatar");
-  }
+  };
   const handleSave = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
 
-      const profileResponse = await fetch("http://20.216.143.86/profile/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          username,
-          birthdate,
-        }),
-      });
+      const profileResponse = await fetch(
+        "http://20.216.143.86/profile/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            username,
+            birthdate,
+          }),
+        }
+      );
       if (!username) {
-        Toast.show(`Nom d'utilisateur ou numéro de téléphone vide, merci de remplir ces champs`, {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.BOTTOM,
-          backgroundColor: "red",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-        });
+        Toast.show(
+          `Nom d'utilisateur ou numéro de téléphone vide, merci de remplir ces champs`,
+          {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM,
+            backgroundColor: "red",
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+          }
+        );
       }
       if (!profileResponse.ok) {
         const errorDescription = await profileResponse.text();
-        console.log("Failed to update profile:", profileResponse.status, errorDescription);
-        Toast.show(`Modification de profile échouée, les informations sont incorrects`, {
-          duration: Toast.durations.LONG,
-          position: Toast.positions.BOTTOM,
-          backgroundColor: "red",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-        });
+        console.log(
+          "Failed to update profile:",
+          profileResponse.status,
+          errorDescription
+        );
+        Toast.show(
+          `Modification de profile échouée, les informations sont incorrects`,
+          {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM,
+            backgroundColor: "red",
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+          }
+        );
         return;
       }
 
       console.log("Profile updated successfully");
-
     } catch (error) {
       console.error("Error updating profile:", error);
     }
-  if (username) {
-    navigation.navigate("Accueil3");
-  }
-    
+    if (username) {
+      navigation.navigate("Accueil3");
+    }
   };
-  
 
   const handleIconClick = () => {
     setShowButtons((prevShowButtons) => !prevShowButtons);
@@ -193,80 +212,93 @@ const Settings = ({ navigation }) => {
 
   return (
     <View style={{ flex: 1 }}>
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior="padding"
-      enabled={true}
-    >
-      <View style={styles.container}>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={{ uri: image }}
-              style={{
-                width: 150,
-                height: 150,
-                borderRadius: 10,
-                marginBottom: 10,
-              }}
-            />
-            <TouchableOpacity
-              style={styles.iconContainer}
-              onPress={handleIconClick}
-            >
-            <Icon name="gears" size={40} color= {'#E1604D'} />
-            </TouchableOpacity>
-          </View>
-          {showButtons && (
-            <View
-              style={{
-                flexDirection: "row",
-                marginLeft: 20,
-                justifyContent: "space-evenly",
-              }}
-            >
-              <TouchableOpacity style={styles.oauthBtn} onPress={pickImage}>
-              <Icon name="camera" size={30} color= {'white'} />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.oauthBtn} onPress={pickImage2}>
-              <Icon name="photo" size={30} color= {'white'} />
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        enabled={true}
+      >
+        <View style={styles.container}>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={styles.imageContainer}>
+              <Image
+                source={{ uri: image }}
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 10,
+                  marginBottom: 10,
+                }}
+              />
+              <TouchableOpacity
+                style={styles.iconContainer}
+                onPress={handleIconClick}
+              >
+                <Icon name="gears" size={40} color={"#E1604D"} />
               </TouchableOpacity>
             </View>
-          )}
-          <View style={styles.horizontalLine} />
-          <Text style={styles.username}>Nom d'utilisateur</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="username"
-            value={username}
-            onChangeText={setUsername}
-          />
-          <View style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.loginBtn2} onPress={navigatetotamere}>
-            <Text style={styles.loginBtnText2}>Change tes préférences !</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.loginBtn2} onPress={navigatetodescr}>
-            <Text style={styles.loginBtnText2}>Change ta description !</Text>
-          </TouchableOpacity>
+            {showButtons && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  marginLeft: 20,
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <TouchableOpacity style={styles.oauthBtn} onPress={pickImage}>
+                  <Icon name="camera" size={30} color={"white"} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.oauthBtn} onPress={pickImage2}>
+                  <Icon name="photo" size={30} color={"white"} />
+                </TouchableOpacity>
+              </View>
+            )}
+            <View style={styles.horizontalLine} />
+            <Text style={styles.username}>Nom d'utilisateur</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="username"
+              value={username}
+              onChangeText={setUsername}
+            />
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={styles.loginBtn2}
+                onPress={navigatetotamere}
+              >
+                <Text style={styles.loginBtnText2}>
+                  Change tes préférences !
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.loginBtn2}
+                onPress={navigatetodescr}
+              >
+                <Text style={styles.loginBtnText2}>
+                  Change ta description !
+                </Text>
+              </TouchableOpacity>
+            </View>
+            {/* <Text style={styles.username}>Birthdate</Text> */}
+            <MyTextInput
+              dateSelect={new Date(birthdate)}
+              placeholder="Date de naissance"
+              isDatepicker
+              onDateChange={(birthdate) => setBirthdate(birthdate)}
+              onChangeText={(birthdate) => setBirthdate(birthdate)}
+            />
+            <TouchableOpacity
+              style={styles.loginBtn3}
+              onPress={navigatetoavatar}
+            >
+              <Text style={styles.loginBtnText2}>Créer ton avatar !</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
+              <Text style={styles.loginBtnText}>Sauvegarder</Text>
+            </TouchableOpacity>
           </View>
-          {/* <Text style={styles.username}>Birthdate</Text> */}
-          <MyTextInput
-            dateSelect={new Date(birthdate)}
-            placeholder="Date de naissance"
-            isDatepicker
-            onDateChange={(birthdate) => setBirthdate(birthdate)}
-            onChangeText={(birthdate) => setBirthdate(birthdate)}
-          />
-          <TouchableOpacity style={styles.loginBtn3} onPress={navigatetoavatar}>
-            <Text style={styles.loginBtnText2}>Créer ton avatar !</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
-            <Text style={styles.loginBtnText}>Sauvegarder</Text>
-          </TouchableOpacity>
         </View>
-      </View>
-    </KeyboardAvoidingView>
-    <Navbar navigation={navigation} />
+      </KeyboardAvoidingView>
+      <Navbar navigation={navigation} />
     </View>
   );
 };
@@ -310,14 +342,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   buttonContainer: {
-    flexDirection: "row",  // Align buttons horizontally
-    justifyContent: "space-between",  // Space buttons evenly
-    marginTop: 20,  // Adjust margin as needed
+    flexDirection: "row", // Align buttons horizontally
+    justifyContent: "space-between", // Space buttons evenly
+    marginTop: 20, // Adjust margin as needed
   },
   loginBtn2: {
     marginTop: 20,
-    marginLeft:5,
-    marginRight:5,
+    marginLeft: 5,
+    marginRight: 5,
     width: "50%",
     borderRadius: 25,
     height: 50,
@@ -373,9 +405,9 @@ const styles = StyleSheet.create({
   horizontalLine: {
     width: "100%",
     height: 1,
-    backgroundColor: "#ccc", 
-    marginTop: 10, 
-    marginBottom: 10, 
+    backgroundColor: "#ccc",
+    marginTop: 10,
+    marginBottom: 10,
   },
 });
 
