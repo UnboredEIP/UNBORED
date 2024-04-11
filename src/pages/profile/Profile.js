@@ -46,7 +46,7 @@ const Profile = ({ navigation }) => {
       setPreferences(profileData.user.preferences);
       setDescription(profileData.user.description);
       setImage(
-        `http://20.216.143.86/getimage?imageName=${profileData.user.profilPhoto}`
+        `http://20.216.143.86/getimage?imageName=${profileData.user.profilephoto}`
       );
     } catch (error) {
       console.error("Error fetching profile:", error);
