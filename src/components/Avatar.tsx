@@ -59,14 +59,21 @@ const HAIR_LEFT_ADJUSTMENT_RATIO = -0.124;
 const HAIR_SIZE_MULTIPLIER = 1.245;
 
 const MyAvatar = ({
-  clothTop = "shirt",
-  eyes = "closed",
+  //@ts-ignore
+  clothTop, //= "shirt",
+  //@ts-ignore
+  eyes, //= "closed",
   size = 200,
-  hair = "afro",
-  colorSkin = "#D08B5B",
-  colorEye = "green",
-  colorHair = "#4A312C",
-  colorClothingTop = "black",
+  //@ts-ignore
+  hair, //="afro",
+  //@ts-ignore
+  colorSkin,// = "#D08B5B",
+  //@ts-ignore
+  colorEye,// = "green",
+  //@ts-ignore
+  colorHair,// = "#4A312C",
+  //@ts-ignore
+  colorClothingTop,// = "black",
 }) => {
   const clothComponents = {
     blazer: <BlazerSvg />,

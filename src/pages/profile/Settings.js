@@ -128,7 +128,7 @@ const Settings = ({ navigation }) => {
 
       const profileData = await response.json();
       setImage(
-        `http://20.216.143.86/getimage?imageName=${profileData.user.profilephoto}`
+        `http://20.216.143.86/getimage?imageName=${profileData.user.profilePhoto}`
       );
       setUsername(profileData.user.username.trim());
       setBirthdate(new Date(profileData.user.birthdate.trim()));

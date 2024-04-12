@@ -85,7 +85,7 @@ const Calendar = ({ navigation }) => {
         const profileData = await response.json();
         setUsername(profileData.user.username.trim());
         setImage(
-          `http://20.216.143.86/getimage?imageName=${profileData.user.profilephoto}`
+          `http://20.216.143.86/getimage?imageName=${profileData.user.profilePhoto}`
         );
         setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
@@ -290,8 +290,7 @@ const Calendar = ({ navigation }) => {
           <>
             <View style={styles.usernameContainer}>
               <Text style={styles.usernameLabel}>Bonjour </Text>
-              <Text style={styles.username}>{username}</Text>
-              <Text style={styles.usernameLabel}> !</Text>
+              <Text style={styles.username}>{username + " !"}</Text>
             </View>
             <View style={styles.imageContainer}>
               <Image
@@ -476,12 +475,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   usernameContainer: {
-    flexDirection: "row",
+    marginBottom:30,
+    // flexDirection: "row",
     alignItems: "center",
   },
   imageContainer: {
     padding: 5,
-    marginLeft: 30,
+    marginLeft: 60,
     borderWidth: 2,
     borderColor: "#E1604D",
     borderRadius: 12,
@@ -489,7 +489,7 @@ const styles = StyleSheet.create({
   usernameLabel: {
     fontSize: 25,
     fontWeight: "500",
-    marginRight: 5,
+    // marginRight: 5,
     color: "#E1604D",
   },
   username: {

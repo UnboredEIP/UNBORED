@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
 import Swiper from "react-native-swiper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import MyAvatar from "../components/Avatar";
 const Avatar = ({ navigation }) => {
   const [selectedFace, setSelectedFace] = useState(null); // To store the selected face
   const [tintColor, setTintColor] = useState("#000000"); // Initial color is black
 
-  const faces = [
-    require("./avatar/avatars/body/body.png"),
-  ];
+
 
   const colorOptions = ["#F5D0A9", "#E0AC69", "#C68642", "#A0522D", "#8B4513", "#6F4E37", "#DEB887", "#D2B48C", "#CD853F", "#8B5A2B", "#FFDAB9", "#F4A460", "#FFA07A", "#FA8072", "#FF6347", "#FF4500", "#FF7F50", "#FF8C00", "#D2691E", "#8B0000"];
 
@@ -25,12 +23,8 @@ const Avatar = ({ navigation }) => {
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({
-          style: {
-            head: selectedFace === null ? "0" : selectedFace.toString(),
-            shoes: "0", // Set the appropriate value for shoes
-            pants: "0", // Set the appropriate value for pants
-            body: "0", // Set the appropriate value for body
-          },
+            head:{ 
+              color:selectedFace === null ? "0" : selectedFace},
         }),
       });
 
@@ -43,24 +37,16 @@ const Avatar = ({ navigation }) => {
 
   const handleColorChange = (color) => {
     setSelectedFace(color);
+    console.log("ziziii", color);
     setTintColor(color);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Choisissez l'avatar</Text>
-      <Swiper
-        style={styles.swiper}
-        showsButtons={true}
-        loop={false}
-        onIndexChanged={(color) => setSelectedFace(color)}
-      >
-        {faces.map((face, index) => (
-          <View key={index} style={styles.slide}>
-            <Image source={face} style={[styles.image, { tintColor: tintColor }]} />
-          </View>
-        ))}
-      </Swiper>
+      <View style={styles.face1}>
+      <MyAvatar size={330} colorSkin={tintColor} colorClothingTop={tintColor}/>
+      </View>
 
       <ScrollView horizontal style={styles.colorContainer}>
         {colorOptions.map((color, index) => (
@@ -104,9 +90,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginTop: 50,
   },
-  swiper: {
-    marginTop: 20,
-    height: 150,
+  face1: {
+    flex: 1,
+    marginBottom:-100,
+    marginTop:50,
+    paddingLeft:30,
+    alignSelf:"flex-start",
   },
   slide: {
     flex: 1,

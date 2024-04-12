@@ -1,41 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import MyAvatar from "../components/Avatar";
 const avatareyes = ({ navigation }) => {
-  const [avatarIndex, setAvatarIndex] = useState(0); // Default avatar index
-  const [selectedGlassesIndex, setSelectedGlassesIndex] = useState(null); // Index of selected glasses
-  const [selectedMouthIndex, setSelectedMouthIndex] = useState(null); // Index of selected mouth
-  const [selectedeyebroweIndex, setSelectedeyebroweIndex] = useState(null); // Index of selected mouth
-  const [selectedHair, setSelectedHair] = useState(null);
-  const [continuePressed, setContinuePressed] = useState(0); // Changed to 0 to represent the index
-  const [avatarColor, setAvatarColor] = useState("#FFFFFF"); // Default avatar color
+  const [selectedGlasses, setSelectedGlasses] = useState(null);
+  const [selectedCloth, setSelectedCloth] = useState(null);
+  const [continuePressed, setContinuePressed] = useState(0);
+  const [avatarColor, setAvatarColor] = useState("#FFFFFF");
+  const [clothColor, setClothColor] = useState("");
+  const [HairColor, setHairColor] = useState("");
+  const [EyeColor, setEyeColor] = useState("");
+  const [selectedHair, setSelectedHair] = useState("");
   const [reward, setReward] = useState(null);
-  const faces = [
-    require("./avatar/avatars/body/body.png"),
-  ];
-  const glasses = [
-    require("./avatar/avatars/eyes/eyeroll.png"),
-     require("./avatar/avatars/eyes/closed.png"),
-     require("./avatar/avatars/eyes/cry.png"),
-     require("./avatar/avatars/eyes/default.png"),
-     require("./avatar/avatars/eyes/dizzy.png"),
-     require("./avatar/avatars/eyes/happy.png"),
-     require("./avatar/avatars/eyes/heart.png"),
-     require("./avatar/avatars/eyes/side.png"),
-     require("./avatar/avatars/eyes/squint.png"),
-     require("./avatar/avatars/eyes/surprised.png"),
-     require("./avatar/avatars/eyes/wacky.png"),
-     require("./avatar/avatars/eyes/wink.png"),
-  ];
-  const hat = [
-    require("./avatar/avatars/hat/fedora.png"),
-    require("./avatar/avatars/hat/hijab.png"),
-    require("./avatar/avatars/hat/turban.png"),
-    require("./avatar/avatars/hat/winter.png"),
-    require("./avatar/avatars/hat/winter2.png"),
-    require("./avatar/avatars/hat/wintercat.png"),
-  ]
+
   const hair = [
     require("./avatar/avatars/hair1/afro.png"),
     require("./avatar/avatars/hair1/big.png"),
@@ -58,20 +35,6 @@ const avatareyes = ({ navigation }) => {
     require("./avatar/avatars/hair1/shortwaved.png"),
     require("./avatar/avatars/hair1/square.png"),
   ]
-  const mouths = [
-    require("./avatar/avatars/mouth/default.png"),
-    require("./avatar/avatars/mouth/desbelief.png"),
-    require("./avatar/avatars/mouth/eating.png"),
-    require("./avatar/avatars/mouth/grimace.png"),
-    require("./avatar/avatars/mouth/open.png"),
-    require("./avatar/avatars/mouth/sad.png"),
-    require("./avatar/avatars/mouth/scream.png"),
-    require("./avatar/avatars/mouth/serious.png"),
-    require("./avatar/avatars/mouth/smile.png"),
-    require("./avatar/avatars/mouth/tongue.png"),
-    require("./avatar/avatars/mouth/twinkle.png"),
-    require("./avatar/avatars/mouth/vomit.png"),
-  ];
   const eyebrowes = [
     require("./avatar/avatars/eyebrowes/angry.png"),
     require("./avatar/avatars/eyebrowes/exited.png"),
@@ -132,17 +95,22 @@ const avatareyes = ({ navigation }) => {
         }
       }
     }
-
-      setAvatarColor(profileData.user.style.head);
+    console.log("CACAAAAAAA:",profileData.user.style.head.color)
+      setAvatarColor(profileData.user.style.head.color);
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
   };
 
-  const onPressImage = (index) => {
-    setSelectedGlassesIndex(index);
+  const onPressImage = (eyes) => {
+    setSelectedGlasses(eyes);
   };
-
+  const onPressImageHair = (hair) => {
+    setSelectedHair(hair);
+  };
+  const onPressImageCloth = (cloth) => {
+    setSelectedCloth(cloth);
+  };
   const onPressContinue = () => {
     setContinuePressed(prevIndex => prevIndex + 1); // Increment the index
  };
@@ -154,48 +122,49 @@ const avatareyes = ({ navigation }) => {
 
   const renderGlassesImages = () => {
     if (!continuePressed) {
-      // Divide glasses array into four arrays with 3 elements each
-      const glassesRow1 = glasses.slice(0, 3);
-      const glassesRow2 = glasses.slice(3, 6);
-      const glassesRow3 = glasses.slice(6, 9);
-      const glassesRow4 = glasses.slice(9, 12);
-  
       return (
         <View style={styles.imagesContainer}>
           <View style={styles.row}>
-            {glassesRow1.map((glass, index) => (
-              <TouchableOpacity key={index} onPress={() => onPressImage(index)}>
-                <Image source={glass} style={[styles.bigImage]} />
-              </TouchableOpacity>
-            ))}
+            <TouchableOpacity style={styles.button} onPress={() => onPressImage("closed")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"closed"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button2} onPress={() => onPressImage("cry")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"cry"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button3} onPress={() => onPressImage("default")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"default"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button4} onPress={() => onPressImage("dizzy")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"dizzy"}/>
+            </TouchableOpacity>
           </View>
-          <View style={styles.row}>
-            {glassesRow2.map((glass, index) => (
-              <TouchableOpacity key={index + 3} onPress={() => onPressImage(index + 3)}>
-                <Image source={glass} style={[styles.bigImage]} />
-              </TouchableOpacity>
-            ))}
+          <View style={styles.row2}>
+            <TouchableOpacity style={styles.button} onPress={() => onPressImage("eyeroll")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"eyeroll"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button2} onPress={() => onPressImage("happy")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"happy"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button3} onPress={() => onPressImage("heart")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"heart"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button4} onPress={() => onPressImage("side")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"side"}/>
+            </TouchableOpacity>
           </View>
-          <View style={styles.row}>
-            {glassesRow3.map((glass, index) => (
-              <TouchableOpacity 
-                key={index + 6} 
-                onPress={() => {
-                  if (reward) { // Check if it's not the first eye of the 3rd row or if setReward is true
-                    onPressImage(index + 6);
-                  }
-                }}
-              >
-                <Image source={glass} style={[styles.bigImage, reward ? null : styles.lockedImage]} />
-              </TouchableOpacity>
-            ))}
-          </View>
-          <View style={styles.row}>
-            {glassesRow4.map((glass, index) => (
-              <TouchableOpacity key={index + 9} onPress={() => onPressImage(index + 9)}>
-                <Image source={glass} style={[styles.bigImage]} />
-              </TouchableOpacity>
-            ))}
+          <View style={styles.row3}>
+            <TouchableOpacity style={styles.button} onPress={() => onPressImage("squint")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"squint"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button2} onPress={() => onPressImage("surprised")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"surprised"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button3} onPress={() => onPressImage("wacky")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"wacky"}/>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button4} onPress={() => onPressImage("wink")}>
+              <MyAvatar size={90} colorSkin={avatarColor} eyes={"wink"}/>
+            </TouchableOpacity>
           </View>
         </View>
       );
@@ -205,46 +174,130 @@ const avatareyes = ({ navigation }) => {
   
   
 
-  const renderMouthImages = () => {
-    // Divide mouths array into two arrays with 3 elements each
-    const mouthsRow1 = mouths.slice(0, 3);
-    const mouthsRow2 = mouths.slice(3, 6);
-    const mouthsRow3 = mouths.slice(6, 9);
-    const mouthsRow4 = mouths.slice(9, 12);
+  const chooseColor = () => {
+    const colors = [
+      '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF',
+      '#8A2BE2', '#32CD32', '#4682B4', '#FF69B4', '#7FFF00', // Additional colors
+      '#FF6347', '#00CED1', '#FFA07A', '#9400D3', '#ADFF2F', // More colors
+      '#40E0D0', '#8B008B', '#FF4500', '#1E90FF', '#00FF7F', // Even more colors
+    ];
+    
+    // Calculate the number of buttons per row
+    const buttonsPerRow = 5;
+    const rows = Math.ceil(colors.length / buttonsPerRow);
   
     return (
-      <View style={styles.imagesContainer}>
-        <View style={styles.row}>
-          {mouthsRow1.map((mouth, index) => (
-            <TouchableOpacity key={index} onPress={() => setSelectedMouthIndex(index)}>
-              <Image source={mouth} style={[styles.bigImage]} />
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View style={styles.row}>
-          {mouthsRow2.map((mouth, index) => (
-            <TouchableOpacity key={index + 3} onPress={() => setSelectedMouthIndex(index + 3)}>
-              <Image source={mouth} style={[styles.bigImage]} />
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View style={styles.row}>
-          {mouthsRow3.map((mouth, index) => (
-            <TouchableOpacity key={index + 6} onPress={() => setSelectedMouthIndex(index + 6)}>
-              <Image source={mouth} style={[styles.bigImage]} />
-            </TouchableOpacity>
-          ))}
-        </View>
-        <View style={styles.row}>
-          {mouthsRow4.map((mouth, index) => (
-            <TouchableOpacity key={index + 9} onPress={() => setSelectedMouthIndex(index + 9)}>
-              <Image source={mouth} style={[styles.bigImage]} />
-            </TouchableOpacity>
-          ))}
-        </View>
+      <View style={styles.colorContainer}>
+        {[...Array(rows)].map((_, rowIndex) => (
+          <View key={rowIndex} style={styles.row}>
+            {colors.slice(rowIndex * buttonsPerRow, (rowIndex + 1) * buttonsPerRow).map((color, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.colorBox, { backgroundColor: color }]}
+                onPress={() => setClothColor(color)}
+              />
+            ))}
+          </View>
+        ))}
       </View>
     );
   };
+
+  const chooseColorEye = () => {
+    const colors = [
+      '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF',
+      '#8A2BE2', '#32CD32', '#4682B4', '#FF69B4', '#7FFF00', // Additional colors
+      '#FF6347', '#00CED1', '#FFA07A', '#9400D3', '#ADFF2F', // More colors
+      '#40E0D0', '#8B008B', '#FF4500', '#1E90FF', '#00FF7F', // Even more colors
+    ];
+    
+    // Calculate the number of buttons per row
+    const buttonsPerRow = 5;
+    const rows = Math.ceil(colors.length / buttonsPerRow);
+  
+    return (
+      <View style={styles.colorContainer}>
+        {[...Array(rows)].map((_, rowIndex) => (
+          <View key={rowIndex} style={styles.row}>
+            {colors.slice(rowIndex * buttonsPerRow, (rowIndex + 1) * buttonsPerRow).map((color, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.colorBox, { backgroundColor: color }]}
+                onPress={() => setEyeColor(color)}
+              />
+            ))}
+          </View>
+        ))}
+      </View>
+    );
+  };
+  const chooseColorHair = () => {
+    const colors = [
+      '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF',
+      '#8A2BE2', '#32CD32', '#4682B4', '#FF69B4', '#7FFF00', // Additional colors
+      '#FF6347', '#00CED1', '#FFA07A', '#9400D3', '#ADFF2F', // More colors
+      '#40E0D0', '#8B008B', '#FF4500', '#1E90FF', '#00FF7F', // Even more colors
+    ];
+    
+    // Calculate the number of buttons per row
+    const buttonsPerRow = 5;
+    const rows = Math.ceil(colors.length / buttonsPerRow);
+  
+    return (
+      <View style={styles.colorContainer}>
+        {[...Array(rows)].map((_, rowIndex) => (
+          <View key={rowIndex} style={styles.row}>
+            {colors.slice(rowIndex * buttonsPerRow, (rowIndex + 1) * buttonsPerRow).map((color, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[styles.colorBox, { backgroundColor: color }]}
+                onPress={() => setHairColor(color)}
+              />
+            ))}
+          </View>
+        ))}
+      </View>
+    );
+  };
+
+
+  const renderClothImages = () => {
+    return (
+      <View style={styles.imagesContainer}>
+      <View style={styles.row}>
+        <TouchableOpacity style={styles.buttonZ} onPress={() => onPressImageCloth("blazer")}>
+          <MyAvatar size={90} colorSkin={avatarColor} clothTop={"blazer"}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonZ2} onPress={() => onPressImageCloth("crewneck")}>
+          <MyAvatar size={90} colorSkin={avatarColor} clothTop={"crewneck"}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonZ3} onPress={() => onPressImageCloth("hoodie")}>
+          <MyAvatar size={90} colorSkin={avatarColor} clothTop={"hoodie"}/>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.row2}>
+        <TouchableOpacity style={styles.buttonZ} onPress={() => onPressImageCloth("polo")}>
+          <MyAvatar size={90} colorSkin={avatarColor} clothTop={"polo"}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonZ2} onPress={() => onPressImageCloth("scoopneck")}>
+          <MyAvatar size={90} colorSkin={avatarColor} clothTop={"scoopneck"}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonZ3} onPress={() => onPressImageCloth("shirt")}>
+          <MyAvatar size={90} colorSkin={avatarColor} clothTop={"shirt"}/>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.row3}>
+      <TouchableOpacity style={styles.button2} onPress={() => onPressImageCloth("overall")}>
+          <MyAvatar size={90} colorSkin={avatarColor} clothTop={"overall"}/>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button3} onPress={() => onPressImageCloth("vneck")}>
+          <MyAvatar size={90} colorSkin={avatarColor} clothTop={"vneck"}/>
+        </TouchableOpacity>
+      </View>
+    </View>
+    );
+  };
+
   const renderEyebrowesImages = () => {
     // Divide mouths array into two arrays with 3 elements each
     const eyebrowesRow1 = eyebrowes.slice(0, 3);
@@ -279,48 +332,81 @@ const avatareyes = ({ navigation }) => {
   };
 
   const renderHairImages = () => {
-    const hairRow1 = hair.slice(0, 3);
-    const hairRow2 = hair.slice(3, 6);
-    const hairRow3 = hair.slice(6, 9);
-    const hairRow4 = hair.slice(9, 12);
-    const hairRow5 = hair.slice(12, 15);
     return (
       <View style={styles.imagesContainer}>
         <View style={styles.row}>
-          {hairRow1.map((hair, index) => (
-            <TouchableOpacity key={index} onPress={() => setSelectedHair(index)}>
-              <Image source={hair} style={[styles.BigImageHair]} />
-            </TouchableOpacity>
-          ))}
+          <TouchableOpacity style={styles.button} onPress={() => onPressImageHair("afro")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"afro"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button2} onPress={() => onPressImageHair("big")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"big"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button3} onPress={() => onPressImageHair("buzzcut")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"buzzcut"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button4} onPress={() => onPressImageHair("calvitie")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"calvitie"}/>
+          </TouchableOpacity>
         </View>
+        <View style={styles.row2}>
+          <TouchableOpacity style={styles.button} onPress={() => onPressImageHair("curly")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"curly"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button2} onPress={() => onPressImageHair("curlyshort")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"curlyshort"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button3} onPress={() => onPressImageHair("curvy")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"curvy"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button4} onPress={() => onPressImageHair("frizzy")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"frizzy"}/>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.row3}>
+          <TouchableOpacity style={styles.button} onPress={() => onPressImageHair("longdreads")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"longdreads"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button2} onPress={() => onPressImageHair("longstraight")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"longstraight"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button3} onPress={() => onPressImageHair("medium")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"medium"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button4} onPress={() => onPressImageHair("mediumdreads")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"mediumdreads"}/>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  };
+  const renderHairImages2 = () => {
+    return (
+      <View style={styles.imagesContainer}>
         <View style={styles.row}>
-          {hairRow2.map((hair, index) => (
-            <TouchableOpacity key={index + 3} onPress={() => setSelectedHair(index + 3)}>
-              <Image source={hair} style={[styles.BigImageHair]} />
-            </TouchableOpacity>
-          ))}
+          <TouchableOpacity style={styles.button} onPress={() => onPressImageHair("mediumlong")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"mediumlong"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button2} onPress={() => onPressImageHair("minidreads")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"minidreads"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button3} onPress={() => onPressImageHair("shaggy")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"shaggy"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.button4} onPress={() => onPressImageHair("shaggymullet")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"shaggymullet"}/>
+          </TouchableOpacity>
         </View>
-        {/* <View style={styles.row}>
-          {hairRow3.map((hair, index) => (
-            <TouchableOpacity key={index + 6} onPress={() => setSelectedHair(index + 6)}>
-              <Image source={hair} style={[styles.BigImageHair]} />
-            </TouchableOpacity>
-          ))}
-        </View> */}
-        {/* <View style={styles.row}>
-          {hairRow4.map((hair, index) => (
-            <TouchableOpacity key={index + 9} onPress={() => setSelectedHair(index + 9)}>
-              <Image source={hair} style={[styles.BigImageHair]} />
-            </TouchableOpacity>
-          ))}
+        <View style={styles.row2}>
+          <TouchableOpacity style={styles.buttonZ} onPress={() => onPressImageHair("shortflat")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"shortflat"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonZ2} onPress={() => onPressImageHair("shortwaved")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"shortwaved"}/>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.buttonZ3} onPress={() => onPressImageHair("square")}>
+            <MyAvatar size={70} colorSkin={avatarColor} hair={"square"}/>
+          </TouchableOpacity>
         </View>
-        <View style={styles.row}>
-          {hairRow5.map((hair, index) => (
-            <TouchableOpacity key={index + 12} onPress={() => setSelectedHair(index + 12)}>
-              <Image source={hair} style={[styles.BigImageHair]} />
-            </TouchableOpacity>
-          ))}
-        </View> */}
       </View>
     );
   };
@@ -329,19 +415,7 @@ const avatareyes = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Créez votre Avatar !</Text>
       <View style={styles.avatarContainer}>
-        <Image source={faces[avatarIndex]} style={[styles.image, { tintColor: avatarColor }]} />
-        {selectedGlassesIndex !== null && (
-          <Image source={glasses[selectedGlassesIndex]} style={[styles.glasses]} />
-        )}
-        {selectedMouthIndex !== null && continuePressed >= 1 && (
-          <Image source={mouths[selectedMouthIndex]} style={[styles.mouth]} />
-        )}
-        {selectedeyebroweIndex !== null && continuePressed >= 1 && (
-          <Image source={eyebrowes[selectedeyebroweIndex]} style={[styles.eyebrowes, { tintColor: "#000000" }]} />
-        )}
-        {selectedHair !== null && continuePressed >= 1 && (
-          <Image source={hair[selectedHair]} style={[styles.hair]} />
-        )}
+      <MyAvatar size={190} colorSkin={avatarColor} eyes={selectedGlasses} clothTop={selectedCloth} colorClothingTop={clothColor} hair={selectedHair} colorHair={HairColor} colorEye={EyeColor}/>
       </View>
       <TouchableOpacity style={styles.bigButton} onPress={onPressContinue}>
         <Text style={styles.buttonText}>Continuer</Text>
@@ -353,20 +427,35 @@ const avatareyes = ({ navigation }) => {
       )}
       {continuePressed == 1 && (
         <View style={styles.imagesContainer}>
-          <View style={styles.row}>{renderMouthImages()}</View>
+          <View style={styles.row}>{chooseColorEye()}</View>
         </View>
       )}
       {continuePressed == 2 && (
         <View style={styles.imagesContainer}>
-          <View style={styles.row}>{renderEyebrowesImages()}</View>
+          <View style={styles.row}>{renderClothImages()}</View>
         </View>
       )}
       {continuePressed == 3 && (
         <View style={styles.imagesContainer}>
-          <View style={styles.row}>{renderHairImages()}</View>
+          <View style={styles.row}>{chooseColor()}</View>
         </View>
       )}
       {continuePressed == 4 && (
+        <View style={styles.imagesContainer}>
+          <View style={styles.row}>{renderHairImages()}</View>
+        </View>
+      )}
+      {continuePressed == 5 && (
+        <View style={styles.imagesContainer}>
+          <View style={styles.row}>{renderHairImages2()}</View>
+        </View>
+      )}
+      {continuePressed == 6 && (
+        <View style={styles.imagesContainer}>
+          <View style={styles.row}>{chooseColorHair()}</View>
+        </View>
+      )}
+      {continuePressed == 7 && (
         <TouchableOpacity style={styles.bigButton} onPress={onPressFinish}>
           <Text style={styles.buttonText}>Finish</Text>
         </TouchableOpacity>
@@ -383,13 +472,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  colorContainer: {
+    flexDirection: 'row',
+    // marginTop: 20,
+    marginBottom:-300,
+  },
+  colorBox: {
+    width: 40,
+    height: 40,
+    borderRadius: 8,
+    marginHorizontal: 5,
+  },
   title: {
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
   },
   avatarContainer: {
-    position: "relative",
     width: 200,
     height: 200,
     borderWidth: 1,
@@ -431,9 +530,35 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   row: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginBottom:30,
+    top:-180,
+    marginTop:180,
+  },
+  row2:{
+    top:-60
+  },
+  row3:{
+    top:70
+  },
+  button: {
+    right:-105,
+  },
+  button2: {
+    right:-5,
+  },
+  button3: {
+    right:95,
+  },
+  button4: {
+    right:195,
+  },
+  buttonZ: {
+    right:-50
+  },
+  buttonZ2: {
+    right:45
+  },
+  buttonZ3: {
+    right:140
   },
   bigImage: {
     marginHorizontal: 10,
