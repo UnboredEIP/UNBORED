@@ -23,6 +23,7 @@ const Calendar = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [allEvents, setAllEvents] = useState([]);
   let filteredEvents = [];
+  let dotEvent = [];
 
   const navigatetotamere = async () => {
     navigation.navigate("NewEvent");
@@ -31,7 +32,6 @@ const Calendar = ({ navigation }) => {
     navigation.navigate("Description");
   };
   const handleEventPress = (item) => {
-    console.log(item);
     window.Globalitem = item;
     navigation.navigate("EditEvent");
   };
@@ -185,39 +185,42 @@ const Calendar = ({ navigation }) => {
   const handleDayPress = (day) => {
     setSelectedDay(day);
   };
-
-  const renderDayItem = ({ item }) => (
-    <TouchableOpacity
-      style={[
-        styles.dayItem,
-        item.dayName === selectedDay && styles.selectedDayItem,
-      ]}
-      onPress={() => handleDayPress(item.dayName)}
-    >
-      <Text style={styles.dayNumber}>{item.dayNumber}</Text>
-      <Text style={styles.dayName}>{item.dayName}</Text>
-      {item.events?.map((event) => (
-        <Text key={event.name} style={styles.eventText}>
-          {event.name}
-        </Text>
-      ))}
-    </TouchableOpacity>
-  );
-
+  const renderDayItem = ({ item }) => {
+    const hasEvents = dotEvent.some(event => {
+      const eventDate = new Date(event.date);
+      return (
+        eventDate.getFullYear() === item.year &&
+        eventDate.getMonth() + 1 === item.month &&
+        eventDate.getDate() === item.dayNumber
+      );
+    });
+  
+    return (
+      <TouchableOpacity
+        style={[
+          styles.dayItem,
+          item.dayName === selectedDay && styles.selectedDayItem,
+        ]}
+        onPress={() => handleDayPress(item.dayName)}
+      >
+        <Text style={[styles.dayNumber, item.dayName===selectedDay && styles.dayNumber2]}>{item.dayNumber}</Text>
+        <Text style={[styles.dayName, item.dayName===selectedDay && styles.dayName2]}>{item.dayName}</Text>
+        {hasEvents && <View style={styles.redDot} />}
+      </TouchableOpacity>
+    );
+  };
+  
   const renderAllEvents = () => (
     <View style={styles.allEventsContainer}>
       {
         allEvents
           .filter((event) => event.private) // Filter only private events
           .map((event) => {
-            console.log("CACA", event);
             const [year, month, day] = event.start_date.split("-");
             const [dayOnly] = day.split("T");
             const [datePart, timePart] = event.start_date.split("T");
             const [hoursMinutes] = timePart.split(".");
             const [hours, minutes] = hoursMinutes.split(":");
-            console.log("Hours:", hours);
-            console.log("Minutes:", minutes);
             // Ensure month and day have leading zeros if necessary
             const formattedMonth = month.padStart(2, "0");
             const formattedDayOnly = dayOnly.padStart(2, "0");
@@ -233,13 +236,11 @@ const Calendar = ({ navigation }) => {
 
                 const formattedDayMonth = dayMonth.toString().padStart(2, "0");
                 const formattedDayDay = dayNumber.toString().padStart(2, "0");
-                console.log(event.name, year, dayYear.toString());
                 if (
                   year === dayYear.toString() &&
                   formattedMonth === formattedDayMonth &&
                   formattedDayOnly === formattedDayDay
                 ) {
-                  console.log(event);
                   filteredEvents.push({
                     heuredebut: hours,
                     minutesdebut: minutes,
@@ -250,6 +251,9 @@ const Calendar = ({ navigation }) => {
                     date: formattedDayOnly,
                     id: event._id,
                   });
+                  dotEvent.push({
+                    date:event.start_date
+                  })
                   return null;
                 }
                 return null;
@@ -357,7 +361,6 @@ const Calendar = ({ navigation }) => {
                 })}
                 scrollEnabled={false}
                 renderItem={({ item }) => (
-                  console.log("Pressed item:", item.id),
                   (
                     <TouchableOpacity onPress={() => handleEventPress(item)}>
                       <View style={styles.hourItem}>
@@ -460,10 +463,21 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     textAlign: "center",
   },
+  dayNumber2: {
+    color:"#E1604D",
+    fontSize: 18,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
   dayName: {
     fontSize: 12,
     textAlign: "center",
     color: "grey",
+  },
+  dayName2: {
+    fontSize: 12,
+    textAlign: "center",
+    color: "#E1604D",
   },
   monthDayNumber: {
     fontSize: 16,
@@ -507,6 +521,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
+  redDot: {
+    position: 'absolute',
+    bottom: 2,
+    left: '68%',
+    width: 8,
+    height: 8,
+    borderRadius: 5,
+    backgroundColor: '#E1604D',
+  },  
   hourItem: {
     flexDirection: "row",
     justifyContent: "space-between",
