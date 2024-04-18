@@ -10,14 +10,14 @@
                     <use xlink:href="#path-rpj9oimezy-1"></use>
                 </mask>
                 <use id="The-white-stuff" fill="#FFFFFF" xlink:href="#path-rpj9oimezy-1"></use>
-                <circle fill-opacity="0.699999988" fill="#000000" mask="url(#mask-rpj9oimezy-2)" cx="14" cy="10" r="6"></circle>
+                <circle fill-opacity="0.699999988" fill="currentColor" mask="url(#mask-rpj9oimezy-2)" cx="14" cy="10" r="6"></circle>
             </g>
             <g id="Eye" transform="translate(68, 13)">
                 <mask id="mask-rpj9oimezy-4" fill="white">
                     <use xlink:href="#path-rpj9oimezy-3"></use>
                 </mask>
                 <use id="Eyeball-Mask" fill="#FFFFFF" xlink:href="#path-rpj9oimezy-3"></use>
-                <circle fill-opacity="0.699999988" fill="#000000" mask="url(#mask-rpj9oimezy-4)" cx="14" cy="10" r="6"></circle>
+                <circle fill-opacity="0.699999988" fill="currentColor" mask="url(#mask-rpj9oimezy-4)" cx="14" cy="10" r="6"></circle>
             </g>
         </g>
     </g>
