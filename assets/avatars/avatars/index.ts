@@ -8,7 +8,6 @@ import PoloSvg from "./body/polo.svg";
 import ScoopneckSvg from "./body/scoopneck.svg";
 import ShirtSvg from "./body/shirt.svg";
 import VneckSvg from "./body/vneck.svg";
-
 //EYES
 import EyeClosedSvg from "./eyes/closed.svg";
 import EyeCrySvg from "./eyes/cry.svg";
@@ -42,6 +41,44 @@ import HairShaggymulet from "./hair/shaggymulet.svg";
 import HairShortflat from "./hair/shortflat.svg";
 import HairShortwaved from "./hair/shortwaved.svg";
 import HairSquare from "./hair/square.svg";
+//BEARD
+import BeardLight from "./beard/light.svg";
+import BeardMajestic from "./beard/majestic.svg";
+import BeardMedium from "./beard/medium.svg";
+import BeardMustache from "./beard/mustache.svg";
+import BeardMustachemagnum from "./beard/mustachemagnum.svg";
+
+//MOUTH
+import MouthDefault from "./mouth/default.svg";
+import MouthDesbelief from "./mouth/desbelief.svg";
+import MouthEating from "./mouth/eating.svg";
+import MouthGrimace from "./mouth/grimace.svg";
+import MouthOpen from "./mouth/open.svg";
+import MouthSad from "./mouth/sad.svg";
+import MouthScream from "./mouth/scream.svg";
+import MouthSerious from "./mouth/serious.svg";
+import MouthSmile from "./mouth/smile.svg";
+import MouthTongue from "./mouth/tongue.svg";
+import MouthTwinkle from "./mouth/twinkle.svg";
+import MouthVomit from "./mouth/vomit.svg";
+
+//EYEBROWS
+import EyebrowAngry from "./eyebrows/angry.svg";
+import EyebrowExited from "./eyebrows/exited.svg";
+import EyebrowFlat from "./eyebrows/flat.svg";
+import EyebrowNatural from "./eyebrows/natural.svg";
+import EyebrowSad from "./eyebrows/sad.svg";
+import EyebrowSad2 from "./eyebrows/sad2.svg";
+import EyebrowUnibrow from "./eyebrows/unibrow.svg";
+import EyebrowUpdown from "./eyebrows/updown.svg";
+
+//HAT
+import HatFedora from "./hat/fedora.svg";
+import HatHijab from "./hat/hijab.svg";
+import HatTurban from "./hat/turban.svg";
+import HatWinter from "./hat/winter.svg";
+import HatWinter2 from "./hat/winter2.svg";
+import HatWintercat from "./hat/wintercat.svg";
 
 export {
   BodySvg,
@@ -87,4 +124,39 @@ export {
   HairShortflat,
   HairShortwaved,
   HairSquare,
+  //BEARD
+  BeardLight,
+  BeardMajestic,
+  BeardMedium,
+  BeardMustache,
+  BeardMustachemagnum,
+  //MOUTH
+  MouthDefault,
+  MouthDesbelief,
+  MouthEating,
+  MouthGrimace,
+  MouthOpen,
+  MouthSad,
+  MouthScream,
+  MouthSerious,
+  MouthSmile,
+  MouthTongue,
+  MouthTwinkle,
+  MouthVomit,
+  //EYEBROW,
+  EyebrowAngry,
+  EyebrowExited,
+  EyebrowFlat,
+  EyebrowNatural,
+  EyebrowSad,
+  EyebrowSad2,
+  EyebrowUnibrow,
+  EyebrowUpdown,
+  //HAT
+  HatFedora,
+  HatHijab,
+  HatTurban,
+  HatWinter,
+  HatWinter2,
+  HatWintercat,
 };
