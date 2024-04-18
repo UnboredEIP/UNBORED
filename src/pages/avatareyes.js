@@ -28,9 +28,9 @@ const avatareyes = ({ navigation }) => {
           Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify({
-          hair:{id: selectedHairId.toString()},
-          eyes: {id: selectedGlassesId.toString()},
-          accessory: {id: selectedClothId.toString()}
+          hair:{id: selectedHairId.toString(), color:HairColor.toString()},
+          eyes: {id: selectedGlassesId.toString(),color:EyeColor.toString()},
+          accessory: {id: selectedClothId.toString(),color:clothColor.toString()}
         }),
       });
   
@@ -268,12 +268,8 @@ const avatareyes = ({ navigation }) => {
     );
   };
   const chooseColorHair = () => {
-    const colors = [
-      '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF',
-      '#8A2BE2', '#32CD32', '#4682B4', '#FF69B4', '#7FFF00', // Additional colors
-      '#FF6347', '#00CED1', '#FFA07A', '#9400D3', '#ADFF2F', // More colors
-      '#40E0D0', '#8B008B', '#FF4500', '#1E90FF', '#00FF7F', // Even more colors
-    ];
+    const colors = ["#F5D0A9", "#E0AC69", "#C68642", "#A0522D", "#8B4513", "#6F4E37", "#DEB887", "#D2B48C", "#CD853F", "#8B5A2B", "#FFDAB9", "#F4A460", "#FFA07A", "#FA8072", "#FF6347", "#FF4500", "#FF7F50", "#FF8C00", "#D2691E", "#8B0000"];
+
     
     // Calculate the number of buttons per row
     const buttonsPerRow = 5;
