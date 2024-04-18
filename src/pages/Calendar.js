@@ -35,7 +35,25 @@ const Calendar = ({ navigation }) => {
     window.Globalitem = item;
     navigation.navigate("EditEvent");
   };
-
+  const HoursGrid = () => {
+    const hours = [];
+    for (let i = 2; i <= 24; i += 3) {
+      hours.push(`${i}:00`);
+    }
+  
+    return (
+      <FlatList
+        data={hours}
+        renderItem={({ item }) => (
+          <View style={styles.hourItem}>
+            <Text style={styles.hourText}>{item}</Text>
+          </View>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    );
+  };
+  
   useEffect(() => {
     const getDaysOfWeek = () => {
       const today = new Date();
@@ -339,13 +357,15 @@ const Calendar = ({ navigation }) => {
       ) : (
         <MonthDaysList />
       )}
-      <View style={styles.detailsContainer}>
-        {selectedDay ? (
-          <>
-            <Text style={styles.detailsText}>
-              Détail pour la journée de {selectedDay}
-            </Text>
-            {filteredEvents.length > 0 ? (
+    <View style={styles.detailsContainer}>
+      {selectedDay ? (
+        <>
+          <Text style={styles.detailsText}>
+            Détail pour la journée !
+          </Text>
+          {filteredEvents.length > 0 ? (
+            <>
+              <HoursGrid />
               <FlatList
                 data={filteredEvents.filter((event) => {
                   const selectedDayNumber = daysOfWeek.find(
@@ -353,7 +373,7 @@ const Calendar = ({ navigation }) => {
                   )?.dayNumber;
                   const formattedSelectedDayNumber = selectedDayNumber
                     .toString()
-                    .padStart(2, "0");
+                    .padStart(2, '0');
                   return (
                     formattedSelectedDayNumber &&
                     event.date === formattedSelectedDayNumber.toString()
@@ -361,29 +381,28 @@ const Calendar = ({ navigation }) => {
                 })}
                 scrollEnabled={false}
                 renderItem={({ item }) => (
-                  (
-                    <TouchableOpacity onPress={() => handleEventPress(item)}>
-                      <View style={styles.hourItem}>
-                        <Text style={styles.hourText}>{item.name}</Text>
-                        <Text style={styles.eventText}>{item.address}</Text>
-                      </View>
-                    </TouchableOpacity>
-                  )
+                  <TouchableOpacity onPress={() => handleEventPress(item)}>
+                    <View style={styles.hourItem}>
+                      <Text style={styles.hourText}>{item.heuredebut}</Text>
+                      {/* <Text style={styles.eventText}>{item.address}</Text> */}
+                    </View>
+                  </TouchableOpacity>
                 )}
                 keyExtractor={(item, index) => index.toString()}
               />
-            ) : (
-              <Text style={styles.noDetailsText}>
-                Pas d'événements disponibles pour {selectedDay}
-              </Text>
-            )}
-          </>
-        ) : (
-          <Text style={styles.detailsText}>
-            Sélectionnez un jour pour voir les détails
-          </Text>
-        )}
-      </View>
+            </>
+          ) : (
+            <Text style={styles.noDetailsText}>
+              Pas d'événements disponibles pour {selectedDay}
+            </Text>
+          )}
+        </>
+      ) : (
+        <Text style={styles.detailsText}>
+          Sélectionnez un jour pour voir les détails
+        </Text>
+      )}
+    </View>
 
       <View style={styles.buttonContainer2}>
         <TouchableOpacity style={styles.loginBtn2} onPress={navigatetotamere}>
@@ -513,13 +532,14 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     flex: 100,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
+    // alignItems: "center",
     marginTop: 30,
   },
   detailsText: {
     fontSize: 18,
-    fontWeight: "bold",
+    textAlign:"center",
+    marginBottom:20,
   },
   redDot: {
     position: 'absolute',
@@ -533,14 +553,14 @@ const styles = StyleSheet.create({
   hourItem: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
+    alignItems: "left",
     padding: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+
   },
   hourText: {
-    fontSize: 16,
-    fontWeight: "bold",
+    color:"grey",
+    fontSize: 12,
+    fontWeight: "200",
   },
   eventText: {
     fontSize: 16,

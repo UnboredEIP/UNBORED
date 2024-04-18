@@ -70,8 +70,7 @@ const MyAvatar = ({
   colorSkin,// = "#D08B5B",
   //@ts-ignore
   colorEye,// = "green",
-  //@ts-ignore
-  colorHair,// = "#4A312C",
+  colorHair = "black",
   //@ts-ignore
   colorClothingTop,// = "black",
 }) => {
