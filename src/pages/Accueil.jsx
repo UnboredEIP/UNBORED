@@ -310,18 +310,7 @@ const Accueil3 = ({ navigation }) => {
                   ></Image>
                 </TouchableOpacity>
               </View>
-              {/* <MyAvatar
-                top={300}
-                clothTop="hoodie"
-                colorClothingTop="orange"
-                size={50}
-              />
-              <MyAvatar
-                top={400}
-                clothTop="polo"
-                colorClothingTop="red"
-                size={75}
-              /> */}
+
               <View
                 style={{
                   top: screenHeight / 8,
@@ -451,7 +440,18 @@ const Accueil3 = ({ navigation }) => {
               {/* <View style={{position:'relative', height:1000}}></View> */}
             </View>
           </TouchableWithoutFeedback>
-
+          {/* <MyAvatar
+            top={300}
+            clothTop="hoodie"
+            colorClothingTop="orange"
+            size={50}
+          /> */}
+          <MyAvatar
+            top={400}
+            // clothTop="polo"
+            colorClothingTop="red"
+            size={200}
+          />
           <View
             style={{
               position: "relative",

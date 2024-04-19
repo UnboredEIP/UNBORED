@@ -89,16 +89,16 @@ const HAIR_TOP_ADJUSTMENT_RATIO = -0.059;
 const HAIR_LEFT_ADJUSTMENT_RATIO = -0.124;
 const HAIR_SIZE_MULTIPLIER = 1.245;
 
-const BEARD_TOP_ADJUSTMENT_RATIO = 0.32;
-const BEARD_LEFT_ADJUSTMENT_RATIO = 0.2;
-const BEARD_SIZE_MULTIPLIER = 0.6;
+const BEARD_TOP_ADJUSTMENT_RATIO = 0.27;
+const BEARD_LEFT_ADJUSTMENT_RATIO = 0.22;
+const BEARD_SIZE_MULTIPLIER = 0.57;
 
 const EYEBROW_TOP_ADJUSTMENT_RATIO = 0.07;
 const EYEBROW_LEFT_ADJUSTMENT_RATIO = 0.3;
 const EYEBROW_SIZE_MULTIPLIER = 0.4;
 
 const MOUTH_TOP_ADJUSTMENT_RATIO = 0.54;
-const MOUTH_LEFT_ADJUSTMENT_RATIO = 0.435;
+const MOUTH_LEFT_ADJUSTMENT_RATIO = 0.43;
 const MOUTH_SIZE_MULTIPLIER = 0.15;
 
 const HAT_TOP_ADJUSTMENT_RATIO = -0.17;
@@ -106,19 +106,31 @@ const HAT_LEFT_ADJUSTMENT_RATIO = -0.2;
 const HAT_SIZE_MULTIPLIER = 1.4;
 
 const MyAvatar = ({
-  clothTop ,//="shirt", C bon
-  eyes  ,//="wink", C bon
-  size ,//= 200, C bon
-  hair  ,//="afro", C bon
-  beard  ,//="majestic",
-  colorSkin ,//= "#D08B5B", C bon
-  colorEye  ,//="green", C bon
-  colorHair  ="black",
-  colorBeard  = colorHair, // C bon
-  colorClothingTop ,// ="black", C bon
-  mouth  ,//="grimace",
-  eyebrow  ,//="natural",
+  //@ts-ignore
+  clothTop, //="shirt", C bon
+  //@ts-ignore
+  eyes, //="wink", C bon
+  //@ts-ignore
+  size, //= 200, C bon
+  //@ts-ignore
+  hair, //="afro", C bon
+  //@ts-ignore
+  beard, //="majestic",
+  //@ts-ignore
+  colorSkin, //= "#D08B5B", C bon
+  //@ts-ignore
+  colorEye, //="green", C bon
+  colorHair = "black",
+  colorBeard = colorHair, // C bon
+  //@ts-ignore
+  colorClothingTop, // ="black", C bon
+  //@ts-ignore
+  mouth, //="grimace",
+  //@ts-ignore
+  eyebrow, //="natural",
+  //@ts-ignore
   hat,
+  //@ts-ignore
   colorHat, //=  "yellow",
 }) => {
   const clothComponents = {
@@ -169,7 +181,7 @@ const MyAvatar = ({
   };
   const beardComponents = {
     light: <BeardLight />,
-    majestic: <BeardMajestic />,
+    // majestic: <BeardMajestic />,
     medium: <BeardMedium />,
     mustache: <BeardMustache />,
     mustachemagnum: <BeardMustachemagnum />,
@@ -271,15 +283,6 @@ const MyAvatar = ({
           },
           color: colorHair,
         })}
-      {selectedBeard &&
-        React.cloneElement(selectedBeard, {
-          style: {
-            ...styles(screenWidth, screenHeight, size).beardSvg,
-            width: size * BEARD_SIZE_MULTIPLIER,
-            height: size * BEARD_SIZE_MULTIPLIER,
-          },
-          color: colorBeard,
-        })}
       {selectedEyebrow &&
         React.cloneElement(selectedEyebrow, {
           style: {
@@ -297,6 +300,15 @@ const MyAvatar = ({
             height: size * MOUTH_SIZE_MULTIPLIER,
           },
           color: colorSkin,
+        })}
+      {selectedBeard &&
+        React.cloneElement(selectedBeard, {
+          style: {
+            ...styles(screenWidth, screenHeight, size).beardSvg,
+            width: size * BEARD_SIZE_MULTIPLIER,
+            height: size * BEARD_SIZE_MULTIPLIER,
+          },
+          color: colorBeard,
         })}
       {selectedHat &&
         hat !== "fedora" &&
