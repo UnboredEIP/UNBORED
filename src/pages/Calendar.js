@@ -24,6 +24,7 @@ const Calendar = ({ navigation }) => {
   const [allEvents, setAllEvents] = useState([]);
   let filteredEvents = [];
   let dotEvent = [];
+  let formattedSelectedDayNumber = null;
 
   const navigatetotamere = async () => {
     navigation.navigate("NewEvent");
@@ -35,24 +36,48 @@ const Calendar = ({ navigation }) => {
     window.Globalitem = item;
     navigation.navigate("EditEvent");
   };
-  const HoursGrid = () => {
+  const HoursGrid = ({ selectedDay }) => {
     const hours = [];
-    for (let i = 2; i <= 24; i += 3) {
+    for (let i = 0; i <= 23; i += 1) {
       hours.push(`${i}:00`);
     }
   
     return (
       <FlatList
         data={hours}
-        renderItem={({ item }) => (
+        renderItem={({ item: hour }) => (
           <View style={styles.hourItem}>
-            <Text style={styles.hourText}>{item}</Text>
+            <Text style={styles.hourText}>{hour}</Text>
+            {/* Render event names for this hour */}
+            {filteredEvents
+              .filter((event) => 
+                parseInt(event.heuredebut) === parseInt(hour) &&
+                event.date === selectedDay
+              )
+              .map((event) => (
+                <TouchableOpacity
+                  key={event.id}
+                  onPress={() => handleEventPress(event)}
+                >
+              <View style={styles.eventBox}>
+                  <Text style={styles.eventText}>{event.name}</Text>
+              </View>                
+              </TouchableOpacity>
+              ))}
+               {filteredEvents
+        .filter((event) => 
+          parseInt(event.heuredebut) === parseInt(hour) 
+        )
+        .map((event) => (
+          console.log("event.date:", event.date + "selectedDate!: ", selectedDay)
+        ))}
           </View>
         )}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(hour) => hour}
       />
     );
   };
+  
   
   useEffect(() => {
     const getDaysOfWeek = () => {
@@ -239,7 +264,16 @@ const Calendar = ({ navigation }) => {
             const [datePart, timePart] = event.start_date.split("T");
             const [hoursMinutes] = timePart.split(".");
             const [hours, minutes] = hoursMinutes.split(":");
+            let hours2, minutes2 = 0;
+            if (event.end_date) {
+            const [year2, month2, day2] = event.end_date.split("-");
+            const [dayOnly2] = day2.split("T");
+            const [datePart2, timePart2] = event.end_date.split("T");
+            const [hoursMinutes2] = timePart2.split(".");
+            [hours2, minutes2] = hoursMinutes2.split(":");
+            }    
             // Ensure month and day have leading zeros if necessary
+            console.log(hours2, minutes2);
             const formattedMonth = month.padStart(2, "0");
             const formattedDayOnly = dayOnly.padStart(2, "0");
 
@@ -262,7 +296,8 @@ const Calendar = ({ navigation }) => {
                   filteredEvents.push({
                     heuredebut: hours,
                     minutesdebut: minutes,
-                    heurefin: event.hours,
+                    heurefin: hours2,
+                    minutesfin:minutes2,
                     category: event.categories,
                     name: event.name,
                     address: event.address,
@@ -365,13 +400,12 @@ const Calendar = ({ navigation }) => {
           </Text>
           {filteredEvents.length > 0 ? (
             <>
-              <HoursGrid />
               <FlatList
                 data={filteredEvents.filter((event) => {
                   const selectedDayNumber = daysOfWeek.find(
                     (day) => day.dayName === selectedDay
                   )?.dayNumber;
-                  const formattedSelectedDayNumber = selectedDayNumber
+                  formattedSelectedDayNumber = selectedDayNumber
                     .toString()
                     .padStart(2, '0');
                   return (
@@ -383,13 +417,13 @@ const Calendar = ({ navigation }) => {
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => handleEventPress(item)}>
                     <View style={styles.hourItem}>
-                      <Text style={styles.hourText}>{item.heuredebut}</Text>
-                      {/* <Text style={styles.eventText}>{item.address}</Text> */}
+ 
                     </View>
                   </TouchableOpacity>
                 )}
                 keyExtractor={(item, index) => index.toString()}
               />
+              <HoursGrid selectedDay={formattedSelectedDayNumber} />
             </>
           ) : (
             <Text style={styles.noDetailsText}>
@@ -426,6 +460,13 @@ const styles = StyleSheet.create({
     marginTop: 50,
     padding: 16,
   },
+  eventBox: {
+    position:"absolute",
+    right:150,
+    backgroundColor: 'lightblue',
+    padding: 5,
+    borderRadius: 5,
+},
   loginBtnText2: {
     color: "#FFF",
     textAlign: "center",

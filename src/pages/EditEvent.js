@@ -9,7 +9,9 @@ const EditEvent = ({navigation }) => {
   const [activityName, setActivityName] = useState(Globalitem.name);
   const [address, setAddress] = useState(Globalitem.address);
   const [startHour, setStartHour] = useState(Globalitem.heuredebut);
-  const [endHour, setEndHour] = useState(Globalitem.minutesdebut);
+  const [endHour, setEndHour] = useState(Globalitem.heurefin);
+  const [startMinutes, setStartMinutes] = useState(Globalitem.minutesdebut);
+  const [endMinutes, setEndMinutes] = useState(Globalitem.minutesfin);
   const [selectedCategory, setSelectedCategory] = useState(Globalitem.category[0]);
 
   const handleDaySelection = (day) => {
@@ -26,7 +28,7 @@ const EditEvent = ({navigation }) => {
  ];
 
  const navigatetocalendar = async () => {
-  navigation.navigate("Calendar");
+  navigation.navigate("Accueil3");
 }
  const handleCategorySelection = (categoryName) => {
     setSelectedCategory(categoryName); // Update the selected category state
@@ -66,13 +68,19 @@ const goToNextDays = () => {
 
     const formattedDate = displayedDate.toISOString().split('T')[0];
     let startDate = new Date(formattedDate);
+    let endDate = new Date(formattedDate);
     startDate.setUTCHours(startDate.getUTCHours() + startHour);
-    const formattedStartDate = startDate.toISOString();  
+    startDate.setUTCMinutes(startDate.getUTCMinutes() + startMinutes);
+    endDate.setUTCHours(endDate.getUTCHours() + endHour);
+    endDate.setUTCMinutes(endDate.getUTCMinutes() + endMinutes);
+    const formattedStartDate = startDate.toISOString();
+    const formattedEndDate = endDate.toISOString();
     console.log(formattedDate);
     const selectedCategories = selectedCategory ? [selectedCategory] : [];
   
     const eventData = {
       start_date: formattedStartDate,
+      end_date: formattedEndDate,
       name: activityName,
       address: address,
       categories: selectedCategories,
@@ -177,13 +185,13 @@ const goToNextDays = () => {
                 </Text>
               </TouchableOpacity>
               ))}
-            </View>
+            </View>            
             <View style={styles.hourSelectionContainer}>
-              <Text style={styles.username}>Sélectionnez l'heure de début et de fin :</Text>
+              <Text style={styles.username}>Sélectionnez l'heure de début et de fin</Text>
               <View style={styles.hoursContainer}>
                 <TextInput
                   style={styles.hourInput}
-                  placeholder="Début"
+                  placeholder="Heures"
                   value={startHour}
                   onChangeText={setStartHour}
                 />
@@ -193,8 +201,26 @@ const goToNextDays = () => {
                 <TextInput
                   style={styles.hourInput}
                   placeholder="Minutes"
+                  value={startMinutes}
+                  onChangeText={setStartMinutes}
+                />
+                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                  <Text style={styles.hourSeparator}>|</Text>
+                </View>
+                <TextInput
+                  style={styles.hourInput}
+                  placeholder="Heures"
                   value={endHour}
                   onChangeText={setEndHour}
+                />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.hourSeparator}>-</Text>
+                </View>                          
+                <TextInput
+                  style={styles.hourInput}
+                  placeholder="Minutes"
+                  value={endMinutes}
+                  onChangeText={setEndMinutes}
                 />
               </View>
             </View>
@@ -321,10 +347,9 @@ const styles = StyleSheet.create({
   },
   hourInput: {
     borderRadius: 10,
-    width: 100,
+    width: 82,
     height: 45,
     paddingLeft: 10,
-    marginRight: 10,
     textAlign: 'center', // Center the text horizontally
   },
   categoryContainer: {
@@ -344,7 +369,6 @@ const styles = StyleSheet.create({
   
   hourSeparator: {
     fontSize: 20,
-    marginLeft:60,
     fontWeight: 'bold',
   },
   navigationButtons: {

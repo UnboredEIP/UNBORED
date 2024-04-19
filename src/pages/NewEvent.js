@@ -10,6 +10,8 @@ const NewEvent = ({ navigation }) => {
   const [address, setAddress] = useState("");
   const [startHour, setStartHour] = useState("");
   const [endHour, setEndHour] = useState("");
+  const [startMinutes, setStartMinutes] = useState("");
+  const [endMinutes, setEndMinutes] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(""); // State to hold the selected category
 
   const handleDaySelection = (day) => {
@@ -26,7 +28,7 @@ const NewEvent = ({ navigation }) => {
  ];
 
  const navigatetocalendar = async () => {
-  navigation.navigate("Calendar");
+  navigation.navigate("Accueil3");
 }
  const handleCategorySelection = (categoryName) => {
     setSelectedCategory(categoryName); // Update the selected category state
@@ -82,12 +84,15 @@ const goToNextDays = () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
       let startDate = new Date(formattedDate);
-
-      // Add the hours to the date
+      let endDate = new Date(formattedDate);
       startDate.setUTCHours(startDate.getUTCHours() + startHour);
+      startDate.setUTCMinutes(startDate.getUTCMinutes() + startMinutes);
+      endDate.setUTCHours(endDate.getUTCHours() + endHour);
+      endDate.setUTCMinutes(endDate.getUTCMinutes() + endMinutes);
       // Convert the date back to the desired format
+      const formattedEndDate = endDate.toISOString();
       const formattedStartDate = startDate.toISOString();
-      console.log("zizi", formattedStartDate);
+      console.log("zizi", formattedStartDate + "pipi:", formattedEndDate);
 
       const response = await fetch('http://20.216.143.86/events/create/private', {
         method: 'POST',
@@ -95,7 +100,7 @@ const goToNextDays = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
         },
-        body: JSON.stringify({ ...eventData, start_date: formattedStartDate }), // Replace the start_date field with the formatted date including hours
+        body: JSON.stringify({ ...eventData, start_date: formattedStartDate, end_date: formattedEndDate }), // Replace the start_date field with the formatted date including hours
       });
   
       if (response.ok) {
@@ -189,11 +194,11 @@ const goToNextDays = () => {
               ))}
             </View>
             <View style={styles.hourSelectionContainer}>
-              <Text style={styles.username}>Sélectionnez l'heure de début de l'evenement :</Text>
+              <Text style={styles.username}>Sélectionnez l'heure de début et de fin</Text>
               <View style={styles.hoursContainer}>
                 <TextInput
                   style={styles.hourInput}
-                  placeholder="Début"
+                  placeholder="Heures"
                   value={startHour}
                   onChangeText={setStartHour}
                 />
@@ -202,9 +207,27 @@ const goToNextDays = () => {
                 </View>
                 <TextInput
                   style={styles.hourInput}
-                  placeholder="Mintues"
+                  placeholder="Minutes"
+                  value={startMinutes}
+                  onChangeText={setStartMinutes}
+                />
+                <View style={{ flexDirection: 'column', alignItems: 'center' }}>
+                  <Text style={styles.hourSeparator}>|</Text>
+                </View>
+                <TextInput
+                  style={styles.hourInput}
+                  placeholder="Heures"
                   value={endHour}
                   onChangeText={setEndHour}
+                />
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.hourSeparator}>-</Text>
+                </View>                          
+                <TextInput
+                  style={styles.hourInput}
+                  placeholder="Minutes"
+                  value={endMinutes}
+                  onChangeText={setEndMinutes}
                 />
               </View>
             </View>
@@ -331,10 +354,9 @@ const styles = StyleSheet.create({
   },
   hourInput: {
     borderRadius: 10,
-    width: 100,
+    width: 82,
     height: 45,
     paddingLeft: 10,
-    marginRight: 10,
     textAlign: 'center', // Center the text horizontally
   },
   categoryContainer: {
@@ -354,7 +376,6 @@ const styles = StyleSheet.create({
   
   hourSeparator: {
     fontSize: 20,
-    marginLeft:60,
     fontWeight: 'bold',
   },
   navigationButtons: {
