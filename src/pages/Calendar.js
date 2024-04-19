@@ -59,7 +59,7 @@ const Calendar = ({ navigation }) => {
                   key={event.id}
                   onPress={() => handleEventPress(event)}
                 >
-              <View style={styles.eventBox}>
+                <View style={[styles.eventBox, { height: (parseInt(event.heurefin - event.heuredebut) * 33) }]}>
                   <Text style={styles.eventText}>{event.name}</Text>
               </View>                
               </TouchableOpacity>
@@ -232,9 +232,9 @@ const Calendar = ({ navigation }) => {
     const hasEvents = dotEvent.some(event => {
       const eventDate = new Date(event.date);
       return (
-        eventDate.getFullYear() === item.year &&
-        eventDate.getMonth() + 1 === item.month &&
-        eventDate.getDate() === item.dayNumber
+        eventDate.getUTCFullYear() === item.year &&
+        eventDate.getUTCMonth() + 1 === item.month &&
+        eventDate.getUTCDate() === item.dayNumber
       );
     });
   
@@ -461,6 +461,8 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   eventBox: {
+    justifyContent: 'center',
+    alignItems: 'center',
     position:"absolute",
     right:150,
     backgroundColor: 'lightblue',
