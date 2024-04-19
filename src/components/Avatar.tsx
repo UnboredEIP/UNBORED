@@ -106,22 +106,20 @@ const HAT_LEFT_ADJUSTMENT_RATIO = -0.2;
 const HAT_SIZE_MULTIPLIER = 1.4;
 
 const MyAvatar = ({
-  clothTop = "shirt",
-  eyes = "wink",
-  size = 200,
-  //@ts-ignore
-  hair = "afro",
-  beard = "majestic",
-  colorSkin = "#D08B5B",
-  colorEye = "green",
-  colorHair = "#4A312C",
-  colorBeard = colorHair,
-  colorClothingTop = "black",
-  mouth = "grimace",
-  eyebrow = "natural",
-  //@ts-ignore
+  clothTop ,//="shirt", C bon
+  eyes  ,//="wink", C bon
+  size ,//= 200, C bon
+  hair  ,//="afro", C bon
+  beard  ,//="majestic",
+  colorSkin ,//= "#D08B5B", C bon
+  colorEye  ,//="green", C bon
+  colorHair  ="black",
+  colorBeard  = colorHair, // C bon
+  colorClothingTop ,// ="black", C bon
+  mouth  ,//="grimace",
+  eyebrow  ,//="natural",
   hat,
-  colorHat = "yellow",
+  colorHat, //=  "yellow",
 }) => {
   const clothComponents = {
     blazer: <BlazerSvg />,
