@@ -29,6 +29,7 @@ import RegisterStep2 from "./src/pages/auth/Register_Pages/Register_step2";
 import RegisterStep3 from "./src/pages/auth/Register_Pages/Register_step3";
 import EditEvent from "./src/pages/EditEvent";
 import TimelineEventsPage from "./src/pages/TimelineEvents";
+import activites from "./src/pages/activites";
 
 import { ImagePickerIOS } from "react-native";
 class OTP2 extends React.Component {
@@ -113,6 +114,9 @@ const AppNavigator = createStackNavigator(
       navigationOptions: {
         ...TransitionPresets.DefaultTransition,
       },
+    },
+    activites: {
+      screen:activites,
     },
     Choose: {
       screen: ChoosePreferences,

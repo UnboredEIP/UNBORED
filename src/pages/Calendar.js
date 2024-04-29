@@ -30,7 +30,7 @@ const Calendar = ({ navigation }) => {
     navigation.navigate("NewEvent");
   };
   const navigatetodescr = async () => {
-    navigation.navigate("Description");
+    navigation.navigate("activites");
   };
   const handleEventPress = (item) => {
     window.Globalitem = item;
@@ -59,7 +59,7 @@ const Calendar = ({ navigation }) => {
                   key={event.id}
                   onPress={() => handleEventPress(event)}
                 >
-                <View style={[styles.eventBox, { height: (parseInt(event.heurefin - event.heuredebut) * 33) }]}>
+                <View style={[styles.eventBox, { height: (parseInt(event.heurefin - event.heuredebut) * 37) }]}>
                   <Text style={styles.eventText}>{event.name}</Text>
               </View>                
               </TouchableOpacity>
@@ -461,10 +461,11 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   eventBox: {
+    width:250,
     justifyContent: 'center',
     alignItems: 'center',
     position:"absolute",
-    right:150,
+    right:30,
     backgroundColor: 'lightblue',
     padding: 5,
     borderRadius: 5,
