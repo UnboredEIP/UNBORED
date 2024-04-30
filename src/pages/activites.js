@@ -9,19 +9,17 @@ const Activities = ({ navigation }) => {
   const [lastDirection, setLastDirection] = useState();
   const [data, setData] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(9);
-  const [test, setTest] = useState(currentCardIndex);
   const [swipeDirection, setSwipeDirection] = useState(null);
 
-  const swiped = (direction, nameToDelete) => {
+  const swiped = (direction, nameToDelete, index) => {
     console.log("prout", direction);
     console.log('removing: ' + nameToDelete);
     setLastDirection(direction);
     setSwipeDirection(direction);
     setCurrentCardIndex(currentIndex => currentIndex - 1);
-    setTest(test => test - 1);
-    console.log("zzzzzz::", test);
+    console.log("zzzzzz::", index);
     if (direction === 'right') {
-      createEvent(currentCardIndex);
+      createEvent(index);
     }
   };
 
@@ -36,17 +34,19 @@ const Activities = ({ navigation }) => {
   };
 
   function formatDate(dateString) {
-    const dateRanges = dateString.split('_');
-    const firstDateRange = dateRanges[0];
-    const startDateString = firstDateRange.split('T')[0];
-    const startDate = new Date(startDateString);
-    const day = startDate.getDate().toString().padStart(2, '0');
-    const month = (startDate.getMonth() + 1).toString().padStart(2, '0');
-    const year = startDate.getFullYear();
-    const hours = Math.floor(Math.random() * (18 - 10 + 1)) + 10; // Random hour between 10 and 18
-    const minutes = startDate.getMinutes().toString().padStart(2, '0');
-    const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
-    return formattedDate;
+    if (dateString) {
+      const dateRanges = dateString.split('_');
+      const firstDateRange = dateRanges[0];
+      const startDateString = firstDateRange.split('T')[0];
+      const startDate = new Date(startDateString);
+      const day = startDate.getDate().toString().padStart(2, '0');
+      const month = (startDate.getMonth() + 1).toString().padStart(2, '0');
+      const year = startDate.getFullYear();
+      const hours = 12; // Random hour between 10 and 18
+      const minutes = startDate.getMinutes().toString().padStart(2, '0');
+      const formattedDate = `${day}/${month}/${year} ${hours}:${minutes}`;
+      return formattedDate;
+    }
   }
 
   const removeCharacter = (str, charToRemove) => {
@@ -55,27 +55,31 @@ const Activities = ({ navigation }) => {
     }
   };
   function formatDateToISO(originalDate) {
-    const dateParts = originalDate.split(/[\s/:\-]/);
-    const year = parseInt(dateParts[2]);
-    const month = parseInt(dateParts[1]) - 1; // Month is zero-based
-    const day = parseInt(dateParts[0]);
-    const hour = parseInt(dateParts[3]);
-    const minute = parseInt(dateParts[4]);
-    const dateObject = new Date(year, month, day, hour, minute);
-    const isoDateString = dateObject.toISOString();
-    return isoDateString;
+    if (originalDate) {
+      const dateParts = originalDate.split(/[\s/:\-]/);
+      const year = parseInt(dateParts[2]);
+      const month = parseInt(dateParts[1]) - 1; // Month is zero-based
+      const day = parseInt(dateParts[0]);
+      const hour = parseInt(dateParts[3]);
+      const minute = parseInt(dateParts[4]);
+      const dateObject = new Date(Date.UTC(year, month, day, hour, minute));
+      const isoDateString = dateObject.toISOString();
+      return isoDateString;
+    }
 }
   const createEvent = async (currentIndex) => {
     console.log("tezst,", currentIndex);
     const formattedDate = formatDateToISO(formatDate(data.results[currentIndex].occurrences));
     const activityName = data.results[currentIndex].title;
     const address = removeCharacter(data.results[currentIndex].url, "<br />");
-    console.log("start date : tiiiiit", formattedDate);
+    console.log("start date : tiiiiit", formatDate(data.results[currentIndex].occurrences));
+    const endDate = new Date(formattedDate);
+    endDate.setHours(endDate.getHours() + 2);
     const eventData = {
       start_date: formattedDate,
       name: activityName,
       address: address,
-      end_date: formattedDate,
+      end_date: endDate,
       categories: ["test"],
     };
 
@@ -104,7 +108,7 @@ const Activities = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=date_end%3A%222024%2F06%22', {
+        const response = await fetch('https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=date_end%3A%222024%2F05%22', {
           method: 'GET',
           headers: {},
         });
@@ -126,7 +130,7 @@ const Activities = ({ navigation }) => {
         {data && data.results.map((character, index) => (
           <TinderCard
             key={character.title}
-            onSwipe={(dir) => swiped(dir, character.title)}
+            onSwipe={(dir) => swiped(dir, character.title, index)}
             onCardLeftScreen={() => outOfFrame(character.title)}
           >
             <View style={[styles.card, swipeDirection === 'right' ? styles.swipeRight : swipeDirection === 'left' ? styles.swipeLeft : null]}>
