@@ -81,8 +81,8 @@ export class AuthService {
   };
 
   getLogin = async (email, password) => {
-    try { 
-      // http://20.216.143.86
+    try {
+      // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: {

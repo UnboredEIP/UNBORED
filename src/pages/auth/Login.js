@@ -15,7 +15,7 @@ const LoginScreen = ({ navigation }) => {
   // const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
   // const handleLogin = async () => {
-  //   const url = "http://20.216.143.86/auth/login"; // Replace with your backend login endpoint
+  //   const url = "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login"; // Replace with your backend login endpoint
   //   const headers = {
   //     "Content-Type": "application/json",
   //   };

@@ -78,7 +78,7 @@ const Settings = ({ navigation }) => {
       });
 
       const imageResponse = await fetch(
-        "http://20.216.143.86/profile/profilepicture",
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/profilepicture",
         {
           method: "POST",
           headers: {
@@ -114,13 +114,16 @@ const Settings = ({ navigation }) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
 
-      const response = await fetch("http://20.216.143.86/profile", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -128,7 +131,7 @@ const Settings = ({ navigation }) => {
 
       const profileData = await response.json();
       setImage(
-        `http://20.216.143.86/getimage?imageName=${profileData.user.profilePhoto}`
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/getimage?imageName=${profileData.user.profilePhoto}`
       );
       setUsername(profileData.user.username.trim());
       setBirthdate(new Date(profileData.user.birthdate.trim()));
@@ -151,7 +154,7 @@ const Settings = ({ navigation }) => {
       const authToken = await AsyncStorage.getItem("authToken");
 
       const profileResponse = await fetch(
-        "http://20.216.143.86/profile/update",
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/update",
         {
           method: "PUT",
           headers: {

@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
 import Swiper from "react-native-swiper";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyAvatar from "../components/Avatar";
@@ -7,26 +14,49 @@ const Avatar = ({ navigation }) => {
   const [selectedFace, setSelectedFace] = useState(null); // To store the selected face
   const [tintColor, setTintColor] = useState("#000000"); // Initial color is black
 
-
-
-  const colorOptions = ["#F5D0A9", "#E0AC69", "#C68642", "#A0522D", "#8B4513", "#6F4E37", "#DEB887", "#D2B48C", "#CD853F", "#8B5A2B", "#FFDAB9", "#F4A460", "#FFA07A", "#FA8072", "#FF6347", "#FF4500", "#FF7F50", "#FF8C00", "#D2691E", "#8B0000"];
+  const colorOptions = [
+    "#F5D0A9",
+    "#E0AC69",
+    "#C68642",
+    "#A0522D",
+    "#8B4513",
+    "#6F4E37",
+    "#DEB887",
+    "#D2B48C",
+    "#CD853F",
+    "#8B5A2B",
+    "#FFDAB9",
+    "#F4A460",
+    "#FFA07A",
+    "#FA8072",
+    "#FF6347",
+    "#FF4500",
+    "#FF7F50",
+    "#FF8C00",
+    "#D2691E",
+    "#8B0000",
+  ];
 
   const saveAvatarData = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
 
       // Step 2: Save selected face in the database
-      const avatarDataResponse = await fetch("http://20.216.143.86/profile/avatar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-            head:{ 
-              color:selectedFace === null ? "0" : selectedFace},
-        }),
-      });
+      const avatarDataResponse = await fetch(
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/avatar",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            head: {
+              color: selectedFace === null ? "0" : selectedFace,
+            },
+          }),
+        }
+      );
 
       const avatarDataResult = await avatarDataResponse.json();
       console.log("Avatar data saved:", avatarDataResult);
@@ -45,7 +75,11 @@ const Avatar = ({ navigation }) => {
     <View style={styles.container}>
       <Text style={styles.title}>Choisissez l'avatar</Text>
       <View style={styles.face1}>
-      <MyAvatar size={330} colorSkin={tintColor} colorClothingTop={tintColor}/>
+        <MyAvatar
+          size={330}
+          colorSkin={tintColor}
+          colorClothingTop={tintColor}
+        />
       </View>
 
       <ScrollView horizontal style={styles.colorContainer}>
@@ -92,10 +126,10 @@ const styles = StyleSheet.create({
   },
   face1: {
     flex: 1,
-    marginBottom:-100,
-    marginTop:50,
-    paddingLeft:30,
-    alignSelf:"flex-start",
+    marginBottom: -100,
+    marginTop: 50,
+    paddingLeft: 30,
+    alignSelf: "flex-start",
   },
   slide: {
     flex: 1,
@@ -110,7 +144,7 @@ const styles = StyleSheet.create({
   colorContainer: {
     flexDirection: "row",
     marginTop: 20,
-    marginBottom:-550,
+    marginBottom: -550,
   },
   colorBox: {
     width: 80,

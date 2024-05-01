@@ -27,8 +27,14 @@ import { AuthService } from "../../services/AuthService";
 import { CLIENT_ID_ANDROID, CLIENT_ID_IOS, CLIENT_ID_WEB, API_URL } from "@env";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
+console.log("API", API_URL);
 
-// import Auth from "../../components/Auth";
+//A décommenter au moment de build
+// import {
+//   GoogleSignin,
+//   GoogleSigninButton,
+//   statusCodes,
+// } from "@react-native-google-signin/google-signin";
 
 async function navigateTo() {
   try {
@@ -71,6 +77,15 @@ const Login2 = ({ navigation }) => {
       </View>
     );
   }
+
+  //A décommenter au moment de build
+  // GoogleSignin.configure({
+  //   scopes: [
+  //     "https://www.googleapis.com/auth/drive.readonly",
+  //     "https://www.googleapis.com/auth/calendar.readonly",
+  //   ], // what API you want to access on behalf of the user, default is email and profile
+  //   webClientId: `${CLIENT_ID_WEB}`, // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+  // });
 
   return (
     <View style={styles().container}>
@@ -173,17 +188,8 @@ const Login2 = ({ navigation }) => {
             </Text>
             <View style={{ flexDirection: "row" }}>
               <RootSiblingParent>
-                <Buttons
-                  hasIcon={true}
-                  iconPath={
-                    "https://www.facebook.com/images/fb_icon_325x325.png"
-                  }
-                  textColor="black"
-                  width={screenWidth < 350 ? 145 : 160}
-                  backgroundColor="white"
-                  texte="Facebook"
-                />
-                <Buttons
+                {/* //A décommenter au moment de build */}
+                {/* <Buttons
                   hasIcon={true}
                   iconPath={
                     "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
@@ -191,9 +197,32 @@ const Login2 = ({ navigation }) => {
                   textColor="black"
                   width={screenWidth < 350 ? 145 : 160}
                   backgroundColor="white"
-                  onPress={() => {}}
+                  onPress={async () => {
+                    try {
+                      await GoogleSignin.signOut();
+                      await GoogleSignin.hasPlayServices();
+                      const userInfo = await GoogleSignin.signIn();
+                      console.log("Mes infos:", userInfo);
+                    } catch (error) {
+                      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                        console.log("CACA 1");
+                        // user cancelled the login flow
+                      } else if (error.code === statusCodes.IN_PROGRESS) {
+                        console.log("CACA 2");
+                        // operation (e.g. sign in) is in progress already
+                      } else if (
+                        error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
+                      ) {
+                        console.log("CACA 3");
+                        // play services not available or outdated
+                      } else {
+                        console.log("error:", error);
+                        // some other error happened
+                      }
+                    }
+                  }}
                   texte="Google"
-                />
+                /> */}
               </RootSiblingParent>
             </View>
             <View style={{ marginTop: 15 }} />

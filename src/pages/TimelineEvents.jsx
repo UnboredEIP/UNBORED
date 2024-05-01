@@ -77,7 +77,6 @@ const TimelineEventsPage = ({ navigation }) => {
         // console.log(profileData);
         const tmpObj = await ubService.getEvents();
         setEvents(tmpObj);
-        // console.log(tmpObj);
         const imagePromises = tmpObj.map(async (event) => {
           const img = await ubService.getImage(event.pictures[0].id);
           return img;
@@ -86,9 +85,9 @@ const TimelineEventsPage = ({ navigation }) => {
         // console.log("ALL IMAGES:", JSON.stringify(imageResults));
         setImages(imageResults);
       } catch (error) {
-        console.error("Error fetchdata:", error);
-        await AsyncStorage.removeItem("authToken");
-        navigation.replace("Login2");
+        // console.error("Error fetchdata:", error);
+        // await AsyncStorage.removeItem("authToken");
+        // navigation.replace("Login2");
       }
     };
 
@@ -318,16 +317,19 @@ const TimelineEventsPage = ({ navigation }) => {
                           }}
                         >
                           <EventCard
+                            onPress={() => {
+                              navigation.navigate("Event");
+                            }}
                             size={screenHeight / 3.4}
                             key={index}
                             name={event.name}
                             address={event.address}
                             pictures={images[index].url}
                             categories={event.categories}
-                            date={event.date}
+                            date={event.start_date}
                             participents={event.participents.length}
-                            heure={event.hours + ":" + event.minutes}
                             id={event._id}
+                            rate={event.rate}
                           />
                         </View>
                       )

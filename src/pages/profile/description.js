@@ -14,7 +14,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyTextInput from "../../components/TextField";
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from "react-native-vector-icons/FontAwesome";
 import Navbar from "../../components/NavigationBar";
 
 const Description = ({ navigation }) => {
@@ -29,13 +29,16 @@ const Description = ({ navigation }) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
 
-      const response = await fetch("http://20.216.143.86/profile", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -50,29 +53,31 @@ const Description = ({ navigation }) => {
   };
   const navigatetotamere = async () => {
     navigation.navigate("Settings");
-  }
+  };
   const handleSave = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-  
+
       // Step 1: Update user profile information
-      const profileResponse = await fetch("http://20.216.143.86/profile/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
+      const profileResponse = await fetch(
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
             description,
-        }),
-      });
+          }),
+        }
+      );
     } catch (error) {
       console.error("Error updating profile:", error);
     }
-  
+
     navigation.navigate("Accueil3");
   };
-  
 
   useEffect(() => {
     handleProfileFetch();
@@ -80,48 +85,48 @@ const Description = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-    <ScrollView
-      contentContainerStyle={{ flexGrow: 1 }}
-      keyboardShouldPersistTaps="handled"  // or "never"
-    >
-    <View style={{ flex: 1 }}>
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior="padding"
-      enabled={true}
-    >
-      <View style={styles.container}>
-        <View style={styles.container2}>
-      <Image
-              source={{ uri: image }}
-              style={{
-                marginTop:20,
-                width: 150,
-                height: 150,
-                borderRadius: 10,
-                alignItems:"center"
-              }}
-            />
-      </View>
-        <View style={{ flex: 1, alignItems: "center" }}>
-          <Text style={styles.username}>Description</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Description"
-            value={description}
-            onChangeText={setDescription}
-            multiline={true}  
-            textAlignVertical="top"
-          />
-          <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
-            <Text style={styles.loginBtnText}>Sauvegarder</Text>
-          </TouchableOpacity>
-          </View>
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled" // or "never"
+      >
+        <View style={{ flex: 1 }}>
+          <KeyboardAvoidingView
+            style={styles.container}
+            behavior="padding"
+            enabled={true}
+          >
+            <View style={styles.container}>
+              <View style={styles.container2}>
+                <Image
+                  source={{ uri: image }}
+                  style={{
+                    marginTop: 20,
+                    width: 150,
+                    height: 150,
+                    borderRadius: 10,
+                    alignItems: "center",
+                  }}
+                />
+              </View>
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <Text style={styles.username}>Description</Text>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Description"
+                  value={description}
+                  onChangeText={setDescription}
+                  multiline={true}
+                  textAlignVertical="top"
+                />
+                <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
+                  <Text style={styles.loginBtnText}>Sauvegarder</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </KeyboardAvoidingView>
+          <Navbar navigation={navigation} />
         </View>
-    </KeyboardAvoidingView>
-    <Navbar navigation={navigation} />
-    </View>
-    </ScrollView>
+      </ScrollView>
     </TouchableWithoutFeedback>
   );
 };
@@ -134,7 +139,7 @@ const styles = StyleSheet.create({
   },
   container2: {
     backgroundColor: "white",
-    alignItems:"center",
+    alignItems: "center",
   },
   loginBtn: {
     marginTop: 60,
@@ -175,7 +180,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   username: {
-    marginTop:40,
+    marginTop: 40,
     position: "relative",
     right: 110,
     marginBottom: 10,

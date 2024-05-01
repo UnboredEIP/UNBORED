@@ -26,15 +26,18 @@ import ChoosePreferences from "../../ChoosePreferences";
 
 async function makeRLoginRequest(email) {
   try {
-    const response = await fetch("http://20.216.143.86/auth/askreset", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-      }),
-    });
+    const response = await fetch(
+      "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/askreset",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+        }),
+      }
+    );
   } catch {
     console.log("error");
   }

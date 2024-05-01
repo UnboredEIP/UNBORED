@@ -41,7 +41,7 @@ const Calendar = ({ navigation }) => {
     for (let i = 0; i <= 23; i += 1) {
       hours.push(`${i}:00`);
     }
-  
+
     return (
       <FlatList
         data={hours}
@@ -50,9 +50,10 @@ const Calendar = ({ navigation }) => {
             <Text style={styles.hourText}>{hour}</Text>
             {/* Render event names for this hour */}
             {filteredEvents
-              .filter((event) => 
-                parseInt(event.heuredebut) === parseInt(hour) &&
-                event.date === selectedDay
+              .filter(
+                (event) =>
+                  parseInt(event.heuredebut) === parseInt(hour) &&
+                  event.date === selectedDay
               )
               .map((event) => (
                 <TouchableOpacity
@@ -64,21 +65,22 @@ const Calendar = ({ navigation }) => {
               </View>                
               </TouchableOpacity>
               ))}
-               {filteredEvents
-        .filter((event) => 
-          parseInt(event.heuredebut) === parseInt(hour) 
-        )
-        .map((event) => (
-          console.log("event.date:", event.date + "selectedDate!: ", selectedDay)
-        ))}
+            {filteredEvents
+              .filter((event) => parseInt(event.heuredebut) === parseInt(hour))
+              .map((event) =>
+                console.log(
+                  "event.date:",
+                  event.date + "selectedDate!: ",
+                  selectedDay
+                )
+              )}
           </View>
         )}
         keyExtractor={(hour) => hour}
       />
     );
   };
-  
-  
+
   useEffect(() => {
     const getDaysOfWeek = () => {
       const today = new Date();
@@ -113,13 +115,16 @@ const Calendar = ({ navigation }) => {
       try {
         const authToken = await AsyncStorage.getItem("authToken");
 
-        const response = await fetch("http://20.216.143.86/profile", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -128,7 +133,7 @@ const Calendar = ({ navigation }) => {
         const profileData = await response.json();
         setUsername(profileData.user.username.trim());
         setImage(
-          `http://20.216.143.86/getimage?imageName=${profileData.user.profilePhoto}`
+          `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/getimage?imageName=${profileData.user.profilePhoto}`
         );
         setLoading(false); // Set loading to false once data is fetched
       } catch (error) {
@@ -143,13 +148,16 @@ const Calendar = ({ navigation }) => {
         const authToken = await AsyncStorage.getItem("authToken");
 
         // Fetch activities data from the server
-        const response = await fetch("http://20.216.143.86/events/lists", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/lists",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
 
         // Check if response is OK
         if (!response.ok) {
@@ -229,7 +237,7 @@ const Calendar = ({ navigation }) => {
     setSelectedDay(day);
   };
   const renderDayItem = ({ item }) => {
-    const hasEvents = dotEvent.some(event => {
+    const hasEvents = dotEvent.some((event) => {
       const eventDate = new Date(event.date);
       return (
         eventDate.getUTCFullYear() === item.year &&
@@ -237,7 +245,7 @@ const Calendar = ({ navigation }) => {
         eventDate.getUTCDate() === item.dayNumber
       );
     });
-  
+
     return (
       <TouchableOpacity
         style={[
@@ -246,13 +254,27 @@ const Calendar = ({ navigation }) => {
         ]}
         onPress={() => handleDayPress(item.dayName)}
       >
-        <Text style={[styles.dayNumber, item.dayName===selectedDay && styles.dayNumber2]}>{item.dayNumber}</Text>
-        <Text style={[styles.dayName, item.dayName===selectedDay && styles.dayName2]}>{item.dayName}</Text>
+        <Text
+          style={[
+            styles.dayNumber,
+            item.dayName === selectedDay && styles.dayNumber2,
+          ]}
+        >
+          {item.dayNumber}
+        </Text>
+        <Text
+          style={[
+            styles.dayName,
+            item.dayName === selectedDay && styles.dayName2,
+          ]}
+        >
+          {item.dayName}
+        </Text>
         {hasEvents && <View style={styles.redDot} />}
       </TouchableOpacity>
     );
   };
-  
+
   const renderAllEvents = () => (
     <View style={styles.allEventsContainer}>
       {
@@ -263,14 +285,15 @@ const Calendar = ({ navigation }) => {
             const [datePart, timePart] = event.start_date.split("T");
             const [hoursMinutes] = timePart.split(".");
             const [hours, minutes] = hoursMinutes.split(":");
-            let hours2, minutes2 = 0;
+            let hours2,
+              minutes2 = 0;
             if (event.end_date) {
-            const [year2, month2, day2] = event.end_date.split("-");
-            const [dayOnly2] = day2.split("T");
-            const [datePart2, timePart2] = event.end_date.split("T");
-            const [hoursMinutes2] = timePart2.split(".");
-            [hours2, minutes2] = hoursMinutes2.split(":");
-            }    
+              const [year2, month2, day2] = event.end_date.split("-");
+              const [dayOnly2] = day2.split("T");
+              const [datePart2, timePart2] = event.end_date.split("T");
+              const [hoursMinutes2] = timePart2.split(".");
+              [hours2, minutes2] = hoursMinutes2.split(":");
+            }
             // Ensure month and day have leading zeros if necessary
             console.log(hours2, minutes2);
             const formattedMonth = month.padStart(2, "0");
@@ -296,7 +319,7 @@ const Calendar = ({ navigation }) => {
                     heuredebut: hours,
                     minutesdebut: minutes,
                     heurefin: hours2,
-                    minutesfin:minutes2,
+                    minutesfin: minutes2,
                     category: event.categories,
                     name: event.name,
                     address: event.address,
@@ -304,8 +327,8 @@ const Calendar = ({ navigation }) => {
                     id: event._id,
                   });
                   dotEvent.push({
-                    date:event.start_date
-                  })
+                    date: event.start_date,
+                  });
                   return null;
                 }
                 return null;
@@ -391,51 +414,47 @@ const Calendar = ({ navigation }) => {
       ) : (
         <MonthDaysList />
       )}
-    <View style={styles.detailsContainer}>
-      {selectedDay ? (
-        <>
+      <View style={styles.detailsContainer}>
+        {selectedDay ? (
+          <>
+            <Text style={styles.detailsText}>Détail pour la journée !</Text>
+            {filteredEvents.length > 0 ? (
+              <>
+                <FlatList
+                  data={filteredEvents.filter((event) => {
+                    const selectedDayNumber = daysOfWeek.find(
+                      (day) => day.dayName === selectedDay
+                    )?.dayNumber;
+                    formattedSelectedDayNumber = selectedDayNumber
+                      .toString()
+                      .padStart(2, "0");
+                    return (
+                      formattedSelectedDayNumber &&
+                      event.date === formattedSelectedDayNumber.toString()
+                    );
+                  })}
+                  scrollEnabled={false}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity onPress={() => handleEventPress(item)}>
+                      <View style={styles.hourItem}></View>
+                    </TouchableOpacity>
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                />
+                <HoursGrid selectedDay={formattedSelectedDayNumber} />
+              </>
+            ) : (
+              <Text style={styles.noDetailsText}>
+                Pas d'événements disponibles pour {selectedDay}
+              </Text>
+            )}
+          </>
+        ) : (
           <Text style={styles.detailsText}>
-            Détail pour la journée !
+            Sélectionnez un jour pour voir les détails
           </Text>
-          {filteredEvents.length > 0 ? (
-            <>
-              <FlatList
-                data={filteredEvents.filter((event) => {
-                  const selectedDayNumber = daysOfWeek.find(
-                    (day) => day.dayName === selectedDay
-                  )?.dayNumber;
-                  formattedSelectedDayNumber = selectedDayNumber
-                    .toString()
-                    .padStart(2, '0');
-                  return (
-                    formattedSelectedDayNumber &&
-                    event.date === formattedSelectedDayNumber.toString()
-                  );
-                })}
-                scrollEnabled={false}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => handleEventPress(item)}>
-                    <View style={styles.hourItem}>
- 
-                    </View>
-                  </TouchableOpacity>
-                )}
-                keyExtractor={(item, index) => index.toString()}
-              />
-              <HoursGrid selectedDay={formattedSelectedDayNumber} />
-            </>
-          ) : (
-            <Text style={styles.noDetailsText}>
-              Pas d'événements disponibles pour {selectedDay}
-            </Text>
-          )}
-        </>
-      ) : (
-        <Text style={styles.detailsText}>
-          Sélectionnez un jour pour voir les détails
-        </Text>
-      )}
-    </View>
+        )}
+      </View>
 
       <View style={styles.buttonContainer2}>
         <TouchableOpacity style={styles.loginBtn2} onPress={navigatetotamere}>
@@ -468,7 +487,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightblue',
     padding: 5,
     borderRadius: 5,
-},
+  },
   loginBtnText2: {
     color: "#FFF",
     textAlign: "center",
@@ -526,7 +545,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   dayNumber2: {
-    color:"#E1604D",
+    color: "#E1604D",
     fontSize: 18,
     fontWeight: "bold",
     textAlign: "center",
@@ -551,7 +570,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   usernameContainer: {
-    marginBottom:30,
+    marginBottom: 30,
     // flexDirection: "row",
     alignItems: "center",
   },
@@ -581,27 +600,26 @@ const styles = StyleSheet.create({
   },
   detailsText: {
     fontSize: 18,
-    textAlign:"center",
-    marginBottom:20,
+    textAlign: "center",
+    marginBottom: 20,
   },
   redDot: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 2,
-    left: '68%',
+    left: "68%",
     width: 8,
     height: 8,
     borderRadius: 5,
-    backgroundColor: '#E1604D',
-  },  
+    backgroundColor: "#E1604D",
+  },
   hourItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "left",
     padding: 8,
-
   },
   hourText: {
-    color:"grey",
+    color: "grey",
     fontSize: 12,
     fontWeight: "200",
   },

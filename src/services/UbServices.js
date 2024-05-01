@@ -17,6 +17,7 @@ export class UbService {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const responseData = await response.json();
+      // console.log(responseData);
       return responseData.events;
       //   await AsyncStorage.setItem("allEvents", responseData.events);
     } catch (error) {

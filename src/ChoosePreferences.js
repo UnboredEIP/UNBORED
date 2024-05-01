@@ -105,16 +105,19 @@ const ChoosePreferences = ({ navigation }) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
 
-      const response = await fetch("http://20.216.143.86/profile/update", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          preferences: selectedPreferences.map((item) => item.name),
-        }),
-      });
+      const response = await fetch(
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/update",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            preferences: selectedPreferences.map((item) => item.name),
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);

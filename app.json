@@ -13,17 +13,15 @@
         }
       ],
       [
-      "expo-build-properties",
-    {
-      "android": {
-        "usesCleartextTraffic": true
-      }
-    }
-  ],
-  [
-    "expo-notifications"
-  ],
-        "@react-native-google-signin/google-signin"
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      ["expo-notifications"],
+      "@react-native-google-signin/google-signin"
     ],
     "slug": "unbored2",
     "version": "1.0.0",
@@ -35,9 +33,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.unboredeip.unboredapp"
@@ -53,7 +49,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-    }
+    "extra": {}
   }
 }
