@@ -3,10 +3,12 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions,
   Text,
   View,
   Image,
+  Modal,
 } from "react-native";
 import vector from "../../../asset/Vector.png";
 import loc from "../../../asset/location_on.png";
@@ -14,6 +16,8 @@ import startFilled from "../../../assets/star_filled.png";
 import startUnfilled from "../../../assets/star_unfilled.png";
 import { UbService } from "../../services/UbServices";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import ActivityModal from "../Modals/JoinActivity";
+global.currentEventId = 0;
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -24,6 +28,21 @@ function formatDate(dateString) {
   const dateExtraite = dateObj.toISOString().split("T")[0];
 
   return dateExtraite;
+}
+
+function extractTime(dateTimeString) {
+  // Create a new Date object from the given date string
+  const date = new Date(dateTimeString);
+
+  // Extract hours, minutes, and seconds
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  const seconds = date.getSeconds().toString().padStart(2, "0");
+
+  // Construct the time string
+  const timeString = `${hours}:${minutes}`;
+
+  return timeString;
 }
 
 async function updateFavourites(name, id) {
@@ -61,22 +80,30 @@ async function updateFavourites(name, id) {
 }
 
 const EventCard = ({
+  onPress = () => {},
   name = "Five Ivry",
   address = "Ivry-sur-seine",
   pictures,
   categories = ["Football", "Sport"],
-  date = "2024-01-28",
+  date = "2024-01-28T12:00:00.000Z",
   participents,
-  heure = "00:00",
   size = 290,
   id,
-  rate = 4,
+  rate,
   handleRefresh = () => {},
 }) => {
-  const renderStars = (rating) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const renderStars = (ratings) => {
+    let totalStars = 0;
+    ratings.forEach((rating) => {
+      totalStars += parseInt(rating.stars);
+    });
+    const averageStars = Math.round(totalStars / ratings.length); // Calculate average stars and round to nearest integer
     const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      if (i <= rating) {
+    const maxStars = 5;
+    for (let i = 1; i <= maxStars; i++) {
+      if (i <= averageStars) {
         stars.push(
           <Image
             key={i}
@@ -110,9 +137,9 @@ const EventCard = ({
       }}
     >
       <TouchableOpacity
-        onPress={async () => {
-          updateFavourites(name, id);
-          handleRefresh();
+        onPress={() => {
+          global.currentEventId = id;
+          onPress();
         }}
       >
         <Image
@@ -147,7 +174,7 @@ const EventCard = ({
             textAlign: "center",
             color: "#E1604D",
             fontWeight: 600,
-            fontSize: size * 0.02,
+            fontSize: size * 0.033,
           }}
         >
           {formatDate(date)}
@@ -179,7 +206,7 @@ const EventCard = ({
             marginTop: size * 0.017,
           }}
         >
-          Heure début: {heure}
+          Heure début: {extractTime(date)}
         </Text>
         <View style={{ marginTop: size * 0.054, flexDirection: "row" }}>
           <TouchableOpacity>
@@ -306,7 +333,7 @@ const EventCard = ({
             <Text
               style={{
                 marginLeft: size * 0.041,
-                fontSize: size * 0.036,
+                fontSize: size * 0.03,
                 fontWeight: "bold",
                 textAlign: "center",
               }}
@@ -334,12 +361,57 @@ const EventCard = ({
       <View
         style={{
           flexDirection: "row",
-          alignItems: "center",
-          marginTop: size * 0.02,
+          alignSelf: "center",
+          marginTop: size * 0.04,
         }}
       >
         {renderStars(rate)}
       </View>
+      {/* <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false); // Change this to directly set modalVisible to false
+        }}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => {
+            setModalVisible(false);
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0,0,0,0.5)",
+            }}
+          >
+            <TouchableWithoutFeedback>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    borderRadius: 20,
+                    // padding: 2,
+                    // alignItems: "center",
+                    // elevation: 5,
+                  }}
+                >
+                  <ActivityModal pictures={pictures} date={date} />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal> */}
     </View>
   );
 };

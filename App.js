@@ -29,6 +29,7 @@ import RegisterStep2 from "./src/pages/auth/Register_Pages/Register_step2";
 import RegisterStep3 from "./src/pages/auth/Register_Pages/Register_step3";
 import EditEvent from "./src/pages/EditEvent";
 import TimelineEventsPage from "./src/pages/TimelineEvents";
+import Event from "./src/pages/Event";
 
 import { ImagePickerIOS } from "react-native";
 class OTP2 extends React.Component {
@@ -76,7 +77,7 @@ class InitialScreen extends React.Component {
       return;
     }
     const initialRoute = await checkKeys("authToken");
-    this.props.navigation.replace(initialRoute ? "Accueil3" : "Home");
+    this.props.navigation.replace(initialRoute ? "Login2" : "Home");
   }
 
   render() {
@@ -213,6 +214,12 @@ const AppNavigator = createStackNavigator(
     },
     TimelineEventsPage: {
       screen: TimelineEventsPage,
+      navigationOptions: {
+        ...TransitionPresets.ScaleFromCenterAndroid,
+      },
+    },
+    Event: {
+      screen: Event,
       navigationOptions: {
         ...TransitionPresets.ScaleFromCenterAndroid,
       },

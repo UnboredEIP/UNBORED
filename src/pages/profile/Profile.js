@@ -28,13 +28,16 @@ const Profile = ({ navigation }) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
 
-      const response = await fetch("http://20.216.143.86/profile", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -46,7 +49,7 @@ const Profile = ({ navigation }) => {
       setPreferences(profileData.user.preferences);
       setDescription(profileData.user.description);
       setImage(
-        `http://20.216.143.86/getimage?imageName=${profileData.user.profilePhoto}`
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/getimage?imageName=${profileData.user.profilePhoto}`
       );
     } catch (error) {
       console.error("Error fetching profile:", error);

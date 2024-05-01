@@ -84,13 +84,16 @@ const Accueil3 = ({ navigation }) => {
         // await AsyncStorage.removeItem("favourites");
         const authToken = await AsyncStorage.getItem("authToken");
 
-        const response = await fetch("http://20.216.143.86/profile/", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -153,8 +156,8 @@ const Accueil3 = ({ navigation }) => {
         }
       } catch (error) {
         console.error("Error fetchData:", error);
-        await AsyncStorage.removeItem("authToken");
-        navigation.replace("Login2");
+        // await AsyncStorage.removeItem("authToken");
+        // navigation.replace("Login2");
       }
     };
 
@@ -259,40 +262,6 @@ const Accueil3 = ({ navigation }) => {
                     marginHorizontal: 10,
                   }}
                 />
-                {/* <Buttons
-                  texte="màj"
-                  width="30%"
-                  onPress={async () => {
-                    navigation.navigate("PreferencesUpdate");
-                  }}
-                /> */}
-                {/* <View>
-                  <TextInput
-                    style={{
-                      height: 45,
-                      backgroundColor: "#F4F6F9",
-                      width: 270,
-                      borderRadius: 100,
-                      justifyContent: "center",
-                      paddingLeft: 24,
-                      paddingRight: 24,
-                    }}
-                    placeholder="Rechercher"
-                    placeholderTextColor={"grey"}
-                    onChangeText={(newText) => setText(newText)}
-                    defaultValue={text}
-                  />
-                  <Image
-                    style={{
-                      position: "absolute",
-                      top: 15,
-                      right: 25,
-                      height: 17,
-                      width: 17,
-                    }}
-                    source={search}
-                  ></Image>
-                </View> */}
                 <TouchableOpacity
                   style={{
                     marginLeft: 10,
@@ -376,48 +345,27 @@ const Accueil3 = ({ navigation }) => {
                       // )
                       .map((event, index) => (
                         <EventCard
+                          onPress={() => {
+                            navigation.navigate("Event");
+                          }}
                           key={index}
                           name={event.name}
                           address={event.address}
                           pictures={images[index].url}
                           categories={event.categories}
-                          date={event.date}
+                          date={event.start_date}
                           participents={event.participents.length}
-                          heure={event.hours + ":" + event.minutes}
                           id={event._id}
                           handleRefresh={() => {
                             handleRefresh(0);
                           }}
+                          rate={event.rate}
                           // rate={ubService.getEventRate(event._id)}
                         />
                       ))
                   ) : (
                     <View />
                   )}
-                  {/* {events.length > 0 ? (
-                events
-                  // .filter((event) =>
-                  //   event.categories.some((category) =>
-                  //     preferences.includes(category)
-                  //   )
-                  // )
-                  .map((event, index) => (
-                    <EventCard
-                      key={index}
-                      name={event.name}
-                      address={event.address}
-                      pictures={images[index].url}
-                      categories={event.categories}
-                      date={event.date}
-                      participents={event.participents.length}
-                      heure={event.hours + ":" + event.minutes}
-                      id={event._id}
-                      handleRefresh={handleRefresh}
-                    />
-                  ))
-              ) : (
-                <EventCard />
-              )} */}
                 </ScrollView>
               </View>
 
@@ -440,18 +388,6 @@ const Accueil3 = ({ navigation }) => {
               {/* <View style={{position:'relative', height:1000}}></View> */}
             </View>
           </TouchableWithoutFeedback>
-          {/* <MyAvatar
-            top={300}
-            clothTop="hoodie"
-            colorClothingTop="orange"
-            size={50}
-          /> */}
-          <MyAvatar
-            top={400}
-            // clothTop="polo"
-            colorClothingTop="red"
-            size={200}
-          />
           <View
             style={{
               position: "relative",
@@ -472,48 +408,27 @@ const Accueil3 = ({ navigation }) => {
               {favouritesEvents.length > 0 ? (
                 favouritesEvents.map((event, index) => (
                   <EventCard
+                    onPress={() => {
+                      navigation.navigate("Event");
+                    }}
                     key={index}
                     name={event.name}
                     address={event.address}
                     pictures={favouritesImages[index].url}
                     categories={event.categories}
-                    date={event.date}
+                    date={event.start_date}
                     participents={event.participents.length}
-                    heure={event.hours + ":" + event.minutes}
                     id={event._id}
                     handleRefresh={() => {
                       handleRefresh(0);
                     }}
+                    rate={event.rate}
                     // rate={ubService.getEventRate(event._id)}
                   />
                 ))
               ) : (
                 <View />
               )}
-              {/* {events.length > 0 ? (
-                events
-                  // .filter((event) =>
-                  //   event.categories.some((category) =>
-                  //     preferences.includes(category)
-                  //   )
-                  // )
-                  .map((event, index) => (
-                    <EventCard
-                      key={index}
-                      name={event.name}
-                      address={event.address}
-                      pictures={images[index].url}
-                      categories={event.categories}
-                      date={event.date}
-                      participents={event.participents.length}
-                      heure={event.hours + ":" + event.minutes}
-                      id={event._id}
-                      handleRefresh={handleRefresh}
-                    />
-                  ))
-              ) : (
-                <EventCard />
-              )} */}
             </ScrollView>
           </View>
           {/* <View style={{backgroundColor:'blue', width:100+'%', top:300, height:1000}}></View> */}
