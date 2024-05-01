@@ -257,7 +257,6 @@ const Calendar = ({ navigation }) => {
     <View style={styles.allEventsContainer}>
       {
         allEvents
-          .filter((event) => event.private) // Filter only private events
           .map((event) => {
             const [year, month, day] = event.start_date.split("-");
             const [dayOnly] = day.split("T");

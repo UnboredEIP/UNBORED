@@ -140,7 +140,8 @@ const Settings = ({ navigation }) => {
     navigation.navigate("Choose");
   };
   const navigatetodescr = async () => {
-    navigation.navigate("Description");
+      await AsyncStorage.removeItem("authToken");
+      navigation.replace("Login2");
   };
   const navigatetoavatar = async () => {
     navigation.navigate("Avatar");
@@ -274,7 +275,7 @@ const Settings = ({ navigation }) => {
                 onPress={navigatetodescr}
               >
                 <Text style={styles.loginBtnText2}>
-                  Change ta description !
+                  Deconnexion
                 </Text>
               </TouchableOpacity>
             </View>

@@ -114,14 +114,6 @@ const Profile = ({ navigation }) => {
                 </Text>
               ))}
             </ScrollView>
-            <Buttons
-              texte="deco"
-              width="30%"
-              onPress={async () => {
-                await AsyncStorage.removeItem("authToken");
-                navigation.replace("Login2");
-              }}
-            />
           </View>
         </View>
       </KeyboardAvoidingView>
