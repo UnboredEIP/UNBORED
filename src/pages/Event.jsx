@@ -12,10 +12,11 @@ import vector from "../../asset/Vector.png";
 import loc from "../../asset/location_on.png";
 import startFilled from "../../assets/star_filled.png";
 import startUnfilled from "../../assets/star_unfilled.png";
-
 import { UbService } from "../services/UbServices";
+import Buttons from "../components/Buttons";
 
 const screenHeight = Dimensions.get("screen").height;
+const screenWidth = Dimensions.get("screen").width;
 
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
@@ -99,11 +100,6 @@ const Event = ({ navigation }) => {
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <Image style={styles.image} source={{ uri: image.url }} />
-        <Text style={styles.title}>{eventData.name}</Text>
-        <Text style={styles.date}>{formatDate(eventData.start_date)}</Text>
-        <Text style={styles.time}>
-          Heure début: {extractTime(eventData.start_date)}
-        </Text>
         <View style={styles.categoryContainer}>
           <TouchableOpacity>
             <View style={styles.category}>
@@ -111,6 +107,11 @@ const Event = ({ navigation }) => {
             </View>
           </TouchableOpacity>
         </View>
+        <Text style={styles.title}>{eventData.name}</Text>
+        <Text style={styles.date}>{formatDate(eventData.start_date)}</Text>
+        <Text style={styles.time}>
+          Heure début: {extractTime(eventData.start_date)}
+        </Text>
         <View style={styles.participantsContainer}>
           <Text style={styles.participantsText}>
             {eventData.participents.length} personne(s)
@@ -135,7 +136,7 @@ const Event = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flexGrow: screenHeight * 0.00062,
     alignItems: "center",
     justifyContent: "center",
     // paddingTop: screenHeight / 10,
@@ -148,7 +149,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#E1604D",
     fontWeight: "600",
-    fontSize: screenHeight * 0.04,
+    fontSize: screenHeight * 0.03,
   },
   date: {
     textAlign: "center",
@@ -164,12 +165,13 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.017,
   },
   categoryContainer: {
-    flexDirection: "row",
-    marginTop: screenHeight * 0.054,
+    // alignSelf: "flex-start",
+    marginLeft: screenWidth * 0.05,
+    marginTop: screenHeight * 0.01,
   },
   category: {
-    width: screenHeight * 0.227,
-    height: screenHeight * 0.076,
+    width: screenHeight * 0.1,
+    height: screenHeight * 0.04,
     borderWidth: 1,
     borderColor: "#E1604D",
     borderRadius: 100,
@@ -177,7 +179,7 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     fontWeight: "600",
-    fontSize: screenHeight * 0.031,
+    fontSize: screenHeight * 0.02,
     color: "#E1604D",
     textAlign: "center",
   },
