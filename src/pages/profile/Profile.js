@@ -14,6 +14,8 @@ import Navbar from "../../components/NavigationBar";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Accueil3 from "../Accueil";
 import Buttons from "../../components/Buttons";
+import MyAvatar from "../../components/Avatar";
+import Swiper from 'react-native-swiper';
 
 const Profile = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -23,7 +25,109 @@ const Profile = ({ navigation }) => {
   );
   const [image, setImage] = useState(defaultImageUri);
   const [description, setDescription] = useState(""); // State for the user's description
-
+  const [selectedGlasses, setSelectedGlasses] = useState(null);
+  const [selectedCloth, setSelectedCloth] = useState(null);
+  const [selectedHair, setSelectedHair] = useState("");
+  const [selectedBeard, setSelectedBeard] = useState("");
+  const [selectedMouth, setSelectedMouth] = useState("");
+  const [selectedHat, setSelectedHat] = useState("");
+  const [selectedEyebrow, setSelectedEyebrow] = useState("");
+  const [avatarColor, setAvatarColor] = useState("#FFFFFF");
+  const [clothColor, setClothColor] = useState("");
+  const [HairColor, setHairColor] = useState("black");
+  const [EyeColor, setEyeColor] = useState("");
+  const listHair = [
+    "null",
+    "calvitie",
+    "buzzcut",
+    "big",
+    "afro",
+    "frizzy",
+    "curvy",
+    "curlyshort",
+    "curly",
+    "mediumdreads",
+    "medium",
+    "longstraight",
+    "longdreads",
+    "shaggymullet",
+    "shaggy",
+    "minidreads",
+    "mediumlong",
+    "square",
+    "shortwaved",
+    "shortflat",
+  ];
+  
+  const listMouth = [
+    "null",
+    "grimace",
+    "eating",
+    "desbelief",
+    "default",
+    "serious",
+    "scream",
+    "sad",
+    "open",
+    "vomit",
+    "twinkle",
+    "tongue",
+    "smile",
+  ];
+  
+  const listTop = [
+    "null",
+    "hoodie",
+    "crewneck",
+    "blazer",
+    "shirt",
+    "scoopneck",
+    "polo",
+    "vneck",
+    "overall",
+  ];
+  
+  const listEyebrow = [
+    "null",
+    "natural",
+    "flat",
+    "exited",
+    "angry",
+    "updown",
+    "unibrow",
+    "sad2",
+    "sad",
+  ];
+  
+  const listBeard = [
+    "null",
+    "medium",
+    "majestic",
+    "ligth",
+    "mustachemagnum",
+    "mustache",
+  ];
+  
+  const listEyes = [
+    "null",
+    "dizzy",
+    "default",
+    "cry",
+    "closed",
+    "side",
+    "heart",
+    "happy",
+    "eyeroll",
+    "wink",
+    "wacky",
+    "surprised",
+    "squint",
+    "angry",
+    "updown",
+    "unibrow",
+    "sad2",
+    "sad",
+  ];
   const handleProfileFetch = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -48,6 +152,15 @@ const Profile = ({ navigation }) => {
       setUsername(profileData.user.username);
       setPreferences(profileData.user.preferences);
       setDescription(profileData.user.description);
+      setAvatarColor(profileData.user.style.head.color);
+      setSelectedBeard(profileData.user.style.beard.id);
+      setSelectedEyebrow();
+      setSelectedCloth(profileData.user.style.accessory.id);
+      setSelectedGlasses(profileData.user.style.eyes.id);
+      setSelectedHair(profileData.user.style.hair.id);
+      setSelectedMouth(profileData.user.style.mouth.id);
+      setClothColor(profileData.user.style.accessory.color);
+      setHairColor(profileData.user.style.hair.color);
       setImage(
         `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/getimage?imageName=${profileData.user.profilePhoto}`
       );
@@ -78,17 +191,34 @@ const Profile = ({ navigation }) => {
                 <Icon name="gears" size={20} color={"#E1604D"} />
               </TouchableOpacity>
             </View>
-            <View style={styles.imageContainer}>
-              <Image
-                source={{ uri: image }}
-                style={{
-                  width: 180,
-                  height: 180,
-                  borderRadius: 10,
-                  marginBottom: 10,
-                }}
-              />
-            </View>
+            <Swiper style={styles.swiperContainer} loop={false} nestedScrollEnabled={true}>
+              <View style={styles.slide}>
+                <Image
+                  source={{ uri: image }}
+                  style={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: 10,
+                    marginBottom: 10,
+                  }}
+                />
+              </View>
+              <View style={styles.slide2}>
+                <MyAvatar
+                  size={120}
+                  colorSkin={avatarColor}
+                  eyes={listEyes[selectedGlasses]}
+                  clothTop={listTop[selectedCloth]}
+                  colorClothingTop={clothColor}
+                  hair={listHair[selectedHair]}
+                  colorHair={HairColor}
+                  colorEye={EyeColor}
+                  beard={listBeard[selectedBeard]}
+                  mouth={listMouth[selectedMouth]}
+                  eyebrow={selectedEyebrow}
+                />
+              </View>
+            </Swiper>
             <Text style={styles.textBelowImage}>{username}</Text>
             <View style={styles.numbersContainer}>
               <View style={styles.numberItem}>
@@ -110,7 +240,7 @@ const Profile = ({ navigation }) => {
             <Text style={styles.textPreferences}>À propos de moi</Text>
             <Text style={styles.descriptionpersonne}>{description}</Text>
             <Text style={styles.textPreferences}>Mes intérêts :</Text>
-            <ScrollView horizontal contentContainerStyle={styles.preferenceRow}>
+            <ScrollView horizontal contentContainerStyle={styles.preferenceRow}   nestedScrollEnabled={true} >
               {preferences.map((preference, index) => (
                 <Text key={index} style={styles.preferenceItem}>
                   {preference}
@@ -224,6 +354,27 @@ const styles = StyleSheet.create({
     backgroundColor: "#5265FF1A",
     borderColor: "#E1604D",
     borderWidth: 1,
+  },
+  swiperContainer: {
+    // width: "100%",
+    height: 150,
+    marginBottom: 10,
+  },
+  slide: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  slide2: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    overflow: "hidden",
+    right:60,
+    paddingBottom:140,
   },
   loginBtnText: {
     color: "#E1604D",
