@@ -205,8 +205,8 @@ const Activities = ({ navigation }) => {
               />
             </View>
             <TouchableOpacity onPress={handleLinkPress}>
-              <Text style={styles.cardInfoText}>
-                {removeCharacter(data.results[currentCardIndex].url, "<br />")}
+              <Text style={styles.cardInfoText2}>
+              Accédez au site en cliquant ici !
               </Text>
             </TouchableOpacity>
           </View>
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
     fontWeight: "bold",
     position: "absolute",
-    top: -30, // Adjust this value according to your layout
+    top: -40, // Adjust this value according to your layout
     left: 10, // Adjust this value according to your layout
   },
 
@@ -303,6 +303,12 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     alignSelf: "center",
+  },
+  cardInfoText2: {
+    color: "#E1604D",
+    fontSize: 15,
+    padding: 10,
+    fontWeight:"bold",
   },
   cardInfoText: {
     color: "black",

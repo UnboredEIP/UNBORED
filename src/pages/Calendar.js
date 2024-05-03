@@ -37,6 +37,7 @@ const Calendar = ({ navigation }) => {
     navigation.navigate("EditEvent");
   };
   const HoursGrid = ({ selectedDay }) => {
+    console.log("prouuuuuuuzzz", selectedDay);
     const hours = [];
     for (let i = 0; i <= 23; i += 1) {
       hours.push(`${i}:00`);
@@ -237,6 +238,7 @@ const Calendar = ({ navigation }) => {
     setSelectedDay(day);
   };
   const renderDayItem = ({ item }) => {
+    console.log("pipppppe une pipppp",item.dayName); // Add this line to log item.dayName
     const hasEvents = dotEvent.some((event) => {
       const eventDate = new Date(event.date);
       return (
@@ -340,25 +342,38 @@ const Calendar = ({ navigation }) => {
     </View>
   );
 
-  const MonthDaysList = () => (
-    <FlatList
-      data={Array.from({ length: 30 }, (_, index) => index + 1)}
-      numColumns={6}
-      renderItem={({ item }) => (
-        <TouchableOpacity
-          style={[
-            styles.monthDayItem,
-            item === selectedDay && styles.selectedMonthDayItem,
-          ]}
-          onPress={() => handleDayPress(item)}
-        >
-          <Text style={styles.monthDayNumber}>{item}</Text>
-        </TouchableOpacity>
-      )}
-      keyExtractor={(item) => item.toString()}
-      contentContainerStyle={styles.centeredMonthDaysContainer}
-    />
-  );
+  const MonthDaysList = () => {
+    const today = new Date();
+    const currentDay = today.getUTCDate();
+    const lastDayOfMonth = new Date(today.getUTCFullYear(), today.getUTCMonth() + 1, 0).getUTCDate();
+    const lastDayOfNextMonth = new Date(today.getUTCFullYear(), today.getUTCMonth() + 2, 0).getUTCDate();
+    let data = Array.from({ length: Math.min(31, lastDayOfMonth - currentDay + 1) }, (_, index) => currentDay + index);
+    if (data.length < 31) {
+        const daysToAdd = 31 - data.length;
+        data = data.concat(Array.from({ length: daysToAdd }, (_, index) => index + 1));
+    }
+
+    return (
+       <FlatList
+         data={data}
+         numColumns={8}
+         renderItem={({ item }) => (
+           <TouchableOpacity
+             style={[
+               styles.monthDayItem,
+               item === selectedDay && styles.selectedMonthDayItem,
+             ]}
+             onPress={() => handleDayPress(item)}
+           >
+             <Text style={styles.monthDayNumber}>{item}</Text>
+           </TouchableOpacity>
+         )}
+         keyExtractor={(item) => item.toString()}
+         contentContainerStyle={styles.centeredMonthDaysContainer}
+       />
+    );
+};
+
 
   return (
     <View style={styles.container}>
@@ -414,47 +429,54 @@ const Calendar = ({ navigation }) => {
       ) : (
         <MonthDaysList />
       )}
-      <View style={styles.detailsContainer}>
-        {selectedDay ? (
-          <>
-            <Text style={styles.detailsText}>Détail pour la journée !</Text>
-            {filteredEvents.length > 0 ? (
-              <>
-                <FlatList
-                  data={filteredEvents.filter((event) => {
-                    const selectedDayNumber = daysOfWeek.find(
-                      (day) => day.dayName === selectedDay
-                    )?.dayNumber;
-                    formattedSelectedDayNumber = selectedDayNumber
-                      .toString()
-                      .padStart(2, "0");
-                    return (
-                      formattedSelectedDayNumber &&
-                      event.date === formattedSelectedDayNumber.toString()
-                    );
-                  })}
-                  scrollEnabled={false}
-                  renderItem={({ item }) => (
-                    <TouchableOpacity onPress={() => handleEventPress(item)}>
-                      <View style={styles.hourItem}></View>
-                    </TouchableOpacity>
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-                <HoursGrid selectedDay={formattedSelectedDayNumber} />
-              </>
-            ) : (
-              <Text style={styles.noDetailsText}>
-                Pas d'événements disponibles pour {selectedDay}
-              </Text>
+<View style={styles.detailsContainer}>
+  {selectedDay ? (
+    <>
+      <Text style={styles.detailsText}>Détail pour la journée !</Text>
+      {filteredEvents.length > 0 ? (
+        <>
+          <FlatList
+            data={filteredEvents.filter((event) => {
+              const selectedDayNumber = daysOfWeek.find(
+                (day) => day.dayName === selectedDay
+              )?.dayNumber;
+              if (selectedDayNumber) {
+                formattedSelectedDayNumber = selectedDayNumber
+                  .toString()
+                  .padStart(2, "0");
+              }
+              return (
+                formattedSelectedDayNumber &&
+                event.date === formattedSelectedDayNumber.toString()
+              );
+            })}
+            scrollEnabled={false}
+            renderItem={({ item }) => (
+              <TouchableOpacity onPress={() => handleEventPress(item)}>
+                <View style={styles.hourItem}></View>
+              </TouchableOpacity>
             )}
-          </>
-        ) : (
-          <Text style={styles.detailsText}>
-            Sélectionnez un jour pour voir les détails
-          </Text>
-        )}
-      </View>
+            keyExtractor={(item, index) => index.toString()}
+          />
+          {viewMode === 'week' ? (
+            <HoursGrid selectedDay={formattedSelectedDayNumber} />
+          ) : (
+            <>
+              {selectedDay && (
+                <HoursGrid selectedDay={selectedDay < 10 ? "0" + selectedDay : selectedDay} />
+              )}
+            </>
+          )}
+        </>
+      ) : (
+        <Text style={styles.noDetailsText}>
+          Pas d'événements disponibles pour {selectedDay}
+        </Text>
+      )}
+    </>
+  ) : null}
+</View>
+
 
       <View style={styles.buttonContainer2}>
         <TouchableOpacity style={styles.loginBtn2} onPress={navigatetotamere}>
@@ -476,6 +498,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 50,
+    position: "relative", // Ensure the container is relative for absolute positioning
     padding: 16,
   },
   eventBox: {
@@ -484,7 +507,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position:"absolute",
     right:30,
-    backgroundColor: 'lightblue',
+    backgroundColor: "rgba(0, 20, 255, 0.4)",
     padding: 5,
     borderRadius: 5,
   },
@@ -529,8 +552,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(225, 96, 77, 0.2)",
   },
   monthDayItem: {
-    width: 40,
-    height: 40,
+    width: 30,
+    height: 30,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
@@ -576,10 +599,11 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     padding: 5,
-    marginLeft: 60,
     borderWidth: 2,
     borderColor: "#E1604D",
     borderRadius: 12,
+    position: "absolute",
+    right: 0,
   },
   usernameLabel: {
     fontSize: 25,
