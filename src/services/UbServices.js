@@ -24,6 +24,30 @@ export class UbService {
       console.error("Error when try to get events:", error);
     }
   };
+  joinEvent = async (events) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/event/add`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          events,
+        }),
+      });
+      if (response.ok) {
+        return true;
+      } else {
+        console.error(response.toString());
+        return false;
+      }
+      //   await AsyncStorage.setItem("allEvents", responseData.events);
+    } catch (error) {
+      console.error("Error when try to get events:", error);
+    }
+  };
   getEventById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -42,6 +66,68 @@ export class UbService {
       return responseData.event;
     } catch (error) {
       console.error("Error when try to get event:", error);
+    }
+  };
+  getUserById = async (id) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/profile?id=${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      return responseData.user;
+    } catch (error) {
+      console.error("Error when try to get user:", error);
+    }
+  };
+
+  sendFriendRequest = async (id) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/friends/invite?user_id=${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      console.log("FRIEND REQUEST SENT TO:", id);
+      return true;
+    } catch (error) {
+      console.error("Error when try to send friend request:", error);
+    }
+  };
+
+  acceptFriendRequest = async (id) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/friends/accept?user_id=${id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      console.log("ACCEPT NEW FRIEND:", id);
+      return true;
+    } catch (error) {
+      console.error("Error when try to accept friend:", error);
     }
   };
 

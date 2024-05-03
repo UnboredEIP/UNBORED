@@ -7,13 +7,16 @@ import {
   Dimensions,
   TouchableOpacity,
   StyleSheet,
+  Modal,
+  TouchableWithoutFeedback,
 } from "react-native";
-import vector from "../../asset/Vector.png";
-import loc from "../../asset/location_on.png";
-import startFilled from "../../assets/star_filled.png";
-import startUnfilled from "../../assets/star_unfilled.png";
-import { UbService } from "../services/UbServices";
-import Buttons from "../components/Buttons";
+import vector from "../../../asset/Vector.png";
+import loc from "../../../asset/location_on.png";
+import startFilled from "../../../assets/star_filled.png";
+import startUnfilled from "../../../assets/star_unfilled.png";
+import { UbService } from "../../services/UbServices";
+import Buttons from "../../components/Buttons";
+import ParticipantsActivity from "../../components/Modals/ParticipantsActivity";
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
@@ -72,7 +75,9 @@ const renderStars = (ratings) => {
 
 const Event = ({ navigation }) => {
   const [eventData, setEventData] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
+  const [participents, setParticipents] = useState([]);
   const ubService = new UbService();
 
   useEffect(() => {
@@ -86,13 +91,26 @@ const Event = ({ navigation }) => {
         setEventData(responseData);
         const img = await ubService.getImage(responseData.pictures[0].id);
         setImage(img);
+
+        if (responseData.participents.length > 0) {
+          const users = [];
+          for (const participent of responseData.participents) {
+            const user = await ubService.getUserById(participent);
+            // console.log(user);
+            if (user) {
+              users.push(user);
+            }
+          }
+          setParticipents(users);
+          // console.log(users);
+        }
       } catch (error) {
         console.error("Error fetchData:", error);
       }
     };
 
     fetchData();
-  }, []);
+  }, [participents]);
 
   if (eventData === null || image === null) {
     return <Text>Loading...</Text>;
@@ -101,6 +119,11 @@ const Event = ({ navigation }) => {
       <ScrollView contentContainerStyle={styles.container}>
         <Image style={styles.image} source={{ uri: image.url }} />
         <View style={styles.categoryContainer}>
+          <View style={styles.participantsContainer}>
+            <Text style={styles.participantsText}>
+              {eventData.participents.length} personne(s)
+            </Text>
+          </View>
           <TouchableOpacity>
             <View style={styles.category}>
               <Text style={styles.categoryText}>{eventData.categories[0]}</Text>
@@ -112,11 +135,27 @@ const Event = ({ navigation }) => {
         <Text style={styles.time}>
           Heure début: {extractTime(eventData.start_date)}
         </Text>
-        <View style={styles.participantsContainer}>
-          <Text style={styles.participantsText}>
-            {eventData.participents.length} personne(s)
-          </Text>
-        </View>
+        <Buttons
+          texte="Rejoindre activité"
+          onPress={async () => {
+            const response = await ubService.joinEvent([global.currentEventId]);
+
+            if (response == true) {
+              console.log("NEW ACTIVITY JOIN:", eventData.name);
+            } else console.log("ERROR WHEN JOIN ACTIVITY");
+          }}
+        />
+        <View
+          style={{
+            marginVertical: 10,
+          }}
+        />
+        <Buttons
+          texte="Voir les participants"
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        />
         <View style={styles.locationContainer}>
           <View style={styles.locationTextContainer}>
             <Image style={styles.locationIcon} source={loc} />
@@ -129,6 +168,48 @@ const Event = ({ navigation }) => {
         <View style={styles.ratingContainer}>
           {renderStars(eventData.rate)}
         </View>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,0.5)",
+              }}
+            >
+              <TouchableWithoutFeedback>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 20,
+                    }}
+                  >
+                    <ParticipantsActivity participents={participents} />
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
       </ScrollView>
     );
   }
@@ -136,7 +217,7 @@ const Event = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: screenHeight * 0.00062,
+    flexGrow: screenHeight * 0.0062,
     alignItems: "center",
     justifyContent: "center",
     // paddingTop: screenHeight / 10,
@@ -165,9 +246,11 @@ const styles = StyleSheet.create({
     marginTop: screenHeight * 0.017,
   },
   categoryContainer: {
-    // alignSelf: "flex-start",
+    alignSelf: "flex-start",
+    flexDirection: "row",
     marginLeft: screenWidth * 0.05,
     marginTop: screenHeight * 0.01,
+    alignItems: "center",
   },
   category: {
     width: screenHeight * 0.1,

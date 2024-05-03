@@ -10,15 +10,13 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import Navbar from "../components/NavigationBar";
-import "../../asset/SourceSansPro-Regular.otf";
-import book from "../../asset/bookmark.png";
-import notifications from "../../asset/notifications.png";
-import Buttons from "../components/Buttons";
+import Navbar from "../../components/NavigationBar";
+import book from "../../../asset/bookmark.png";
+import notifications from "../../../asset/notifications.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
-import { UbService } from "../services/UbServices";
-import EventCard from "../components/Event/EventCard";
+import { UbService } from "../../services/UbServices";
+import EventCard from "../../components/Event/EventCard";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -121,13 +119,6 @@ const TimelineEventsPage = ({ navigation }) => {
             height: screenHeight,
           }}
         >
-          {/* <View
-            style={{
-              marginTop: screenHeight / 10,
-            }}
-          >
-            <Buttons texte="Retour" width={screenWidth / 5} />
-          </View> */}
           <TouchableWithoutFeedback
             accessible={false}
             onPress={Keyboard.dismiss}
@@ -149,14 +140,6 @@ const TimelineEventsPage = ({ navigation }) => {
                   Les activités
                 </Text>
                 <View style={{ flexDirection: "row" }}>
-                  {/* <Buttons
-                    texte="deco"
-                    width="30%"
-                    onPress={async () => {
-                      await AsyncStorage.removeItem("authToken");
-                      navigation.replace("Login2");
-                    }}
-                  /> */}
                   <TouchableOpacity
                     style={{
                       width: 44,
@@ -244,6 +227,7 @@ const TimelineEventsPage = ({ navigation }) => {
                       }}
                     >
                       <Text
+                        key={index}
                         style={{
                           color: choice === index ? "white" : "#E1604D",
                           fontWeight: "bold",
@@ -308,6 +292,7 @@ const TimelineEventsPage = ({ navigation }) => {
                       (event.categories[0] === activitiesType[choice] ||
                         choice === 0) && (
                         <View
+                          key={index}
                           style={{
                             marginVertical: screenHeight / 50,
                             width: "50%",
@@ -335,7 +320,7 @@ const TimelineEventsPage = ({ navigation }) => {
                       )
                   )
                 ) : (
-                  <EventCard />
+                  <View />
                 )}
               </View>
             </ScrollView>

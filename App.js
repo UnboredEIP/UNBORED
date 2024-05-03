@@ -28,10 +28,11 @@ import Register from "./src/pages/auth/Register_Pages/Register";
 import RegisterStep2 from "./src/pages/auth/Register_Pages/Register_step2";
 import RegisterStep3 from "./src/pages/auth/Register_Pages/Register_step3";
 import EditEvent from "./src/pages/EditEvent";
-import TimelineEventsPage from "./src/pages/TimelineEvents";
+import TimelineEventsPage from "./src/pages/Events/TimelineEvents";
 import activites from "./src/pages/activites";
-import Event from "./src/pages/Event";
-
+import Event from "./src/pages/Events/Event";
+import FriendsRequest from "./src/pages/profile/FriendsRequest";
+import SavedEventsPage from "./src/pages/Events/SavedEvents";
 import { ImagePickerIOS } from "react-native";
 class OTP2 extends React.Component {
   render() {
@@ -78,7 +79,7 @@ class InitialScreen extends React.Component {
       return;
     }
     const initialRoute = await checkKeys("authToken");
-    this.props.navigation.replace(initialRoute ? "Login2" : "Home");
+    this.props.navigation.replace(initialRoute ? "Accueil3" : "Login2");
   }
 
   render() {
@@ -117,7 +118,7 @@ const AppNavigator = createStackNavigator(
       },
     },
     activites: {
-      screen:activites,
+      screen: activites,
     },
     Choose: {
       screen: ChoosePreferences,
@@ -224,6 +225,18 @@ const AppNavigator = createStackNavigator(
     },
     Event: {
       screen: Event,
+      navigationOptions: {
+        ...TransitionPresets.ScaleFromCenterAndroid,
+      },
+    },
+    FriendsRequest: {
+      screen: FriendsRequest,
+      navigationOptions: {
+        ...TransitionPresets.ScaleFromCenterAndroid,
+      },
+    },
+    SavedEventsPage: {
+      screen: SavedEventsPage,
       navigationOptions: {
         ...TransitionPresets.ScaleFromCenterAndroid,
       },

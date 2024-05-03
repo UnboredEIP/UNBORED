@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,8 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
-  Platform,
-  Button,
+  Platform
 } from "react-native";
 import {
   useFonts,
@@ -20,14 +19,11 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Buttons from "../../components/Buttons";
-import Accueil3 from "../Accueil";
-import ChoosePreferences from "../../ChoosePreferences";
 import { UbService } from "../../services/UbServices";
 import { AuthService } from "../../services/AuthService";
-import { CLIENT_ID_ANDROID, CLIENT_ID_IOS, CLIENT_ID_WEB, API_URL } from "@env";
+import { API_URL } from "@env";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
-console.log("API", API_URL);
 
 //A décommenter au moment de build
 // import {
