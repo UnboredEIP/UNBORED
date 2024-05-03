@@ -33,8 +33,6 @@ const Accueil3 = ({ navigation }) => {
   //   DMSans_400Regular,
   //   DMSans_700Bold,
   // });
-  const [text, setText] = useState("");
-  const [choice, setChoice] = useState(0);
   const [username, setUsername] = useState("Citoyen");
   const [profileData, setProfileData] = useState(null);
   const [events, setEvents] = useState([]);
@@ -66,6 +64,7 @@ const Accueil3 = ({ navigation }) => {
     const fetchData = async () => {
       try {
         // await AsyncStorage.removeItem("favourites");
+
         const authToken = await AsyncStorage.getItem("authToken");
 
         const response = await fetch(
@@ -82,30 +81,31 @@ const Accueil3 = ({ navigation }) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
         const responseData = await response.json();
-        setProfileData(responseData);
+
+        // console.log("ALL:", responseData.user);
 
         global.myId = responseData.user._id;
 
         const tmpfavourites = await AsyncStorage.getItem("favourites");
-        if (tmpfavourites === null) {
-          return false;
-        } else {
+        if (tmpfavourites !== null) {
           setFavourites(JSON.parse(tmpfavourites));
         }
 
         if (responseData !== null) {
+          setProfileData(responseData);
           const preferences = responseData.user.preferences.map(function (
             string
           ) {
             return string.toLowerCase();
           });
 
-          setUsername(responseData.user.username);
+          if (responseData.user.username !== undefined)
+            setUsername(responseData.user.username);
           setPreferences(preferences);
           // await getEvents();
           const tmpObj = await ubService.getEvents();
+
           const filteredEvents = tmpObj.filter((event) =>
             event.categories.some((category) => preferences.includes(category))
           );
@@ -117,27 +117,31 @@ const Accueil3 = ({ navigation }) => {
           });
           const imageResults = await Promise.all(imagePromises);
           setImages(imageResults);
+
           //
           const reservedEvents2 = responseData.user.reservations;
 
-          if (reservedEvents2.length > 0 && refresh === 0) {
-            // console.log(reservedEvents);
-            const events = [];
-            for (const favourite of reservedEvents2) {
-              const event = await ubService.getEventById(favourite);
-              // console.log(event);
-              if (event) {
-                events.push(event);
+          global.reservedEvents = responseData.user.reservations;
+          if (reservedEvents2 !== null) {
+            if (reservedEvents2.length > 0 && refresh === 0) {
+              // console.log(reservedEvents);
+              const events = [];
+              for (const favourite of reservedEvents2) {
+                const event = await ubService.getEventById(favourite);
+                // console.log(event);
+                if (event) {
+                  events.push(event);
+                }
               }
+              setReservedEvents(events);
+              // console.log("FAVOURITES EVENTS", favourites);
+              const imagePromises2 = reservedEvents.map(async (event) => {
+                const img = await ubService.getImage(event.pictures[0].id);
+                return img;
+              });
+              const imageResults2 = await Promise.all(imagePromises2);
+              setFavouritesImages(imageResults2);
             }
-            setReservedEvents(events);
-            // console.log("FAVOURITES EVENTS", favourites);
-            const imagePromises2 = reservedEvents.map(async (event) => {
-              const img = await ubService.getImage(event.pictures[0].id);
-              return img;
-            });
-            const imageResults2 = await Promise.all(imagePromises2);
-            setFavouritesImages(imageResults2);
           }
           handleRefresh(1);
         }

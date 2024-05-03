@@ -107,4 +107,31 @@ export class AuthService {
       return false;
     }
   };
+
+  loginGoogle = async (googleTokenId) => {
+    try {
+      // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
+      const response = await fetch(`${API_URL}/auth/login/google`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          googleTokenId,
+        }),
+      });
+      if (response.status === 202) {
+        const data = await response.json();
+        const token = data.token;
+        await AsyncStorage.setItem("authToken", token);
+        return true;
+      } else {
+        console.error(response.toString());
+        return false;
+      }
+    } catch (error) {
+      console.error("Request error: ", error);
+      return false;
+    }
+  };
 }

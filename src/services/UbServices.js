@@ -48,6 +48,30 @@ export class UbService {
       console.error("Error when try to get events:", error);
     }
   };
+  leaveEvent = async (events) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/event/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          events,
+        }),
+      });
+      if (response.ok) {
+        return true;
+      } else {
+        console.error("JE SUIS DSL", response.toString().status);
+        return false;
+      }
+      //   await AsyncStorage.setItem("allEvents", responseData.events);
+    } catch (error) {
+      console.error("Error when try to get events:", error);
+    }
+  };
   getEventById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");

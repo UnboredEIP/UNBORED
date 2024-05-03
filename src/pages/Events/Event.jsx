@@ -17,9 +17,13 @@ import startUnfilled from "../../../assets/star_unfilled.png";
 import { UbService } from "../../services/UbServices";
 import Buttons from "../../components/Buttons";
 import ParticipantsActivity from "../../components/Modals/ParticipantsActivity";
+import Toast from "react-native-root-toast";
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
+
+const IS_ENROLL = 1;
+const NOT_ENROLL = 2;
 
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
@@ -78,7 +82,22 @@ const Event = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(null);
   const [participents, setParticipents] = useState([]);
+  const [isEnroll, setIsEnroll] = useState(NOT_ENROLL);
   const ubService = new UbService();
+
+  function userIsEnroll(events, id) {
+    // for (const invitation of invitations) {
+    for (const event of events) {
+      if (event === id) {
+        setIsEnroll(IS_ENROLL);
+        // console.log("ENROLL");
+        return true;
+      }
+      // }
+    }
+
+    return false; // ID not found in invitations
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -89,6 +108,9 @@ const Event = ({ navigation }) => {
         }
         const responseData = response;
         setEventData(responseData);
+        userIsEnroll(global.reservedEvents, global.currentEventId);
+
+        global.reservedEvents;
         const img = await ubService.getImage(responseData.pictures[0].id);
         setImage(img);
 
@@ -102,6 +124,7 @@ const Event = ({ navigation }) => {
             }
           }
           setParticipents(users);
+
           // console.log(users);
         }
       } catch (error) {
@@ -135,16 +158,86 @@ const Event = ({ navigation }) => {
         <Text style={styles.time}>
           Heure début: {extractTime(eventData.start_date)}
         </Text>
-        <Buttons
-          texte="Rejoindre activité"
-          onPress={async () => {
-            const response = await ubService.joinEvent([global.currentEventId]);
 
-            if (response == true) {
-              console.log("NEW ACTIVITY JOIN:", eventData.name);
-            } else console.log("ERROR WHEN JOIN ACTIVITY");
-          }}
-        />
+        {isEnroll == IS_ENROLL ? (
+          <Buttons
+            texte="Inscrit(e)"
+            backgroundColor="green"
+            onPress={async () => {
+              const response = await ubService.leaveEvent([
+                global.currentEventId,
+              ]);
+              if (response === true) {
+                setIsEnroll(NOT_ENROLL);
+                let favourites = global.reservedEvents;
+
+                if (favourites === null) {
+                  favourites = [];
+                }
+                const existingFavourite = global.reservedEvents.findIndex(
+                  (event) => event === global.currentEventId
+                );
+                if (existingFavourite !== -1) {
+                  console.log("CACA");
+                  favourites.splice(existingFavourite, 1);
+                  global.reservedEvents = favourites;
+                  console.log("SECOND GLOB:", global.reservedEvents);
+                }
+                Toast.show("Activité quitté", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.BOTTOM,
+                  backgroundColor: "green",
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                });
+              } else {
+                // console.log("ERROR:", response);
+                console.log("ERROR WHEN LEAVE ACTIVITY");
+                Toast.show("Veuillez réessayez", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.BOTTOM,
+                  backgroundColor: "red",
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                });
+              }
+            }}
+          />
+        ) : (
+          <Buttons
+            texte="Rejoindre activité"
+            onPress={async () => {
+              const response = await ubService.joinEvent([
+                global.currentEventId,
+              ]);
+              if (response == true) {
+                setIsEnroll(IS_ENROLL);
+                global.reservedEvents.push(global.currentEventId);
+                console.log("NEW ACTIVITY JOIN:", eventData.name);
+                Toast.show("Activité rejoints", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.BOTTOM,
+                  backgroundColor: "green",
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                });
+              } else {
+                console.log("ERROR WHEN JOIN ACTIVITY");
+                Toast.show("Veuillez réessayez", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.BOTTOM,
+                  backgroundColor: "red",
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                });
+              }
+            }}
+          />
+        )}
         <View
           style={{
             marginVertical: 10,

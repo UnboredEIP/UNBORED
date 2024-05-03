@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Dimensions,
   KeyboardAvoidingView,
-  Platform
+  Platform,
 } from "react-native";
 import {
   useFonts,
@@ -21,16 +21,16 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Buttons from "../../components/Buttons";
 import { UbService } from "../../services/UbServices";
 import { AuthService } from "../../services/AuthService";
-import { API_URL } from "@env";
+import { API_URL, CLIENT_ID_WEB } from "@env";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 //A décommenter au moment de build
-// import {
-//   GoogleSignin,
-//   GoogleSigninButton,
-//   statusCodes,
-// } from "@react-native-google-signin/google-signin";
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 
 async function navigateTo() {
   try {
@@ -75,13 +75,13 @@ const Login2 = ({ navigation }) => {
   }
 
   //A décommenter au moment de build
-  // GoogleSignin.configure({
-  //   scopes: [
-  //     "https://www.googleapis.com/auth/drive.readonly",
-  //     "https://www.googleapis.com/auth/calendar.readonly",
-  //   ], // what API you want to access on behalf of the user, default is email and profile
-  //   webClientId: `${CLIENT_ID_WEB}`, // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
-  // });
+  GoogleSignin.configure({
+    scopes: [
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly",
+    ], // what API you want to access on behalf of the user, default is email and profile
+    webClientId: `${CLIENT_ID_WEB}`, // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+  });
 
   return (
     <View style={styles().container}>
@@ -185,7 +185,7 @@ const Login2 = ({ navigation }) => {
             <View style={{ flexDirection: "row" }}>
               <RootSiblingParent>
                 {/* //A décommenter au moment de build */}
-                {/* <Buttons
+                <Buttons
                   hasIcon={true}
                   iconPath={
                     "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
@@ -198,18 +198,40 @@ const Login2 = ({ navigation }) => {
                       await GoogleSignin.signOut();
                       await GoogleSignin.hasPlayServices();
                       const userInfo = await GoogleSignin.signIn();
-                      console.log("Mes infos:", userInfo);
+                      const response = await authService.loginGoogle(
+                        userInfo.idToken
+                      );
+
+                      if (response) {
+                        Toast.show("Vous êtes connecté", {
+                          duration: Toast.durations.LONG,
+                          position: Toast.positions.BOTTOM,
+                          backgroundColor: "green",
+                          shadow: true,
+                          animation: true,
+                          hideOnPress: true,
+                        });
+                        const tmp = await navigateTo();
+                        if (tmp === true) navigation.replace("Accueil3");
+                        else navigation.replace("Choose");
+                      } else {
+                        Toast.show("Erreur d'authentification", {
+                          duration: Toast.durations.LONG,
+                          position: Toast.positions.BOTTOM,
+                          backgroundColor: "red",
+                          shadow: true,
+                          animation: true,
+                          hideOnPress: true,
+                        });
+                      }
                     } catch (error) {
                       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                        console.log("CACA 1");
                         // user cancelled the login flow
                       } else if (error.code === statusCodes.IN_PROGRESS) {
-                        console.log("CACA 2");
                         // operation (e.g. sign in) is in progress already
                       } else if (
                         error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
                       ) {
-                        console.log("CACA 3");
                         // play services not available or outdated
                       } else {
                         console.log("error:", error);
@@ -218,7 +240,7 @@ const Login2 = ({ navigation }) => {
                     }
                   }}
                   texte="Google"
-                /> */}
+                />
               </RootSiblingParent>
             </View>
             <View style={{ marginTop: 15 }} />

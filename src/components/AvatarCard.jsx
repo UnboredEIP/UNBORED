@@ -18,20 +18,20 @@ const IS_FRIEND = 3;
 
 const AvatarCard = ({
   name = "user",
-  clothTop = "shirt",
-  eyes = "wink",
+  clothTop,
+  eyes,
   size = 200,
-  hair = "afro",
-  beard = "majestic",
-  colorSkin = "#D08B5B",
+  hair,
+  beard,
+  colorSkin = "#E1604D",
   colorEye = "green",
   colorHair = "black",
   colorClothingTop = "black",
-  mouth = "grimace",
-  eyebrow = "natural",
+  mouth,
+  eyebrow,
   //@ts-ignore
   hat,
-  colorHat = "yellow",
+  colorHat,
   invitations,
   friends,
   //@ts-ignore
@@ -263,7 +263,7 @@ const styles = (size) => {
       alignItems: "center",
     },
     avatarContainer: {
-      paddingBottom: screenHeight * 0.07,
+      paddingBottom: screenHeight * 0.06,
     },
     name: {
       fontSize: size * 0.14,

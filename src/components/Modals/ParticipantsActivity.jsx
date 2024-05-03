@@ -152,6 +152,11 @@ const ParticipantsActivity = ({ participents }) => {
               colorClothingTop={participent.style.accessory.color}
               colorBeard={participent.style.beard.color}
               eyes={listEyes[participent.style.eyes.id]}
+              // eyebrow={
+              //   participent.style.eyebrows.id
+              //     ? listEyebrow[participent.style.eyebrows.id]
+              //     : listEyebrow[1]
+              // }
               mouth={listMouth[participent.style.mouth.id]}
               beard={listBeard[participent.style.beard.id]}
               invitations={participent.invitations}
