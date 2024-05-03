@@ -19,7 +19,7 @@ import { UbService } from "../services/UbServices";
 import EventCard from "../components/Event/EventCard";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
-const MAX_NAME_LENGTH = screenWidth / 43;
+const MAX_NAME_LENGTH = screenWidth / 32;
 
 const truncateName = (name) => {
   if (name.length > MAX_NAME_LENGTH) {
@@ -41,6 +41,7 @@ const Accueil3 = ({ navigation }) => {
   const [reservedEvents, setReservedEvents] = useState([]);
   const [preferences, setPreferences] = useState([]);
   const [refresh, handleRefresh] = useState(0);
+  const [favourites, setFavourites] = useState(null);
 
   const defaultImage = {
     id: 1,
@@ -51,6 +52,16 @@ const Accueil3 = ({ navigation }) => {
   const [favouritesImages, setFavouritesImages] = useState([defaultImage]);
   const ubService = new UbService();
 
+  const isActivitySaved = (id) => {
+    if (favourites === null) return false;
+    const existingFavourite = favourites.findIndex(
+      (preference) => preference.id === id
+    );
+
+    if (existingFavourite) return true;
+
+    return false;
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -77,6 +88,13 @@ const Accueil3 = ({ navigation }) => {
 
         global.myId = responseData.user._id;
 
+        const tmpfavourites = await AsyncStorage.getItem("favourites");
+        if (tmpfavourites === null) {
+          return false;
+        } else {
+          setFavourites(JSON.parse(tmpfavourites));
+        }
+
         if (responseData !== null) {
           const preferences = responseData.user.preferences.map(function (
             string
@@ -101,20 +119,18 @@ const Accueil3 = ({ navigation }) => {
           setImages(imageResults);
           //
           const reservedEvents2 = responseData.user.reservations;
-          console.log("FAV EVENTS:", reservedEvents2);
 
           if (reservedEvents2.length > 0 && refresh === 0) {
             // console.log(reservedEvents);
-            const favourites = [];
+            const events = [];
             for (const favourite of reservedEvents2) {
               const event = await ubService.getEventById(favourite);
               // console.log(event);
               if (event) {
-                favourites.push(event);
+                events.push(event);
               }
             }
-            console.log("FAV:", favourites);
-            setReservedEvents(favourites);
+            setReservedEvents(events);
             // console.log("FAVOURITES EVENTS", favourites);
             const imagePromises2 = reservedEvents.map(async (event) => {
               const img = await ubService.getImage(event.pictures[0].id);
@@ -143,7 +159,8 @@ const Accueil3 = ({ navigation }) => {
     events.length < 0 ||
     images.length !== events.length ||
     (profileData.user.reservations.length !== 0 &&
-      favouritesImages.length !== profileData.user.reservations.length)
+      (favouritesImages.length !== profileData.user.reservations.length ||
+        reservedEvents.length === 0))
   ) {
     return <Text> Loading </Text>;
   } else
@@ -174,7 +191,7 @@ const Accueil3 = ({ navigation }) => {
             >
               <Text
                 style={{
-                  fontSize: screenWidth * 0.07,
+                  fontSize: screenWidth * 0.07 - username.length * 0.3,
                   color: "black",
                   fontWeight: "bold",
                 }}
@@ -190,8 +207,8 @@ const Accueil3 = ({ navigation }) => {
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
                   style={{
-                    width: 44,
-                    height: 44,
+                    width: screenHeight * 0.05,
+                    height: screenHeight * 0.05,
                     marginHorizontal: screenWidth * 0.03,
                     justifyContent: "center",
                     backgroundColor: "#5265FF1A",
@@ -203,14 +220,17 @@ const Accueil3 = ({ navigation }) => {
                   }}
                 >
                   <Image
-                    style={{ height: 19, width: 15 }}
+                    style={{
+                      height: screenHeight * 0.03,
+                      width: screenHeight * 0.02,
+                    }}
                     source={notifications}
                   ></Image>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={{
-                    width: 44,
-                    height: 44,
+                    width: screenHeight * 0.05,
+                    height: screenHeight * 0.05,
                     justifyContent: "center",
                     backgroundColor: "#5265FF1A",
                     borderRadius: 12,
@@ -221,7 +241,10 @@ const Accueil3 = ({ navigation }) => {
                   }}
                 >
                   <Image
-                    style={{ height: 20, width: 14 }}
+                    style={{
+                      height: screenHeight * 0.03,
+                      width: screenHeight * 0.02,
+                    }}
                     source={book}
                   ></Image>
                 </TouchableOpacity>
@@ -230,7 +253,7 @@ const Accueil3 = ({ navigation }) => {
 
             <View
               style={{
-                top: screenHeight / 8,
+                marginTop: screenHeight * 0.12,
                 flexDirection: "column",
                 flex: 1,
                 justifyContent: "space-between",
@@ -270,7 +293,7 @@ const Accueil3 = ({ navigation }) => {
             <View
               style={{
                 position: "relative",
-                marginTop: 120,
+                marginTop: screenHeight * 0.02,
                 flex: 1,
                 height: 50 + "%",
                 // width: 90 + "%",
@@ -308,6 +331,7 @@ const Accueil3 = ({ navigation }) => {
                           handleRefresh(0);
                         }}
                         rate={event.rate}
+                        isSaved={isActivitySaved(event._id) ? false : true}
                         // rate={ubService.getEventRate(event._id)}
                       />
                     ))
@@ -330,7 +354,7 @@ const Accueil3 = ({ navigation }) => {
                   fontSize: screenHeight / 40,
                 }}
               >
-                Tes activités enregistrés
+                Tes activités qui arrivent
               </Text>
             </View>
             {/* <View style={{position:'relative', height:1000}}></View> */}
@@ -370,11 +394,14 @@ const Accueil3 = ({ navigation }) => {
                       handleRefresh(0);
                     }}
                     rate={event.rate}
+                    isSaved={isActivitySaved(event._id) ? false : true}
                     // rate={ubService.getEventRate(event._id)}
                   />
                 ))
               ) : (
-                <View />
+                <View>
+                  <Text>Trouve une activité juste au dessus !</Text>
+                </View>
               )}
             </ScrollView>
           </View>

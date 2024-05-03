@@ -1,27 +1,18 @@
-import React, { useEffect, useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  Dimensions,
-  Text,
-  View,
-  Image,
-  Modal,
-} from "react-native";
+import React, { useState } from "react";
+import { TouchableOpacity, Dimensions, Text, View, Image } from "react-native";
 import vector from "../../../asset/Vector.png";
+import book from "../../../asset/bookmark.png";
 import loc from "../../../asset/location_on.png";
 import startFilled from "../../../assets/star_filled.png";
 import startUnfilled from "../../../assets/star_unfilled.png";
 import { UbService } from "../../services/UbServices";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import ActivityModal from "../Modals/JoinActivity";
 global.currentEventId = 0;
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 const ubService = new UbService();
+const MAX_NAME_LENGTH = screenWidth * 0.065;
 
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
@@ -45,13 +36,20 @@ function extractTime(dateTimeString) {
   return timeString;
 }
 
+const truncateName = (name) => {
+  if (name.length > MAX_NAME_LENGTH) {
+    return name.substring(0, MAX_NAME_LENGTH) + "...";
+  }
+  return name;
+};
+
 async function updateFavourites(name, id) {
   try {
     // await AsyncStorage.removeItem("favourites");
     let favourites = await AsyncStorage.getItem("favourites");
 
     if (favourites === null) {
-      console.log("No favourites yet");
+      // console.log("No favourites yet");
       favourites = [];
     } else {
       favourites = JSON.parse(favourites);
@@ -90,10 +88,10 @@ const EventCard = ({
   size = 290,
   id,
   rate,
+  isSaved = false,
   handleRefresh = () => {},
 }) => {
-  const [modalVisible, setModalVisible] = useState(false);
-
+  const [isActivitySaved, setIsActivitySaved] = useState(isSaved);
   const renderStars = (ratings) => {
     let totalStars = 0;
     ratings.forEach((rating) => {
@@ -192,7 +190,7 @@ const EventCard = ({
             textAlign: "center",
             color: "#E1604D",
             fontWeight: 600,
-            fontSize: size * 0.069,
+            fontSize: size * 0.069 - name.length * 0.2,
           }}
         >
           {name}
@@ -338,22 +336,23 @@ const EventCard = ({
                 textAlign: "center",
               }}
             >
-              {address}
+              {truncateName(address)}
             </Text>
           </View>
           <TouchableOpacity
             onPress={async () => {
               updateFavourites(name, id);
+              setIsActivitySaved(!isActivitySaved);
               handleRefresh();
             }}
           >
             <Image
               style={{
-                width: size * 0.05,
-                height: size * 0.07,
+                width: isSaved === false ? size * 0.04 : size * 0.05,
+                height: isSaved === false ? size * 0.06 : size * 0.07,
                 marginTop: size * 0.001,
               }}
-              source={vector}
+              source={isSaved === false ? vector : book}
             />
           </TouchableOpacity>
         </View>

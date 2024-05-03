@@ -124,12 +124,14 @@ const SavedEventsPage = ({ navigation }) => {
                   width: "95%",
                   // width: 40 + "%",
                   alignItems: "center",
-                  justifyContent: "space-between",
+                  justifyContent: "center",
                 }}
               >
-                <Text style={{ fontSize: 26, color: "black" }}>
+                <Text
+                  style={{ fontSize: 26, color: "black", fontWeight: "bold" }}
+                >
                   {" "}
-                  Mes activités enregistrés
+                  Mes activités enregistrées
                 </Text>
               </View>
               <View
@@ -245,40 +247,47 @@ const SavedEventsPage = ({ navigation }) => {
                 }}
               >
                 {favouritesEvents.length > 0 ? (
-                  favouritesEvents.map((event, index) => (
-                    <View
-                      key={index}
-                      style={{
-                        marginVertical: screenHeight / 50,
-                        width: "50%",
-                        // width: screenWidth > 600 ? "48%" : "100%",
-                        marginVertical: screenHeight / 50,
-                        // marginRight: 20,
-                      }}
-                    >
-                      <EventCard
-                        onPress={() => {
-                          navigation.navigate("Event");
-                        }}
-                        key={index}
-                        size={screenHeight / 3.4}
-                        name={event.name}
-                        address={event.address}
-                        pictures={favouritesImages[index].url}
-                        categories={event.categories}
-                        date={event.start_date}
-                        participents={event.participents.length}
-                        id={event._id}
-                        handleRefresh={() => {
-                          handleRefresh(0);
-                        }}
-                        rate={event.rate}
-                        // rate={ubService.getEventRate(event._id)}
-                      />
-                    </View>
-                  ))
+                  favouritesEvents.map(
+                    (event, index) =>
+                      (event.categories[0] === activitiesType[choice] ||
+                        choice === 0) && (
+                        <View
+                          key={index}
+                          style={{
+                            marginVertical: screenHeight / 50,
+                            width: "50%",
+                            // width: screenWidth > 600 ? "48%" : "100%",
+                            marginVertical: screenHeight / 50,
+                            // marginRight: 20,
+                          }}
+                        >
+                          <EventCard
+                            onPress={() => {
+                              navigation.navigate("Event");
+                            }}
+                            key={index}
+                            size={screenHeight / 3.4}
+                            name={event.name}
+                            address={event.address}
+                            pictures={favouritesImages[index].url}
+                            categories={event.categories}
+                            date={event.start_date}
+                            participents={event.participents.length}
+                            id={event._id}
+                            handleRefresh={() => {
+                              handleRefresh(0);
+                            }}
+                            rate={event.rate}
+                            isSaved={true}
+                            // rate={ubService.getEventRate(event._id)}
+                          />
+                        </View>
+                      )
+                  )
                 ) : (
-                  <View />
+                  <View>
+                    <Text>Pas d'activité enregistrée</Text>
+                  </View>
                 )}
               </View>
             </ScrollView>

@@ -21,6 +21,23 @@ import EventCard from "../../components/Event/EventCard";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
+async function isActivitySaved(id) {
+  const favourites = await AsyncStorage.getItem("favourites");
+  if (favourites === null) {
+    return false;
+  } else {
+    favourites = JSON.parse(favourites);
+  }
+
+  const existingFavourite = favourites.findIndex(
+    (preference) => preference.id === id
+  );
+
+  if (existingFavourite) return true;
+
+  return false;
+}
+
 const TimelineEventsPage = ({ navigation }) => {
   // const [fontsLoaded] = useFonts({
   //   DMSans_400Regular,
@@ -31,6 +48,7 @@ const TimelineEventsPage = ({ navigation }) => {
   const [username, setUsername] = useState("Citoyen");
   const [profileData, setProfileData] = useState(null);
   const [events, setEvents] = useState([]);
+  const [favourites, setFavourites] = useState(null);
   const defaultImage = {
     id: 1,
     url: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
@@ -53,6 +71,16 @@ const TimelineEventsPage = ({ navigation }) => {
     "lol",
   ];
 
+  const isActivitySaved = (id) => {
+    const existingFavourite = favourites.findIndex(
+      (preference) => preference.id === id
+    );
+
+    if (existingFavourite) return true;
+
+    return false;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -72,6 +100,13 @@ const TimelineEventsPage = ({ navigation }) => {
 
         const responseData = await response.json();
         setProfileData(responseData);
+
+        const tmpfavourites = await AsyncStorage.getItem("favourites");
+        if (tmpfavourites === null) {
+          return false;
+        } else {
+          setFavourites(JSON.parse(tmpfavourites));
+        }
         // console.log(profileData);
         const tmpObj = await ubService.getEvents();
         setEvents(tmpObj);
@@ -315,6 +350,7 @@ const TimelineEventsPage = ({ navigation }) => {
                             participents={event.participents.length}
                             id={event._id}
                             rate={event.rate}
+                            isSaved={isActivitySaved(event._id) ? false : true}
                           />
                         </View>
                       )
