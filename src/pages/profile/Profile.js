@@ -154,7 +154,7 @@ const Profile = ({ navigation }) => {
       setDescription(profileData.user.description);
       setAvatarColor(profileData.user.style.head.color);
       setSelectedBeard(profileData.user.style.beard.id);
-      setSelectedEyebrow();
+      setSelectedEyebrow(profileData.user.style.eyebrows.id);
       setSelectedCloth(profileData.user.style.accessory.id);
       setSelectedGlasses(profileData.user.style.eyes.id);
       setSelectedHair(profileData.user.style.hair.id);
@@ -215,7 +215,7 @@ const Profile = ({ navigation }) => {
                   colorEye={EyeColor}
                   beard={listBeard[selectedBeard]}
                   mouth={listMouth[selectedMouth]}
-                  eyebrow={selectedEyebrow}
+                  eyebrow={listEyebrow[selectedEyebrow]}
                 />
               </View>
             </Swiper>

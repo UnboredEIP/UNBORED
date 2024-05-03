@@ -39,6 +39,9 @@ const avatareyes = ({ navigation }) => {
             Authorization: `Bearer ${authToken}`,
           },
           body: JSON.stringify({
+            eyebrows:{
+              id: selectedEyebrowId.toString(),
+            },
             hair: {
               id: selectedHairId.toString(),
               color: HairColor.toString(),
