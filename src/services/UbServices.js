@@ -104,11 +104,14 @@ export class UbService {
       });
 
       if (!response.ok) {
+        console.log("CACA2");
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const responseData = await response.json();
+      if (!responseData.user) throw new Error(`User null: ${response.status}`);
       return responseData.user;
     } catch (error) {
+      console.log("CACA3");
       console.error("Error when try to get user:", error);
     }
   };

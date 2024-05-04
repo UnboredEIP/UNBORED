@@ -169,12 +169,13 @@ const FriendsRequest = ({ navigation }) => {
             const users2 = [];
             for (const user of responseData.user.invitations.friends) {
               const user2 = await ubservice.getUserById(user._id);
-              // console.log(user);
+              // console.log(user2);
               if (user2) {
                 users2.push(user2);
               }
             }
             setUsers(users2);
+            // console.log("USERS:", users2);
           }
           //   setUsers(responseData.user.invitations.friends);
         }
@@ -193,9 +194,9 @@ const FriendsRequest = ({ navigation }) => {
     profileData === null ||
     (profileData !== null &&
       profileData.user.invitations.friends.length !== 0 &&
-      users.length === 0)
+      users.length !== profileData.user.invitations.friends.length)
   ) {
-    return <Text> Loading </Text>;
+    return <Text> Loading {users[0]}</Text>;
   } else
     return (
       <View

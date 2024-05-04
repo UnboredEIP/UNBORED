@@ -125,7 +125,7 @@ const TimelineEventsPage = ({ navigation }) => {
     };
 
     fetchData();
-  }, [navigation]);
+  }, [navigation, events]);
 
   useEffect(() => {
     if (profileData !== null) {
@@ -139,7 +139,7 @@ const TimelineEventsPage = ({ navigation }) => {
     events.length < 0 ||
     images.length !== events.length
   ) {
-    return <Text> Loading </Text>;
+    return <Text> Loading {events.length} </Text>;
   } else
     return (
       <View style={{ flex: 1 }}>

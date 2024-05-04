@@ -11,6 +11,7 @@ import Buttons from "./Buttons";
 import { UbService } from "../services/UbServices";
 
 const screenHeight = Dimensions.get("screen").height;
+const screenWidth = Dimensions.get("screen").width;
 
 const NOT_FRIENDS = 1;
 const WAIT_FOR_ACCEPT = 2;
@@ -39,7 +40,7 @@ const AvatarCard = ({
 }) => {
   const uberservice = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
-  const MAX_NAME_LENGTH = 11;
+  const MAX_NAME_LENGTH = screenWidth * 0.0305;
 
   //@ts-ignore
   const truncateName = (name) => {
@@ -122,7 +123,7 @@ const AvatarCard = ({
       ) : isFollowed === WAIT_FOR_ACCEPT ? (
         <Buttons
           texte="en attente"
-          textSize={size * 0.13}
+          textSize={size * 0.1}
           width={size * 0.6}
           height={size * 0.3}
           onPress={() => {}}
