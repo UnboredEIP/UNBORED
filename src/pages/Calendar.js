@@ -15,6 +15,7 @@ import Moment from "moment";
 const Calendar = ({ navigation }) => {
   const [selectedDay, setSelectedDay] = useState(null);
   const [daysOfWeek, setDaysOfWeek] = useState([]);
+  const [daysOfMonth, setDaysOfMonth] = useState([]);
   const [username, setUsername] = useState("");
   const [defaultImageUri] = useState("https://..."); // URL d'une image par défaut
   const [image, setImage] = useState(defaultImageUri);
@@ -49,7 +50,6 @@ const Calendar = ({ navigation }) => {
         renderItem={({ item: hour }) => (
           <View style={styles.hourItem}>
             <Text style={styles.hourText}>{hour}</Text>
-            {/* Render event names for this hour */}
             {filteredEvents
               .filter(
                 (event) =>
@@ -67,10 +67,13 @@ const Calendar = ({ navigation }) => {
               </TouchableOpacity>
               ))}
             {filteredEvents
-              .filter((event) => parseInt(event.heuredebut) === parseInt(hour))
-              .map((event) =>
+              .filter(
+                (event) =>
+                  parseInt(event.heuredebut) === parseInt(hour) &&
+                  event.date === selectedDay
+              )              .map((event) =>
                 console.log(
-                  "event.date:",
+                  "event.date: ",
                   event.date + "selectedDate!: ",
                   selectedDay
                 )
@@ -106,7 +109,30 @@ const Calendar = ({ navigation }) => {
 
       return days;
     };
+    const getDaysOfMonth = () => {
+      const daysInMonth = new Date();
+    
+      const days = [];
+      for (let i = 1; i <= 31; i++) {
+        const dayDate = new Date(daysInMonth);
+        dayDate.setDate(daysInMonth.getDate() + i);
 
+        const dayNumber = dayDate.getDate();
+        const dayName = getDayName(dayDate.getDay());
+        const month = dayDate.getMonth() + 1; // Months are zero-based, so we add 1
+        const year = dayDate.getFullYear();
+    
+        days.push({
+          dayNumber,
+          dayName,
+          month,
+          year,
+        });
+      }
+    
+      return days;
+    };
+    
     const getDayName = (dayNumber) => {
       const days = ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"];
       return days[dayNumber];
@@ -230,6 +256,7 @@ const Calendar = ({ navigation }) => {
     handleDayPress(today);
 
     setDaysOfWeek(getDaysOfWeek());
+    setDaysOfMonth(getDaysOfMonth());
     fetchProfileData();
     fetchActivities();
   }, []);
@@ -302,14 +329,13 @@ const Calendar = ({ navigation }) => {
             const formattedDayOnly = dayOnly.padStart(2, "0");
 
             // Iterate through all days of the week
-            return daysOfWeek
+            return daysOfMonth
               .map((dayOfWeek) => {
                 const {
                   year: dayYear,
                   month: dayMonth,
                   dayNumber: dayNumber,
                 } = dayOfWeek;
-
                 const formattedDayMonth = dayMonth.toString().padStart(2, "0");
                 const formattedDayDay = dayNumber.toString().padStart(2, "0");
                 if (
@@ -345,6 +371,7 @@ const Calendar = ({ navigation }) => {
   const MonthDaysList = () => {
     const today = new Date();
     const currentDay = today.getUTCDate();
+    console.log("filtered",filteredEvents);
     const lastDayOfMonth = new Date(today.getUTCFullYear(), today.getUTCMonth() + 1, 0).getUTCDate();
     const lastDayOfNextMonth = new Date(today.getUTCFullYear(), today.getUTCMonth() + 2, 0).getUTCDate();
     let data = Array.from({ length: Math.min(31, lastDayOfMonth - currentDay + 1) }, (_, index) => currentDay + index);
@@ -463,7 +490,7 @@ const Calendar = ({ navigation }) => {
           ) : (
             <>
               {selectedDay && (
-                <HoursGrid selectedDay={selectedDay < 10 ? "0" + selectedDay : selectedDay} />
+                <HoursGrid selectedDay={selectedDay < 10 ? "0" + selectedDay : selectedDay.toString()} />
               )}
             </>
           )}
