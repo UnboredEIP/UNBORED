@@ -7,6 +7,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   TouchableOpacity,
+  Dimensions,
   ScrollView,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -17,8 +18,12 @@ import Buttons from "../../components/Buttons";
 import MyAvatar from "../../components/Avatar";
 import Swiper from 'react-native-swiper';
 
+const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
+
 const Profile = ({ navigation }) => {
   const [username, setUsername] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   const [preferences, setPreferences] = useState([]);
   const [defaultImageUri] = useState(
     "https://camo.githubusercontent.com/c870c9266f63ef17356bc6356d7c2df99d8a9889644352d4fe854f37f5c13693/68747470733a2f2f692e706f7374696d672e63632f5071674c68726e582f756e626f7265642e706e67" // Replace with the actual default image URL
@@ -171,8 +176,19 @@ const Profile = ({ navigation }) => {
 
   useEffect(() => {
     handleProfileFetch();
-  }, []);
+    const timer = setTimeout(() => {
+      setIsLoading(false); // After 2 seconds, set isLoading to false
+    }, 5000);
 
+    // Clear the timeout if the component unmounts before 2 seconds
+    return () => clearTimeout(timer);
+  }, []);
+  if (isLoading) {
+    return<Image
+    source={require("../../../assets/loading.gif")}
+    style={{ height: 400, width: 400, alignContent:"center", alignItems:"center", marginTop:200 }}
+  ></Image> ;
+  } else
   return (
     <View style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -267,7 +283,7 @@ const styles = StyleSheet.create({
   textAboveImage: {
     textAlign: "left",
     marginBottom: 10,
-    marginTop: 25,
+    marginTop: screenHeight / 50,
     fontSize: 22,
     fontWeight: "bold",
   },
