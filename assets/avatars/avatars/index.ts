@@ -80,6 +80,10 @@ import HatWinter from "./hat/winter.svg";
 import HatWinter2 from "./hat/winter2.svg";
 import HatWintercat from "./hat/wintercat.svg";
 
+// Other
+
+import BackArrow from "../../back-arrow.svg";
+
 export {
   BodySvg,
   //TOP
@@ -159,4 +163,5 @@ export {
   HatWinter,
   HatWinter2,
   HatWintercat,
+  BackArrow,
 };

@@ -268,8 +268,7 @@ const ActivityModal = ({
           </Text>
         </View>
         <TouchableOpacity
-          onPress={async () => {
-            updateFavourites(name, id);
+          onPress={() => {
             handleRefresh();
           }}
         >

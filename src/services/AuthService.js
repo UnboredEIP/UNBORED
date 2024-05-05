@@ -51,7 +51,15 @@ export class AuthService {
       return false;
     }
   };
-  getRegister = async (username, email, password, gender, birthdate, otp) => {
+  getRegister = async (
+    username,
+    email,
+    password,
+    gender,
+    description,
+    birthdate,
+    otp
+  ) => {
     try {
       const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`, {
         method: "POST",
@@ -63,6 +71,7 @@ export class AuthService {
           email,
           password,
           gender,
+          description,
           birthdate,
           otp,
         }),
@@ -91,6 +100,33 @@ export class AuthService {
         body: JSON.stringify({
           email,
           password,
+        }),
+      });
+      if (response.status === 202) {
+        const data = await response.json();
+        const token = data.token;
+        await AsyncStorage.setItem("authToken", token);
+        return true;
+      } else {
+        console.error(response.toString());
+        return false;
+      }
+    } catch (error) {
+      console.error("Request error: ", error);
+      return false;
+    }
+  };
+
+  loginGoogle = async (googleTokenId) => {
+    try {
+      // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
+      const response = await fetch(`${API_URL}/auth/login/google`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          googleTokenId,
         }),
       });
       if (response.status === 202) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -15,16 +15,21 @@ import {
 } from "@expo-google-fonts/source-sans-pro";
 import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../../components/TextField";
-import RNPickerSelect from "react-native-picker-select";
 import Toast from "react-native-root-toast";
-const screenWidth = Dimensions.get("screen").width;
-const screenHeight = Dimensions.get("screen").height;
 import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import { AuthService } from "../../../services/AuthService";
+import LoadingPage from "../../Loading";
+import { API_URL, CLIENT_ID_WEB } from "@env";
+
+const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
+
+// //A décommenter au moment de build
 // import {
 //   GoogleSignin,
 //   GoogleSigninButton,
+//   statusCodes,
 // } from "@react-native-google-signin/google-signin";
 
 global.RegisterData = [];
@@ -50,12 +55,17 @@ const Register = ({ navigation }) => {
   const [birthdate, setBirthdate] = useState("");
 
   if (!fontsLoaded) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
+    return <LoadingPage />;
   }
+
+  // //A décommenter au moment de build
+  // GoogleSignin.configure({
+  //   scopes: [
+  //     "https://www.googleapis.com/auth/drive.readonly",
+  //     "https://www.googleapis.com/auth/calendar.readonly",
+  //   ], // what API you want to access on behalf of the user, default is email and profile
+  //   webClientId: `${CLIENT_ID_WEB}`, // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+  // });
 
   return (
     <View style={styles().container}>
@@ -162,17 +172,8 @@ const Register = ({ navigation }) => {
             </Text>
             <View style={{ flexDirection: "row", marginBottom: 32 }}>
               <RootSiblingParent>
-                <Buttons
-                  hasIcon={true}
-                  iconPath={
-                    "https://www.facebook.com/images/fb_icon_325x325.png"
-                  }
-                  textColor="black"
-                  width={screenWidth < 350 ? 145 : 160}
-                  backgroundColor="white"
-                  texte="Facebook"
-                />
-                <Buttons
+                {/* //A décommenter au moment de build */}
+                {/* <Buttons
                   hasIcon={true}
                   iconPath={
                     "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
@@ -180,8 +181,54 @@ const Register = ({ navigation }) => {
                   textColor="black"
                   width={screenWidth < 350 ? 145 : 160}
                   backgroundColor="white"
+                  onPress={async () => {
+                    try {
+                      await GoogleSignin.signOut();
+                      await GoogleSignin.hasPlayServices();
+                      const userInfo = await GoogleSignin.signIn();
+                      const response = await authService.loginGoogle(
+                        userInfo.idToken
+                      );
+
+                      if (response) {
+                        Toast.show("Vous êtes connecté", {
+                          duration: Toast.durations.LONG,
+                          position: Toast.positions.BOTTOM,
+                          backgroundColor: "green",
+                          shadow: true,
+                          animation: true,
+                          hideOnPress: true,
+                        });
+                        const tmp = await navigateTo();
+                        if (tmp === true) navigation.replace("Accueil3");
+                        else navigation.replace("Choose");
+                      } else {
+                        Toast.show("Erreur d'authentification", {
+                          duration: Toast.durations.LONG,
+                          position: Toast.positions.BOTTOM,
+                          backgroundColor: "red",
+                          shadow: true,
+                          animation: true,
+                          hideOnPress: true,
+                        });
+                      }
+                    } catch (error) {
+                      if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+                        // user cancelled the login flow
+                      } else if (error.code === statusCodes.IN_PROGRESS) {
+                        // operation (e.g. sign in) is in progress already
+                      } else if (
+                        error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
+                      ) {
+                        // play services not available or outdated
+                      } else {
+                        console.log("error:", error);
+                        // some other error happened
+                      }
+                    }
+                  }}
                   texte="Google"
-                />
+                /> */}
               </RootSiblingParent>
             </View>
 

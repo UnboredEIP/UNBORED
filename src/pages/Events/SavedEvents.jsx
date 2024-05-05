@@ -10,37 +10,33 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import Navbar from "../components/NavigationBar";
-import "../../asset/SourceSansPro-Regular.otf";
-import book from "../../asset/bookmark.png";
-import notifications from "../../asset/notifications.png";
-import Buttons from "../components/Buttons";
+import Navbar from "../../components/NavigationBar";
+import book from "../../../asset/bookmark.png";
+import notifications from "../../../asset/notifications.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
-import { UbService } from "../services/UbServices";
-import EventCard from "../components/Event/EventCard";
+import { UbService } from "../../services/UbServices";
+import EventCard from "../../components/Event/EventCard";
+import LoadingPage from "../Loading";
+import { BackArrow } from "../../../assets/avatars/avatars";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-const TimelineEventsPage = ({ navigation }) => {
-  // const [fontsLoaded] = useFonts({
-  //   DMSans_400Regular,
-  //   DMSans_700Bold,
-  // });
+const SavedEventsPage = ({ navigation }) => {
   const [text, setText] = useState("");
   const [choice, setChoice] = useState(0);
   const [username, setUsername] = useState("Citoyen");
-  const [profileData, setProfileData] = useState(null);
-  const [events, setEvents] = useState([]);
+  const [favouritesEvents, setFavouritesEvents] = useState([]);
+  const [preferences, setPreferences] = useState([]);
+  const [refresh, handleRefresh] = useState(0);
   const defaultImage = {
     id: 1,
     url: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
     description: "Default Image",
   };
-  const [images, setImages] = useState([defaultImage]);
+  const [favouritesImages, setFavouritesImages] = useState([defaultImage]);
   const ubService = new UbService();
-  const [selectedActivities, setSelectedActivities] = useState(["Tout"]);
   const activitiesType = [
     "Tout",
     "art",
@@ -58,55 +54,51 @@ const TimelineEventsPage = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const authToken = await AsyncStorage.getItem("authToken");
+        const storageFavourites = global.favEvents;
 
-        const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+        // setFavouritesEvents(JSON.parse(storageFavourites));
+        if (storageFavourites !== null) {
+          const favouritesEvents2 = storageFavourites;
+          if (favouritesEvents2.length > 0 && refresh === 0) {
+            // console.log(favouritesEvents);
+            const favourites = [];
+            for (const favourite of favouritesEvents2) {
+              const event = await ubService.getEventById(favourite);
+              // console.log(event);
+              if (event) {
+                favourites.push(event);
+              }
+            }
+            setFavouritesEvents(favourites);
+            // console.log("FAVOURITES EVENTS", favourites);
+            const imagePromises2 = favouritesEvents.map(async (event) => {
+              const img = await ubService.getImage(event.pictures[0].id);
+              return img;
+            });
+            const imageResults2 = await Promise.all(imagePromises2);
+            setFavouritesImages(imageResults2);
+          }
         }
-
-        const responseData = await response.json();
-        setProfileData(responseData);
-        // console.log(profileData);
-        const tmpObj = await ubService.getEvents();
-        setEvents(tmpObj);
-        const imagePromises = tmpObj.map(async (event) => {
-          const img = await ubService.getImage(event.pictures[0].id);
-          return img;
-        });
-        const imageResults = await Promise.all(imagePromises);
-        // console.log("ALL IMAGES:", JSON.stringify(imageResults));
-        setImages(imageResults);
+        handleRefresh(1);
       } catch (error) {
         // console.error("Error fetchdata:", error);
         // await AsyncStorage.removeItem("authToken");
         // navigation.replace("Login2");
       }
     };
+    global.currentScreen = "SavedEventsPage";
 
     fetchData();
-  }, [navigation]);
+  }, [navigation, favouritesEvents, refresh]);
 
-  useEffect(() => {
-    if (profileData !== null) {
-      setUsername(profileData.user.username);
-    }
-  }, [profileData, events, images]);
+  useEffect(() => {}, [favouritesImages, favouritesEvents]);
   // console.log("ALL EVENTS:", events);
 
   if (
-    profileData === null ||
-    events.length < 0 ||
-    images.length !== events.length
+    favouritesEvents.length !== 0 &&
+    favouritesImages.length !== favouritesEvents.length
   ) {
-    return <Text> Loading </Text>;
+    return <LoadingPage />;
   } else
     return (
       <View style={{ flex: 1 }}>
@@ -121,13 +113,23 @@ const TimelineEventsPage = ({ navigation }) => {
             height: screenHeight,
           }}
         >
-          {/* <View
+          <TouchableOpacity
             style={{
-              marginTop: screenHeight / 10,
+              position: "absolute",
+              top: screenHeight / 15,
+              left: screenWidth / 20,
+              zIndex: 1,
             }}
+            onPress={() => navigation.replace("Accueil3")}
           >
-            <Buttons texte="Retour" width={screenWidth / 5} />
-          </View> */}
+            <BackArrow
+              style={{
+                width: screenWidth / 12,
+                height: screenWidth / 12,
+                color: "black",
+              }}
+            />
+          </TouchableOpacity>
           <TouchableWithoutFeedback
             accessible={false}
             onPress={Keyboard.dismiss}
@@ -141,55 +143,15 @@ const TimelineEventsPage = ({ navigation }) => {
                   width: "95%",
                   // width: 40 + "%",
                   alignItems: "center",
-                  justifyContent: "space-between",
+                  justifyContent: "center",
                 }}
               >
-                <Text style={{ fontSize: 26, color: "black" }}>
+                <Text
+                  style={{ fontSize: 26, color: "black", fontWeight: "bold" }}
+                >
                   {" "}
-                  Les activités
+                  Mes activités enregistrées
                 </Text>
-                <View style={{ flexDirection: "row" }}>
-                  {/* <Buttons
-                    texte="deco"
-                    width="30%"
-                    onPress={async () => {
-                      await AsyncStorage.removeItem("authToken");
-                      navigation.replace("Login2");
-                    }}
-                  /> */}
-                  <TouchableOpacity
-                    style={{
-                      width: 44,
-                      height: 44,
-                      marginHorizontal: 15,
-                      justifyContent: "center",
-                      backgroundColor: "#5265FF1A",
-                      borderRadius: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Image
-                      style={{ height: 19, width: 15 }}
-                      source={notifications}
-                    ></Image>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      marginLeft: 10,
-                      width: 44,
-                      height: 44,
-                      justifyContent: "center",
-                      backgroundColor: "#5265FF1A",
-                      borderRadius: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Image
-                      style={{ height: 20, width: 14 }}
-                      source={book}
-                    ></Image>
-                  </TouchableOpacity>
-                </View>
               </View>
               <View
                 style={{
@@ -244,6 +206,7 @@ const TimelineEventsPage = ({ navigation }) => {
                       }}
                     >
                       <Text
+                        key={index}
                         style={{
                           color: choice === index ? "white" : "#E1604D",
                           fontWeight: "bold",
@@ -302,12 +265,13 @@ const TimelineEventsPage = ({ navigation }) => {
                   paddingHorizontal: screenHeight * 0.005,
                 }}
               >
-                {events.length > 0 ? (
-                  events.map(
+                {favouritesEvents.length > 0 ? (
+                  favouritesEvents.map(
                     (event, index) =>
                       (event.categories[0] === activitiesType[choice] ||
                         choice === 0) && (
                         <View
+                          key={index}
                           style={{
                             marginVertical: screenHeight / 50,
                             width: "50%",
@@ -318,34 +282,39 @@ const TimelineEventsPage = ({ navigation }) => {
                         >
                           <EventCard
                             onPress={() => {
-                              navigation.navigate("Event");
+                              navigation.replace("Event");
                             }}
-                            size={screenHeight / 3.4}
                             key={index}
+                            size={screenHeight / 3.4}
                             name={event.name}
                             address={event.address}
-                            pictures={images[index].url}
+                            pictures={favouritesImages[index].url}
                             categories={event.categories}
                             date={event.start_date}
                             participents={event.participents.length}
                             id={event._id}
+                            handleRefresh={() => {
+                              handleRefresh(0);
+                            }}
                             rate={event.rate}
+                            isSaved={true}
+                            // rate={ubService.getEventRate(event._id)}
                           />
                         </View>
                       )
                   )
                 ) : (
-                  <EventCard />
+                  <View>
+                    <Text>Pas d'activité enregistrée</Text>
+                  </View>
                 )}
               </View>
             </ScrollView>
           </View>
         </ScrollView>
-        <View>
-          <Navbar navigation={navigation} />
-        </View>
+        <View>{/* <Navbar navigation={navigation} /> */}</View>
       </View>
     );
 };
 
-export default TimelineEventsPage;
+export default SavedEventsPage;
