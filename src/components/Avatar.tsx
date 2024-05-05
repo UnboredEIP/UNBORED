@@ -181,7 +181,7 @@ const MyAvatar = ({
   };
   const beardComponents = {
     light: <BeardLight />,
-    // majestic: <BeardMajestic />,
+    majestic: <BeardMajestic />,
     medium: <BeardMedium />,
     mustache: <BeardMustache />,
     mustachemagnum: <BeardMustachemagnum />,

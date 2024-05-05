@@ -3,8 +3,6 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
-  Keyboard,
   Image,
   ScrollView,
   Dimensions,
@@ -15,32 +13,33 @@ import Navbar from "../components/NavigationBar";
 import "../../asset/SourceSansPro-Regular.otf";
 import book from "../../asset/bookmark.png";
 import notifications from "../../asset/notifications.png";
-import filter from "../../asset/filter.png";
-
-import MyAvatar from "../components/Avatar";
-import { BodySvg, shirt } from "../../assets/avatars/avatars/index";
-
-import Buttons from "../components/Buttons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_URL } from "@env";
 import { UbService } from "../services/UbServices";
 import EventCard from "../components/Event/EventCard";
+import LoadingPage from "./Loading";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
+const MAX_NAME_LENGTH = screenWidth / 32;
+
+const truncateName = (name) => {
+  if (name.length > MAX_NAME_LENGTH) {
+    return name.substring(0, MAX_NAME_LENGTH) + "...";
+  }
+  return name;
+};
 
 const Accueil3 = ({ navigation }) => {
   // const [fontsLoaded] = useFonts({
   //   DMSans_400Regular,
   //   DMSans_700Bold,
   // });
-  const [text, setText] = useState("");
-  const [choice, setChoice] = useState(0);
   const [username, setUsername] = useState("Citoyen");
   const [profileData, setProfileData] = useState(null);
   const [events, setEvents] = useState([]);
-  const [favouritesEvents, setFavouritesEvents] = useState([]);
+  const [reservedEvents, setReservedEvents] = useState([]);
   const [preferences, setPreferences] = useState([]);
   const [refresh, handleRefresh] = useState(0);
+  const [favourites, setFavourites] = useState([]);
 
   const defaultImage = {
     id: 1,
@@ -51,37 +50,23 @@ const Accueil3 = ({ navigation }) => {
   const [favouritesImages, setFavouritesImages] = useState([defaultImage]);
   const ubService = new UbService();
 
-  useEffect(() => {
-    const getEvents = async () => {
-      try {
-        const tmpObj = await ubService.getEvents();
-        const filteredEvents = tmpObj.filter((event) =>
-          event.categories.some((category) => preferences.includes(category))
-        );
-        setEvents(filteredEvents);
+  const isActivitySaved = (id) => {
+    if (!favourites) return false;
+    if (favourites.length === 0) return false;
+    const existingFavourite = favourites.findIndex(
+      (preference) => preference === id
+    );
 
-        const imagePromises = filteredEvents.map(async (event) => {
-          const img = await ubService.getImage(event.pictures[0].id);
-          return img;
-        });
-        const imageResults = await Promise.all(imagePromises);
-        setImages(imageResults);
-      } catch (error) {
-        console.error("Error get events:", error);
-      }
-    };
-    const getFavouritesEvents = async () => {
-      try {
-        setFavouritesEvents(
-          JSON.parse(await AsyncStorage.getItem("favourites"))
-        );
-      } catch (error) {
-        console.error("Error get events:", error);
-      }
-    };
+    if (existingFavourite) {
+      return true;
+    }
+    return false;
+  };
+  useEffect(() => {
     const fetchData = async () => {
       try {
         // await AsyncStorage.removeItem("favourites");
+
         const authToken = await AsyncStorage.getItem("authToken");
 
         const response = await fetch(
@@ -98,21 +83,32 @@ const Accueil3 = ({ navigation }) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-
         const responseData = await response.json();
-        setProfileData(responseData);
+
+        // console.log("ALL:", responseData.user);
+
+        global.myId = responseData.user._id;
+
+        const tmpfavourites = responseData.user.favorites;
+        if (tmpfavourites) {
+          global.favEvents = tmpfavourites;
+          setFavourites(tmpfavourites);
+        }
 
         if (responseData !== null) {
+          setProfileData(responseData);
           const preferences = responseData.user.preferences.map(function (
             string
           ) {
             return string.toLowerCase();
           });
 
-          setUsername(responseData.user.username);
+          if (responseData.user.username !== undefined)
+            setUsername(responseData.user.username);
           setPreferences(preferences);
           // await getEvents();
           const tmpObj = await ubService.getEvents();
+
           const filteredEvents = tmpObj.filter((event) =>
             event.categories.some((category) => preferences.includes(category))
           );
@@ -124,35 +120,33 @@ const Accueil3 = ({ navigation }) => {
           });
           const imageResults = await Promise.all(imagePromises);
           setImages(imageResults);
+
           //
+          const reservedEvents2 = responseData.user.reservations;
 
-          const storageFavourites = await AsyncStorage.getItem("favourites");
-          // setFavouritesEvents(JSON.parse(storageFavourites));
-          if (storageFavourites !== null) {
-            const favouritesEvents2 = JSON.parse(storageFavourites);
-            // console.log("FAV EVENTS:", favouritesEvents[1].id);
-
-            if (favouritesEvents2.length > 0 && refresh === 0) {
-              // console.log(favouritesEvents);
-              const favourites = [];
-              for (const favourite of favouritesEvents2) {
-                const event = await ubService.getEventById(favourite.id);
+          global.reservedEvents = responseData.user.reservations;
+          if (reservedEvents2 !== null) {
+            if (reservedEvents2.length > 0 && refresh === 0) {
+              // console.log(reservedEvents);
+              const events = [];
+              for (const favourite of reservedEvents2) {
+                const event = await ubService.getEventById(favourite);
                 // console.log(event);
                 if (event) {
-                  favourites.push(event);
+                  events.push(event);
                 }
               }
-              setFavouritesEvents(favourites);
+              setReservedEvents(events);
               // console.log("FAVOURITES EVENTS", favourites);
-              const imagePromises2 = favouritesEvents.map(async (event) => {
+              const imagePromises2 = reservedEvents.map(async (event) => {
                 const img = await ubService.getImage(event.pictures[0].id);
                 return img;
               });
               const imageResults2 = await Promise.all(imagePromises2);
               setFavouritesImages(imageResults2);
             }
-            handleRefresh(1);
           }
+          handleRefresh(1);
         }
       } catch (error) {
         console.error("Error fetchData:", error);
@@ -162,8 +156,10 @@ const Accueil3 = ({ navigation }) => {
     };
 
     fetchData();
-    // getFavouritesEvents();
-  }, [navigation, favouritesEvents, refresh]);
+    // getreservedEvents();
+
+    global.currentScreen = "Accueil3";
+  }, [navigation, refresh, reservedEvents]);
 
   // console.log("ALL EVENTS:", events);
 
@@ -171,10 +167,16 @@ const Accueil3 = ({ navigation }) => {
     profileData === null ||
     events.length < 0 ||
     images.length !== events.length ||
-    (favouritesEvents.length !== 0 &&
-      favouritesImages.length !== favouritesEvents.length)
+    (profileData.user.reservations.length !== 0 &&
+      (favouritesImages.length !== profileData.user.reservations.length ||
+        reservedEvents.length === 0))
   ) {
-    return <Text> Loading </Text>;
+    // return (
+    //   <View>
+    //     <Text>Loading</Text>
+    //   </View>
+    // );
+    return <LoadingPage />;
   } else
     return (
       <View
@@ -190,204 +192,191 @@ const Accueil3 = ({ navigation }) => {
             width: screenWidth,
           }}
         >
-          <TouchableWithoutFeedback
-            accessible={false}
-            onPress={Keyboard.dismiss}
-          >
-            <View style={{ flex: 1, alignItems: "center" }}>
-              <View
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <View
+              style={{
+                top: "15%",
+                display: "flex",
+                flexDirection: "row",
+                // width: "85%",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
                 style={{
-                  top: "15%",
-                  display: "flex",
-                  flexDirection: "row",
-                  // width: "85%",
-                  alignItems: "center",
-                  justifyContent: "space-between",
+                  fontSize: screenWidth * 0.07 - username.length * 0.3,
+                  color: "black",
+                  fontWeight: "bold",
                 }}
               >
-                <Text style={{ fontSize: 26, color: "black" }}>
-                  {" "}
-                  Bonjour {username} !
-                </Text>
-                <View
-                  style={{
-                    marginHorizontal: 5,
-                  }}
-                ></View>
-                <View style={{ flexDirection: "row" }}>
-                  <TouchableOpacity
-                    style={{
-                      width: 44,
-                      height: 44,
-                      marginHorizontal: 15,
-                      justifyContent: "center",
-                      backgroundColor: "#5265FF1A",
-                      borderRadius: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Image
-                      style={{ height: 19, width: 15 }}
-                      source={notifications}
-                    ></Image>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={{
-                      marginLeft: 10,
-                      width: 44,
-                      height: 44,
-                      justifyContent: "center",
-                      backgroundColor: "#5265FF1A",
-                      borderRadius: 12,
-                      alignItems: "center",
-                    }}
-                  >
-                    <Image
-                      style={{ height: 20, width: 14 }}
-                      source={book}
-                    ></Image>
-                  </TouchableOpacity>
-                </View>
-              </View>
+                {" "}
+                Salut {truncateName(username)} !
+              </Text>
               <View
                 style={{
-                  top: 20 + "%",
-                  display: "flex",
-                  flexDirection: "row",
-                  width: 85 + "%",
+                  marginHorizontal: 5,
                 }}
-              >
-                <View
-                  style={{
-                    marginHorizontal: 10,
-                  }}
-                />
+              ></View>
+              <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
                   style={{
-                    marginLeft: 10,
-                    width: 44,
-                    height: 44,
+                    width: screenHeight * 0.05,
+                    height: screenHeight * 0.05,
+                    marginHorizontal: screenWidth * 0.03,
                     justifyContent: "center",
                     backgroundColor: "#5265FF1A",
                     borderRadius: 12,
                     alignItems: "center",
                   }}
+                  onPress={() => {
+                    navigation.replace("FriendsRequest");
+                  }}
                 >
                   <Image
-                    style={{ height: 20, width: 14 }}
-                    source={filter}
+                    style={{
+                      height: screenHeight * 0.03,
+                      width: screenHeight * 0.02,
+                    }}
+                    source={notifications}
+                  ></Image>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    width: screenHeight * 0.05,
+                    height: screenHeight * 0.05,
+                    justifyContent: "center",
+                    backgroundColor: "#5265FF1A",
+                    borderRadius: 12,
+                    alignItems: "center",
+                  }}
+                  onPress={() => {
+                    navigation.replace("SavedEventsPage");
+                  }}
+                >
+                  <Image
+                    style={{
+                      height: screenHeight * 0.03,
+                      width: screenHeight * 0.02,
+                    }}
+                    source={book}
                   ></Image>
                 </TouchableOpacity>
               </View>
-
-              <View
-                style={{
-                  top: screenHeight / 8,
-                  flexDirection: "column",
-                  flex: 1,
-                  justifyContent: "space-between",
-                  width: 85 + "%",
-                  // alignItems: "center",
-                }}
-              >
-                {/* <Image src="../../assets/avatars/avatars/body/blazer.svg"></Image> */}
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    fontSize: screenHeight / 40,
-                    alignSelf: "center",
-                    marginBottom: 10,
-                    textAlign: "center",
-                  }}
-                >
-                  Ces activités sont faites pour toi !
-                </Text>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate("TimelineEventsPage")}
-                >
-                  <Text
-                    style={{
-                      fontWeight: "bold",
-                      color: "#E1604D",
-                      flex: 1,
-                      textAlign: "right",
-                      justifyContent: "flex-end",
-                    }}
-                  >
-                    Voir toutes les activités
-                  </Text>
-                </TouchableOpacity>
-              </View>
-
-              <View
-                style={{
-                  position: "relative",
-                  marginTop: 120,
-                  flex: 1,
-                  height: 50 + "%",
-                  // width: 90 + "%",
-                  // paddingHorizontal: 20,
-                  alignItems: "center",
-                  marginBottom: 7 + "%",
-                }}
-              >
-                <ScrollView
-                  showsHorizontalScrollIndicator={false}
-                  nestedScrollEnabled={true}
-                  horizontal={true}
-                >
-                  {events.length > 0 ? (
-                    events
-                      // .filter((event) =>
-                      //   event.categories.some((category) =>
-                      //     preferences.includes(category)
-                      //   )
-                      // )
-                      .map((event, index) => (
-                        <EventCard
-                          onPress={() => {
-                            navigation.navigate("Event");
-                          }}
-                          key={index}
-                          name={event.name}
-                          address={event.address}
-                          pictures={images[index].url}
-                          categories={event.categories}
-                          date={event.start_date}
-                          participents={event.participents.length}
-                          id={event._id}
-                          handleRefresh={() => {
-                            handleRefresh(0);
-                          }}
-                          rate={event.rate}
-                          // rate={ubService.getEventRate(event._id)}
-                        />
-                      ))
-                  ) : (
-                    <View />
-                  )}
-                </ScrollView>
-              </View>
-
-              <View
-                style={{
-                  alignSelf: "center",
-                  width: 85 + "%",
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    textAlign: "center",
-                    fontSize: screenHeight / 40,
-                  }}
-                >
-                  Tes activités enregistrés
-                </Text>
-              </View>
-              {/* <View style={{position:'relative', height:1000}}></View> */}
             </View>
-          </TouchableWithoutFeedback>
+
+            <View
+              style={{
+                marginTop: screenHeight * 0.12,
+                flexDirection: "column",
+                flex: 1,
+                justifyContent: "space-between",
+                width: 85 + "%",
+                // alignItems: "center",
+              }}
+            >
+              {/* <Image src="../../assets/avatars/avatars/body/blazer.svg"></Image> */}
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  fontSize: screenWidth / 20,
+                  alignSelf: "center",
+                  marginBottom: 10,
+                  textAlign: "center",
+                }}
+              >
+                Ces activités sont faites pour toi !
+              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.replace("TimelineEventsPage")}
+              >
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    color: "#E1604D",
+                    flex: 1,
+                    textAlign: "right",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  Voir toutes les activités
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View
+              style={{
+                position: "relative",
+                marginTop: screenHeight * 0.02,
+                flex: 1,
+                height: 50 + "%",
+                // width: 90 + "%",
+                // paddingHorizontal: 20,
+                alignItems: "center",
+                marginBottom: 7 + "%",
+              }}
+            >
+              <ScrollView
+                showsHorizontalScrollIndicator={false}
+                nestedScrollEnabled={true}
+                horizontal={true}
+              >
+                {events.length > 0 ? (
+                  events
+                    // .filter((event) =>
+                    //   event.categories.some((category) =>
+                    //     preferences.includes(category)
+                    //   )
+                    // )
+                    .map((event, index) => (
+                      <EventCard
+                        onPress={() => {
+                          navigation.replace("Event");
+                        }}
+                        key={index}
+                        name={event.name}
+                        address={event.address}
+                        pictures={images[index].url}
+                        categories={event.categories}
+                        date={event.start_date}
+                        participents={event.participents.length}
+                        id={event._id}
+                        handleRefresh={() => {
+                          handleRefresh(0);
+                        }}
+                        rate={event.rate}
+                        isSaved={
+                          isActivitySaved(event._id) === true ? true : false
+                        }
+                        // rate={ubService.getEventRate(event._id)}
+                      />
+                    ))
+                ) : (
+                  <View>
+                    <Text>Pas d'activités compatibles</Text>
+                  </View>
+                )}
+              </ScrollView>
+            </View>
+
+            <View
+              style={{
+                alignSelf: "center",
+                width: 85 + "%",
+              }}
+            >
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  fontSize: screenHeight / 40,
+                }}
+              >
+                Tes activités qui arrivent
+              </Text>
+            </View>
+            {/* <View style={{position:'relative', height:1000}}></View> */}
+          </View>
           <View
             style={{
               position: "relative",
@@ -405,11 +394,11 @@ const Accueil3 = ({ navigation }) => {
               nestedScrollEnabled={true}
               horizontal={true}
             >
-              {favouritesEvents.length > 0 ? (
-                favouritesEvents.map((event, index) => (
+              {reservedEvents.length > 0 ? (
+                reservedEvents.map((event, index) => (
                   <EventCard
                     onPress={() => {
-                      navigation.navigate("Event");
+                      navigation.replace("Event");
                     }}
                     key={index}
                     name={event.name}
@@ -423,11 +412,14 @@ const Accueil3 = ({ navigation }) => {
                       handleRefresh(0);
                     }}
                     rate={event.rate}
+                    isSaved={isActivitySaved(event._id) === true ? true : false}
                     // rate={ubService.getEventRate(event._id)}
                   />
                 ))
               ) : (
-                <View />
+                <View>
+                  <Text>Trouve une activité juste au dessus !</Text>
+                </View>
               )}
             </ScrollView>
           </View>

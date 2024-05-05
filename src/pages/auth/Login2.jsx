@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
-  Button,
 } from "react-native";
 import {
   useFonts,
@@ -20,14 +19,12 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Buttons from "../../components/Buttons";
-import Accueil3 from "../Accueil";
-import ChoosePreferences from "../../ChoosePreferences";
 import { UbService } from "../../services/UbServices";
 import { AuthService } from "../../services/AuthService";
-import { CLIENT_ID_ANDROID, CLIENT_ID_IOS, CLIENT_ID_WEB, API_URL } from "@env";
+import { API_URL, CLIENT_ID_WEB } from "@env";
+import LoadingPage from "../Loading";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
-console.log("API", API_URL);
 
 //A décommenter au moment de build
 // import {
@@ -71,11 +68,12 @@ const Login2 = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   if (!fontsLoaded) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
+    // return (
+    //   <View>
+    //     <Text>Loading</Text>
+    //   </View>
+    // );
+    return <LoadingPage />;
   }
 
   //A décommenter au moment de build
@@ -202,18 +200,40 @@ const Login2 = ({ navigation }) => {
                       await GoogleSignin.signOut();
                       await GoogleSignin.hasPlayServices();
                       const userInfo = await GoogleSignin.signIn();
-                      console.log("Mes infos:", userInfo);
+                      const response = await authService.loginGoogle(
+                        userInfo.idToken
+                      );
+
+                      if (response) {
+                        Toast.show("Vous êtes connecté", {
+                          duration: Toast.durations.LONG,
+                          position: Toast.positions.BOTTOM,
+                          backgroundColor: "green",
+                          shadow: true,
+                          animation: true,
+                          hideOnPress: true,
+                        });
+                        const tmp = await navigateTo();
+                        if (tmp === true) navigation.replace("Accueil3");
+                        else navigation.replace("Choose");
+                      } else {
+                        Toast.show("Erreur d'authentification", {
+                          duration: Toast.durations.LONG,
+                          position: Toast.positions.BOTTOM,
+                          backgroundColor: "red",
+                          shadow: true,
+                          animation: true,
+                          hideOnPress: true,
+                        });
+                      }
                     } catch (error) {
                       if (error.code === statusCodes.SIGN_IN_CANCELLED) {
-                        console.log("CACA 1");
                         // user cancelled the login flow
                       } else if (error.code === statusCodes.IN_PROGRESS) {
-                        console.log("CACA 2");
                         // operation (e.g. sign in) is in progress already
                       } else if (
                         error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE
                       ) {
-                        console.log("CACA 3");
                         // play services not available or outdated
                       } else {
                         console.log("error:", error);
