@@ -17,6 +17,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { UbService } from "../../services/UbServices";
 import EventCard from "../../components/Event/EventCard";
+import LoadingPage from "../Loading";
+import { BackArrow } from "../../../assets/avatars/avatars";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -52,17 +54,16 @@ const SavedEventsPage = ({ navigation }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const storageFavourites = await AsyncStorage.getItem("favourites");
+        const storageFavourites = global.favEvents;
+
         // setFavouritesEvents(JSON.parse(storageFavourites));
         if (storageFavourites !== null) {
-          const favouritesEvents2 = JSON.parse(storageFavourites);
-          // console.log("FAV EVENTS:", favouritesEvents2[0].id);
-
+          const favouritesEvents2 = storageFavourites;
           if (favouritesEvents2.length > 0 && refresh === 0) {
             // console.log(favouritesEvents);
             const favourites = [];
             for (const favourite of favouritesEvents2) {
-              const event = await ubService.getEventById(favourite.id);
+              const event = await ubService.getEventById(favourite);
               // console.log(event);
               if (event) {
                 favourites.push(event);
@@ -85,6 +86,7 @@ const SavedEventsPage = ({ navigation }) => {
         // navigation.replace("Login2");
       }
     };
+    global.currentScreen = "SavedEventsPage";
 
     fetchData();
   }, [navigation, favouritesEvents, refresh]);
@@ -96,7 +98,7 @@ const SavedEventsPage = ({ navigation }) => {
     favouritesEvents.length !== 0 &&
     favouritesImages.length !== favouritesEvents.length
   ) {
-    return <Text> Loading </Text>;
+    return <LoadingPage />;
   } else
     return (
       <View style={{ flex: 1 }}>
@@ -111,6 +113,23 @@ const SavedEventsPage = ({ navigation }) => {
             height: screenHeight,
           }}
         >
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              top: screenHeight / 15,
+              left: screenWidth / 20,
+              zIndex: 1,
+            }}
+            onPress={() => navigation.replace("Accueil3")}
+          >
+            <BackArrow
+              style={{
+                width: screenWidth / 12,
+                height: screenWidth / 12,
+                color: "black",
+              }}
+            />
+          </TouchableOpacity>
           <TouchableWithoutFeedback
             accessible={false}
             onPress={Keyboard.dismiss}
@@ -263,7 +282,7 @@ const SavedEventsPage = ({ navigation }) => {
                         >
                           <EventCard
                             onPress={() => {
-                              navigation.navigate("Event");
+                              navigation.replace("Event");
                             }}
                             key={index}
                             size={screenHeight / 3.4}
@@ -293,9 +312,7 @@ const SavedEventsPage = ({ navigation }) => {
             </ScrollView>
           </View>
         </ScrollView>
-        <View>
-          <Navbar navigation={navigation} />
-        </View>
+        <View>{/* <Navbar navigation={navigation} /> */}</View>
       </View>
     );
 };

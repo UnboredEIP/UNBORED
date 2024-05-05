@@ -51,7 +51,15 @@ export class AuthService {
       return false;
     }
   };
-  getRegister = async (username, email, password, gender, birthdate, otp) => {
+  getRegister = async (
+    username,
+    email,
+    password,
+    gender,
+    description,
+    birthdate,
+    otp
+  ) => {
     try {
       const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
@@ -63,6 +71,7 @@ export class AuthService {
           email,
           password,
           gender,
+          description,
           birthdate,
           otp,
         }),

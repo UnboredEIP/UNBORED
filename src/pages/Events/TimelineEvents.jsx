@@ -17,26 +17,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { UbService } from "../../services/UbServices";
 import EventCard from "../../components/Event/EventCard";
+import LoadingPage from "../Loading";
+import { BackArrow } from "../../../assets/avatars/avatars";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
-
-async function isActivitySaved(id) {
-  const favourites = await AsyncStorage.getItem("favourites");
-  if (favourites === null) {
-    return false;
-  } else {
-    favourites = JSON.parse(favourites);
-  }
-
-  const existingFavourite = favourites.findIndex(
-    (preference) => preference.id === id
-  );
-
-  if (existingFavourite) return true;
-
-  return false;
-}
 
 const TimelineEventsPage = ({ navigation }) => {
   // const [fontsLoaded] = useFonts({
@@ -48,7 +33,9 @@ const TimelineEventsPage = ({ navigation }) => {
   const [username, setUsername] = useState("Citoyen");
   const [profileData, setProfileData] = useState(null);
   const [events, setEvents] = useState([]);
-  const [favourites, setFavourites] = useState(null);
+  const [favourites, setFavourites] = useState([]);
+  const [refresh, handleRefresh] = useState(0);
+
   const defaultImage = {
     id: 1,
     url: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
@@ -72,12 +59,15 @@ const TimelineEventsPage = ({ navigation }) => {
   ];
 
   const isActivitySaved = (id) => {
+    // if (!favourites) return false;
+    // if (favourites.length === 0) return false;
     const existingFavourite = favourites.findIndex(
-      (preference) => preference.id === id
+      (preference) => preference === id
     );
 
-    if (existingFavourite) return true;
-
+    if (existingFavourite) {
+      return true;
+    }
     return false;
   };
 
@@ -101,11 +91,9 @@ const TimelineEventsPage = ({ navigation }) => {
         const responseData = await response.json();
         setProfileData(responseData);
 
-        const tmpfavourites = await AsyncStorage.getItem("favourites");
-        if (tmpfavourites === null) {
-          return false;
-        } else {
-          setFavourites(JSON.parse(tmpfavourites));
+        const tmpfavourites = global.favEvents;
+        if (tmpfavourites) {
+          setFavourites(tmpfavourites);
         }
         // console.log(profileData);
         const tmpObj = await ubService.getEvents();
@@ -117,6 +105,7 @@ const TimelineEventsPage = ({ navigation }) => {
         const imageResults = await Promise.all(imagePromises);
         // console.log("ALL IMAGES:", JSON.stringify(imageResults));
         setImages(imageResults);
+        handleRefresh(1);
       } catch (error) {
         // console.error("Error fetchdata:", error);
         // await AsyncStorage.removeItem("authToken");
@@ -124,8 +113,9 @@ const TimelineEventsPage = ({ navigation }) => {
       }
     };
 
+    global.currentScreen = "TimelineEventsPage";
     fetchData();
-  }, [navigation, events]);
+  }, [navigation, events, refresh]);
 
   useEffect(() => {
     if (profileData !== null) {
@@ -139,7 +129,7 @@ const TimelineEventsPage = ({ navigation }) => {
     events.length < 0 ||
     images.length !== events.length
   ) {
-    return <Text> Loading {events.length} </Text>;
+    return <LoadingPage />;
   } else
     return (
       <View style={{ flex: 1 }}>
@@ -149,11 +139,27 @@ const TimelineEventsPage = ({ navigation }) => {
           style={{
             // marginLeft: 5 + "%",
             marginHorizontal: screenWidth / 100,
-
             width: screenWidth,
             height: screenHeight,
           }}
         >
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              top: screenHeight / 15,
+              left: screenWidth / 20,
+              zIndex: 1,
+            }}
+            onPress={() => navigation.replace("Accueil3")}
+          >
+            <BackArrow
+              style={{
+                width: screenWidth / 12,
+                height: screenWidth / 12,
+                color: "black",
+              }}
+            />
+          </TouchableOpacity>
           <TouchableWithoutFeedback
             accessible={false}
             onPress={Keyboard.dismiss}
@@ -338,7 +344,7 @@ const TimelineEventsPage = ({ navigation }) => {
                         >
                           <EventCard
                             onPress={() => {
-                              navigation.navigate("Event");
+                              navigation.replace("Event");
                             }}
                             size={screenHeight / 3.4}
                             key={index}
@@ -350,7 +356,12 @@ const TimelineEventsPage = ({ navigation }) => {
                             participents={event.participents.length}
                             id={event._id}
                             rate={event.rate}
-                            isSaved={isActivitySaved(event._id) ? false : true}
+                            handleRefresh={() => {
+                              handleRefresh(0);
+                            }}
+                            isSaved={
+                              isActivitySaved(event._id) === true ? false : true
+                            }
                           />
                         </View>
                       )

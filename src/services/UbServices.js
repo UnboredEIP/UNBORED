@@ -48,11 +48,11 @@ export class UbService {
       console.error("Error when try to get events:", error);
     }
   };
-  leaveEvent = async (events) => {
+  favEvent = async (events) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/delete`, {
-        method: "DELETE",
+      const response = await fetch(`${API_URL}/event/favorites/add`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
@@ -64,7 +64,32 @@ export class UbService {
       if (response.ok) {
         return true;
       } else {
-        console.error("JE SUIS DSL", response.toString().status);
+        console.error(response.toString());
+        return false;
+      }
+      //   await AsyncStorage.setItem("allEvents", responseData.events);
+    } catch (error) {
+      console.error("Error when try to get events:", error);
+    }
+  };
+  leaveEvent = async (events) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/event/favorites/delete`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          events,
+        }),
+      });
+
+      if (response.ok) {
+        return true;
+      } else {
+        console.error("JE SUIS DSL", response.toString());
         return false;
       }
       //   await AsyncStorage.setItem("allEvents", responseData.events);
@@ -104,14 +129,12 @@ export class UbService {
       });
 
       if (!response.ok) {
-        console.log("CACA2");
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const responseData = await response.json();
       if (!responseData.user) throw new Error(`User null: ${response.status}`);
       return responseData.user;
     } catch (error) {
-      console.log("CACA3");
       console.error("Error when try to get user:", error);
     }
   };

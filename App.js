@@ -96,25 +96,25 @@ const AppNavigator = createStackNavigator(
     Home: {
       screen: Register,
       navigationOptions: {
-        ...TransitionPresets.SlideFromRightIOS,
+        ...TransitionPresets.ModalTransition,
       },
     },
     RegisterStep2: {
       screen: RegisterStep2,
       navigationOptions: {
-        ...TransitionPresets.SlideFromRightIOS,
+        ...TransitionPresets.ModalTransition,
       },
     },
     RegisterStep3: {
       screen: RegisterStep3,
       navigationOptions: {
-        ...TransitionPresets.SlideFromRightIOS,
+        ...TransitionPresets.ModalTransition,
       },
     },
     ForgetPassword: {
       screen: ForgetPasswordScreen,
       navigationOptions: {
-        ...TransitionPresets.DefaultTransition,
+        ...TransitionPresets.ModalTransition,
       },
     },
     activites: {
@@ -123,123 +123,123 @@ const AppNavigator = createStackNavigator(
     Choose: {
       screen: ChoosePreferences,
       navigationOptions: {
-        ...TransitionPresets.FadeFromBottomAndroid,
+        ...TransitionPresets.ModalTransition,
       },
     },
     Avatar: {
       screen: Avatar,
       navigationOptions: {
-        ...TransitionPresets.FadeFromBottomAndroid,
+        ...TransitionPresets.ModalTransition,
       },
     },
     avatareyes: {
       screen: avatareyes,
-      navigationOptions: {
-        ...TransitionPresets.FadeFromBottomAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     Login2: {
       screen: Login2,
-      navigationOptions: {
-        ...TransitionPresets.SlideFromRightIOS,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     OTP2: {
       screen: OTP2,
-      navigationOptions: {
-        ...TransitionPresets.ModalSlideFromBottomIOS,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     OTP3: {
       screen: OTP3,
-      navigationOptions: {
-        ...TransitionPresets.ModalTransition,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     MotDePasse: {
       screen: MotDePasse,
-      navigationOptions: {
-        ...TransitionPresets.ModalTransition,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     OnBoarding3: {
       screen: OnBoarding3,
-      navigationOptions: {
-        ...TransitionPresets.RevealFromBottomAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     Accueil3: {
       screen: Accueil3,
-      navigationOptions: {
-        ...TransitionPresets.SlideFromRightIOS,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     NewEvent: {
       screen: NewEvent,
-      navigationOptions: {
-        ...TransitionPresets.SlideFromRightIOS,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     EditEvent: {
       screen: EditEvent,
-      navigationOptions: {
-        ...TransitionPresets.SlideFromRightIOS,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     Settings: {
       screen: Settings,
-      navigationOptions: {
-        ...TransitionPresets.SlideFromRightIOS,
-        ...TransitionPresets.ScaleFromCenterAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     Profile: {
       screen: Profile,
-      navigationOptions: {
-        ...TransitionPresets.ScaleFromCenterAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     PreferencesUpdate: {
       screen: PreferencesUpdate,
-      navigationOptions: {
-        ...TransitionPresets.ScaleFromCenterAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     Calendar: {
       screen: Calendar,
-      navigationOptions: {
-        ...TransitionPresets.ScaleFromCenterAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     Description: {
       screen: Description,
-      navigationOptions: {
-        ...TransitionPresets.ScaleFromCenterAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     TimelineEventsPage: {
       screen: TimelineEventsPage,
-      navigationOptions: {
-        ...TransitionPresets.ScaleFromCenterAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     Event: {
       screen: Event,
-      navigationOptions: {
-        ...TransitionPresets.ScaleFromCenterAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     FriendsRequest: {
       screen: FriendsRequest,
-      navigationOptions: {
-        ...TransitionPresets.ScaleFromCenterAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
     SavedEventsPage: {
       screen: SavedEventsPage,
-      navigationOptions: {
-        ...TransitionPresets.ScaleFromCenterAndroid,
-      },
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
     },
   },
   {

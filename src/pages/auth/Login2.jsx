@@ -22,6 +22,7 @@ import Buttons from "../../components/Buttons";
 import { UbService } from "../../services/UbServices";
 import { AuthService } from "../../services/AuthService";
 import { API_URL, CLIENT_ID_WEB } from "@env";
+import LoadingPage from "../Loading";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
@@ -67,11 +68,12 @@ const Login2 = ({ navigation }) => {
   const [password, setPassword] = useState("");
 
   if (!fontsLoaded) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
+    // return (
+    //   <View>
+    //     <Text>Loading</Text>
+    //   </View>
+    // );
+    return <LoadingPage />;
   }
 
   //A décommenter au moment de build

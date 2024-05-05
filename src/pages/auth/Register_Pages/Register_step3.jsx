@@ -22,13 +22,12 @@ const screenHeight = Dimensions.get("screen").height;
 import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import { AuthService } from "../../../services/AuthService";
-
+import LoadingPage from "../../Loading";
 const RegisterStep3 = ({ navigation }) => {
   const authService = new AuthService();
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
@@ -38,11 +37,7 @@ const RegisterStep3 = ({ navigation }) => {
   const [birthdate, setBirthdate] = useState("");
 
   if (!fontsLoaded) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
+    return <LoadingPage />;
   }
 
   return (
@@ -92,7 +87,11 @@ const RegisterStep3 = ({ navigation }) => {
                 } else console.log("MATCH !");
               }}
             />
-
+            <Text style={styles().titleTextField}>Description</Text>
+            <MyTextInput
+              placeholder="Description"
+              onChangeText={(description) => setDescription(description)}
+            />
             {/* <Text style={styles().titleTextField}>
               {JSON.parse(global.RegisterData).username}
             </Text> */}
@@ -152,6 +151,7 @@ const RegisterStep3 = ({ navigation }) => {
                       JSON.parse(global.RegisterData).email,
                       password,
                       gender,
+                      description,
                       JSON.parse(global.RegisterData).birthdate,
                       global.OTPValue
                     );

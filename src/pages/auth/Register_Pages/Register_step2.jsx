@@ -24,6 +24,7 @@ import Buttons from "../../../components/Buttons";
 import OTPInput from "../../../components/OTP_intputs";
 import { UbService } from "../../../services/UbServices";
 import { AuthService } from "../../../services/AuthService";
+import LoadingPage from "../../Loading";
 
 const RegisterStep2 = ({ navigation }) => {
   const ubservice = new UbService();
@@ -33,11 +34,7 @@ const RegisterStep2 = ({ navigation }) => {
   });
 
   if (!fontsLoaded) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
+    return <LoadingPage />;
   }
 
   return (

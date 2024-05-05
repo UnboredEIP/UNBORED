@@ -18,6 +18,8 @@ import { UbService } from "../../services/UbServices";
 import Buttons from "../../components/Buttons";
 import ParticipantsActivity from "../../components/Modals/ParticipantsActivity";
 import Toast from "react-native-root-toast";
+import LoadingPage from "../Loading";
+import { BackArrow } from "../../../assets/avatars/avatars";
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
@@ -133,13 +135,30 @@ const Event = ({ navigation }) => {
     };
 
     fetchData();
-  }, [participents]);
+  }, [participents, isEnroll]);
 
   if (eventData === null || image === null) {
-    return <Text>Loading...</Text>;
+    return <LoadingPage />;
   } else {
     return (
       <ScrollView contentContainerStyle={styles.container}>
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: screenHeight / 15,
+            left: screenWidth / 20,
+            zIndex: 1,
+          }}
+          onPress={() => navigation.replace(global.currentScreen)}
+        >
+          <BackArrow
+            style={{
+              width: screenWidth / 12,
+              height: screenWidth / 12,
+              color: "white",
+            }}
+          />
+        </TouchableOpacity>
         <Image style={styles.image} source={{ uri: image.url }} />
         <View style={styles.categoryContainer}>
           <View style={styles.participantsContainer}>
@@ -254,9 +273,6 @@ const Event = ({ navigation }) => {
             <Image style={styles.locationIcon} source={loc} />
             <Text style={styles.locationText}>{eventData.address}</Text>
           </View>
-          <TouchableOpacity>
-            <Image style={styles.vectorIcon} source={vector} />
-          </TouchableOpacity>
         </View>
         <View style={styles.ratingContainer}>
           {renderStars(eventData.rate)}
@@ -314,6 +330,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     // paddingTop: screenHeight / 10,
+  },
+  backButton: {
+    position: "absolute",
+    top: 20,
+    left: 20,
+    zIndex: 1,
+  },
+  backIcon: {
+    width: 30,
+    height: 30,
   },
   image: {
     height: screenHeight * 0.4,

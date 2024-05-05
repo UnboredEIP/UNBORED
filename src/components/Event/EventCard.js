@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { TouchableOpacity, Dimensions, Text, View, Image } from "react-native";
 import vector from "../../../asset/Vector.png";
 import book from "../../../asset/bookmark.png";
@@ -6,6 +6,7 @@ import loc from "../../../asset/location_on.png";
 import startFilled from "../../../assets/star_filled.png";
 import startUnfilled from "../../../assets/star_unfilled.png";
 import { UbService } from "../../services/UbServices";
+import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 global.currentEventId = 0;
 
@@ -42,40 +43,6 @@ const truncateName = (name) => {
   }
   return name;
 };
-
-async function updateFavourites(name, id) {
-  try {
-    // await AsyncStorage.removeItem("favourites");
-    let favourites = await AsyncStorage.getItem("favourites");
-
-    if (favourites === null) {
-      // console.log("No favourites yet");
-      favourites = [];
-    } else {
-      favourites = JSON.parse(favourites);
-    }
-
-    const existingFavourite = favourites.findIndex(
-      (preference) => preference.id === id
-    );
-
-    if (existingFavourite !== -1) {
-      console.log("Remove from favourites:", favourites[existingFavourite]);
-
-      favourites.splice(existingFavourite, 1);
-      await AsyncStorage.setItem("favourites", JSON.stringify(favourites));
-      // console.log("Updated favourites:", favourites);
-      // console.log("ALL FAVOURITES:", await AsyncStorage.getItem("favourites"));
-      return;
-    }
-    favourites.push({ name, id });
-    await AsyncStorage.setItem("favourites", JSON.stringify(favourites));
-    // console.log("Updated favourites:", favourites);
-    // console.log("ALL FAVOURITES:", await AsyncStorage.getItem("favourites"));
-  } catch (error) {
-    console.error("Error updating favourites:", error);
-  }
-}
 
 const EventCard = ({
   onPress = () => {},
@@ -121,6 +88,8 @@ const EventCard = ({
     }
     return stars;
   };
+
+  useEffect(() => {}, [isSaved, global.favEvents]);
 
   return (
     <View
@@ -341,9 +310,65 @@ const EventCard = ({
           </View>
           <TouchableOpacity
             onPress={async () => {
-              updateFavourites(name, id);
-              setIsActivitySaved(!isActivitySaved);
-              handleRefresh();
+              if (isSaved === false) {
+                const response = await ubService.favEvent([id]);
+
+                if (response) {
+                  setIsActivitySaved(!isActivitySaved);
+                  handleRefresh();
+                  Toast.show("Activité enregistrée", {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "green",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+                } else
+                  Toast.show("Veuillez réessayer", {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+              } else {
+                const response = await ubService.leaveEvent([id]);
+                if (response) {
+                  let favourites = global.favEvents;
+
+                  if (!favourites) {
+                    favourites = [];
+                  }
+                  const existingFavourite = global.favEvents.findIndex(
+                    (event) => event === global.currentEventId
+                  );
+                  if (existingFavourite !== -1) {
+                    favourites.splice(existingFavourite, 1);
+                    global.favEvents = favourites;
+                  }
+
+                  setIsActivitySaved(!isActivitySaved);
+                  handleRefresh();
+                  Toast.show("Activité désenregistrée", {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "green",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+                } else
+                  Toast.show("Veuillez réessayer", {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+              }
             }}
           >
             <Image

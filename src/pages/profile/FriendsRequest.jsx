@@ -14,6 +14,8 @@ import { UbService } from "../../services/UbServices";
 import Navbar from "../../components/NavigationBar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AvatarCardFriendAccept } from "../../components/AvatarCard";
+import LoadingPage from "../Loading";
+import { BackArrow } from "../../../assets/avatars/avatars";
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
@@ -134,7 +136,6 @@ function extractTime(dateTimeString) {
 }
 
 const FriendsRequest = ({ navigation }) => {
-  const [username, setUsername] = useState("Citoyen");
   const [profileData, setProfileData] = useState(null);
   const [users, setUsers] = useState([]);
   const ubservice = new UbService();
@@ -175,7 +176,7 @@ const FriendsRequest = ({ navigation }) => {
               }
             }
             setUsers(users2);
-            // console.log("USERS:", users2);
+            console.log("USERS:", users2);
           }
           //   setUsers(responseData.user.invitations.friends);
         }
@@ -196,7 +197,7 @@ const FriendsRequest = ({ navigation }) => {
       profileData.user.invitations.friends.length !== 0 &&
       users.length !== profileData.user.invitations.friends.length)
   ) {
-    return <Text> Loading {users[0]}</Text>;
+    return <LoadingPage />;
   } else
     return (
       <View
@@ -212,6 +213,23 @@ const FriendsRequest = ({ navigation }) => {
             width: screenWidth,
           }}
         >
+          <TouchableOpacity
+            style={{
+              position: "absolute",
+              top: screenHeight / 15,
+              left: screenWidth / 20,
+              zIndex: 1,
+            }}
+            onPress={() => navigation.replace("Accueil3")}
+          >
+            <BackArrow
+              style={{
+                width: screenWidth / 12,
+                height: screenWidth / 12,
+                color: "black",
+              }}
+            />
+          </TouchableOpacity>
           <View
             style={{
               // borderColor: "#EBEEF2",
@@ -257,7 +275,6 @@ const FriendsRequest = ({ navigation }) => {
             )}
           </View>
         </ScrollView>
-        <Navbar navigation={navigation} />
       </View>
     );
 };
@@ -348,6 +365,16 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignSelf: "center",
     marginTop: screenHeight * 0.01,
+  },
+  backButton: {
+    position: "absolute",
+    top: screenHeight / 15,
+    left: screenWidth / 20,
+    zIndex: 1,
+  },
+  backIcon: {
+    width: screenWidth / 12,
+    height: screenWidth / 12,
   },
 });
 

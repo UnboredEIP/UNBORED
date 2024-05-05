@@ -13,10 +13,10 @@ import Navbar from "../components/NavigationBar";
 import "../../asset/SourceSansPro-Regular.otf";
 import book from "../../asset/bookmark.png";
 import notifications from "../../asset/notifications.png";
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UbService } from "../services/UbServices";
 import EventCard from "../components/Event/EventCard";
+import LoadingPage from "./Loading";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 const MAX_NAME_LENGTH = screenWidth / 32;
@@ -39,7 +39,7 @@ const Accueil3 = ({ navigation }) => {
   const [reservedEvents, setReservedEvents] = useState([]);
   const [preferences, setPreferences] = useState([]);
   const [refresh, handleRefresh] = useState(0);
-  const [favourites, setFavourites] = useState(null);
+  const [favourites, setFavourites] = useState([]);
 
   const defaultImage = {
     id: 1,
@@ -51,13 +51,15 @@ const Accueil3 = ({ navigation }) => {
   const ubService = new UbService();
 
   const isActivitySaved = (id) => {
-    if (favourites === null) return false;
+    if (!favourites) return false;
+    if (favourites.length === 0) return false;
     const existingFavourite = favourites.findIndex(
-      (preference) => preference.id === id
+      (preference) => preference === id
     );
 
-    if (existingFavourite) return true;
-
+    if (existingFavourite) {
+      return true;
+    }
     return false;
   };
   useEffect(() => {
@@ -87,9 +89,10 @@ const Accueil3 = ({ navigation }) => {
 
         global.myId = responseData.user._id;
 
-        const tmpfavourites = await AsyncStorage.getItem("favourites");
-        if (tmpfavourites !== null) {
-          setFavourites(JSON.parse(tmpfavourites));
+        const tmpfavourites = responseData.user.favorites;
+        if (tmpfavourites) {
+          global.favEvents = tmpfavourites;
+          setFavourites(tmpfavourites);
         }
 
         if (responseData !== null) {
@@ -154,6 +157,8 @@ const Accueil3 = ({ navigation }) => {
 
     fetchData();
     // getreservedEvents();
+
+    global.currentScreen = "Accueil3";
   }, [navigation, refresh, reservedEvents]);
 
   // console.log("ALL EVENTS:", events);
@@ -166,7 +171,12 @@ const Accueil3 = ({ navigation }) => {
       (favouritesImages.length !== profileData.user.reservations.length ||
         reservedEvents.length === 0))
   ) {
-    return <Text> Loading </Text>;
+    // return (
+    //   <View>
+    //     <Text>Loading</Text>
+    //   </View>
+    // );
+    return <LoadingPage />;
   } else
     return (
       <View
@@ -278,7 +288,7 @@ const Accueil3 = ({ navigation }) => {
                 Ces activités sont faites pour toi !
               </Text>
               <TouchableOpacity
-                onPress={() => navigation.navigate("TimelineEventsPage")}
+                onPress={() => navigation.replace("TimelineEventsPage")}
               >
                 <Text
                   style={{
@@ -321,7 +331,7 @@ const Accueil3 = ({ navigation }) => {
                     .map((event, index) => (
                       <EventCard
                         onPress={() => {
-                          navigation.navigate("Event");
+                          navigation.replace("Event");
                         }}
                         key={index}
                         name={event.name}
@@ -335,12 +345,16 @@ const Accueil3 = ({ navigation }) => {
                           handleRefresh(0);
                         }}
                         rate={event.rate}
-                        isSaved={isActivitySaved(event._id) ? false : true}
+                        isSaved={
+                          isActivitySaved(event._id) === true ? true : false
+                        }
                         // rate={ubService.getEventRate(event._id)}
                       />
                     ))
                 ) : (
-                  <View />
+                  <View>
+                    <Text>Pas d'activités compatibles</Text>
+                  </View>
                 )}
               </ScrollView>
             </View>
@@ -384,7 +398,7 @@ const Accueil3 = ({ navigation }) => {
                 reservedEvents.map((event, index) => (
                   <EventCard
                     onPress={() => {
-                      navigation.navigate("Event");
+                      navigation.replace("Event");
                     }}
                     key={index}
                     name={event.name}
@@ -398,7 +412,7 @@ const Accueil3 = ({ navigation }) => {
                       handleRefresh(0);
                     }}
                     rate={event.rate}
-                    isSaved={isActivitySaved(event._id) ? false : true}
+                    isSaved={isActivitySaved(event._id) === true ? true : false}
                     // rate={ubService.getEventRate(event._id)}
                   />
                 ))
