@@ -5,7 +5,7 @@ export class UbService {
   getEvents = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/events/lists`, {
+      const response = await fetch(`$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/lists`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -27,7 +27,7 @@ export class UbService {
   getEventById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/events/show?id=${id}`, {
+      const response = await fetch(`$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/show?id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export class UbService {
   getEventRate = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/events/show?id=${id}`, {
+      const response = await fetch(`$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/show?id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export class UbService {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
       const response = await fetch(
-        `${API_URL}/getimage?imageName=${imageName}`,
+        `$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/getimage?imageName=${imageName}`,
         {
           method: "GET",
           headers: {
@@ -123,7 +123,7 @@ export class UbService {
 
   getRegister = async (username, email, password, gender, birthdate) => {
     try {
-      const response = await fetch(`${API_URL}/auth/register`, {
+      const response = await fetch(`$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -151,8 +151,8 @@ export class UbService {
 
   getLogin = async (email, password) => {
     try {
-      // ${API_URL}
-      const response = await fetch(`${API_URL}/auth/login`, {
+      // $https://x2025unbored786979363000.francecentral.cloudapp.azure.com
+      const response = await fetch(`$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
