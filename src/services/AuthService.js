@@ -4,7 +4,7 @@ import { API_URL } from "@env";
 export class AuthService {
   checkUsernameEmail = async (username, email) => {
     try {
-      const response = await fetch(`$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/otp`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export class AuthService {
   };
   checkOTP = async (email, otp) => {
     try {
-      const response = await fetch(`$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/otp/verify`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/otp/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -53,7 +53,7 @@ export class AuthService {
   };
   getRegister = async (username, email, password, gender, birthdate, otp) => {
     try {
-      const response = await fetch(`$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export class AuthService {
   getLogin = async (email, password) => {
     try {
       // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
-      const response = await fetch(`$https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
