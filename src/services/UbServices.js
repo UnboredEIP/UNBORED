@@ -5,20 +5,23 @@ export class UbService {
   getEvents = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/lists`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/lists`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const responseData = await response.json();
       // console.log(responseData);
-      return responseData.events;
+      return responseData.events.filter((event) => !event.private);
       //   await AsyncStorage.setItem("allEvents", responseData.events);
     } catch (error) {
       console.error("Error when try to get events:", error);
@@ -29,6 +32,30 @@ export class UbService {
       const authToken = await AsyncStorage.getItem("authToken");
       const response = await fetch(`${API_URL}/event/add`, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({
+          events,
+        }),
+      });
+      if (response.ok) {
+        return true;
+      } else {
+        console.error(response.toString());
+        return false;
+      }
+      //   await AsyncStorage.setItem("allEvents", responseData.events);
+    } catch (error) {
+      console.error("Error when try to get events:", error);
+    }
+  };
+  leaveEvent = async (events) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(`${API_URL}/event/delete`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
@@ -72,7 +99,7 @@ export class UbService {
       console.error("Error when try to get events:", error);
     }
   };
-  leaveEvent = async (events) => {
+  deleteFavEvent = async (events) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
       const response = await fetch(`${API_URL}/event/favorites/delete`, {
@@ -100,13 +127,16 @@ export class UbService {
   getEventById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/show?id=${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/show?id=${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -184,13 +214,16 @@ export class UbService {
   getEventRate = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/show?id=${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/show?id=${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -259,19 +292,22 @@ export class UbService {
 
   getRegister = async (username, email, password, gender, birthdate) => {
     try {
-      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username,
-          email,
-          password,
-          gender,
-          birthdate,
-        }),
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username,
+            email,
+            password,
+            gender,
+            birthdate,
+          }),
+        }
+      );
       if (response.status === 201) {
         console.log("User created");
         return true;
@@ -288,16 +324,19 @@ export class UbService {
   getLogin = async (email, password) => {
     try {
       // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
-      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
       if (response.status === 202) {
         const data = await response.json();
         const token = data.token;
