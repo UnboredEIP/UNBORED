@@ -120,7 +120,7 @@ export class AuthService {
   loginGoogle = async (googleTokenId) => {
     try {
       // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
-      const response = await fetch(`${API_URL}/auth/login/google`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

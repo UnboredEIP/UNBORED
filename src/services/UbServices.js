@@ -27,7 +27,7 @@ export class UbService {
   joinEvent = async (events) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/add`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +51,7 @@ export class UbService {
   favEvent = async (events) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/favorites/add`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/favorites/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,7 +75,7 @@ export class UbService {
   leaveEvent = async (events) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/favorites/delete`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/favorites/delete`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ export class UbService {
   getUserById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/profile?id=${id}`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile?id=${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -142,7 +142,7 @@ export class UbService {
   sendFriendRequest = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/friends/invite?user_id=${id}`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/friends/invite?user_id=${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -163,7 +163,7 @@ export class UbService {
   acceptFriendRequest = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/friends/accept?user_id=${id}`, {
+      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/friends/accept?user_id=${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
