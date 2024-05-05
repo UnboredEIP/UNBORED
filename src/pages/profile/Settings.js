@@ -30,8 +30,8 @@ const Settings = ({ navigation }) => {
   const [image, setImage] = useState(defaultImageUri);
   useEffect(() => {
     (async () => {
-      const galleryStatus = await ImagePicker.requestCameraPermissionsAsync();
-      setHasGalleryPermission(galleryStatus.status === "granted");
+      // const galleryStatus = await ImagePicker.requestCameraPermissionsAsync();
+      // setHasGalleryPermission(galleryStatus.status === "granted");
     })();
   }, []);
   useEffect(() => {
