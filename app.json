@@ -26,7 +26,8 @@
       [
         "expo-notifications"
       ],
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      "expo-font"
     ],
     "slug": "unbored2",
     "version": "1.0.0",
