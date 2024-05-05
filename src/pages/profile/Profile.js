@@ -32,6 +32,8 @@ const Profile = ({ navigation }) => {
   const [description, setDescription] = useState(""); // State for the user's description
   const [selectedGlasses, setSelectedGlasses] = useState(null);
   const [selectedCloth, setSelectedCloth] = useState(null);
+  const [nbFriends, setNbFriends] = useState(0);
+  const [nbActivity, setNbActivity] = useState(0);
   const [selectedHair, setSelectedHair] = useState("");
   const [selectedBeard, setSelectedBeard] = useState("");
   const [selectedMouth, setSelectedMouth] = useState("");
@@ -165,6 +167,8 @@ const Profile = ({ navigation }) => {
       setSelectedHair(profileData.user.style.hair.id);
       setSelectedMouth(profileData.user.style.mouth.id);
       setClothColor(profileData.user.style.accessory.color);
+      setNbFriends(profileData.user.friends.length);
+      setNbActivity(profileData.user.reservations.length);
       setHairColor(profileData.user.style.hair.color);
       setImage(
         `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/getimage?imageName=${profileData.user.profilePhoto}`
@@ -238,18 +242,13 @@ const Profile = ({ navigation }) => {
             <Text style={styles.textBelowImage}>{username}</Text>
             <View style={styles.numbersContainer}>
               <View style={styles.numberItem}>
-                <Text style={styles.numberValue}>1234</Text>
-                <Text style={styles.numberLabel}>Followers</Text>
+                <Text style={styles.numberValue2}>{nbFriends}</Text>
+                <Text style={styles.numberLabel}>      amis</Text>
               </View>
               <View style={styles.divider} />
               <View style={styles.numberItem}>
-                <Text style={styles.numberValue}>567</Text>
-                <Text style={styles.numberLabel}>Suivie</Text>
-              </View>
-              <View style={styles.divider} />
-              <View style={styles.numberItem}>
-                <Text style={styles.numberValue}>89</Text>
-                <Text style={styles.numberLabel}>Events</Text>
+                <Text style={styles.numberValue}>{nbActivity}</Text>
+                <Text style={styles.numberLabel}>activités</Text>
               </View>
             </View>
             <View style={styles.dividerhorz} />
@@ -316,6 +315,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#e0e0e0",
   },
   numberValue: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  numberValue2: {
+    marginLeft:20,
     fontSize: 18,
     fontWeight: "bold",
   },
