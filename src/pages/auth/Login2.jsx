@@ -37,13 +37,16 @@ async function navigateTo() {
   try {
     const authToken = await AsyncStorage.getItem("authToken");
     if (authToken) {
-      const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error(`HTTP ERROR: STATUS: ${response.status}`);
       }
@@ -67,14 +70,14 @@ const Login2 = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  if (!fontsLoaded) {
-    // return (
-    //   <View>
-    //     <Text>Loading</Text>
-    //   </View>
-    // );
-    return <LoadingPage />;
-  }
+  // if (!fontsLoaded) {
+  //   // return (
+  //   //   <View>
+  //   //     <Text>Loading</Text>
+  //   //   </View>
+  //   // );
+  //   return <LoadingPage />;
+  // }
 
   //A décommenter au moment de build
   // GoogleSignin.configure({

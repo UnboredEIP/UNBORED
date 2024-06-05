@@ -34,9 +34,9 @@ const Buttons = ({
     SourceSansPro_600SemiBold,
   });
 
-  if (!fontsLoaded) {
-    return <Text> Font loading</Text>;
-  }
+  // if (!fontsLoaded) {
+  //   return <Text> Font loading</Text>;
+  // }
 
   if (hasIcon === false) {
     return (
