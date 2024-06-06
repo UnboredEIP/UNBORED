@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -16,114 +16,98 @@ import {
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-// Composants Boutton bien modulable my man
-const Buttons = ({
-  // @ts-ignore
+interface ButtonsProps {
+  onPress: () => void;
+  texte?: string;
+  textColor?: string;
+  backgroundColor?: string;
+  width?: number;
+  height?: number;
+  hasIcon?: boolean;
+  iconPath?: string;
+  textSize?: number;
+  disabled?: boolean;
+}
+
+const Buttons: React.FC<ButtonsProps> = ({
   onPress,
   texte = "Boutton",
   textColor = "white",
   backgroundColor = "#E1604D",
-  // width = screenWidth < 350 ? 145 : 160,
   width = screenWidth / 2,
   height = 50,
   hasIcon = false,
   iconPath = "https://cdn.discordapp.com/attachments/1017170044091908298/1080063443987611669/unBored.gif?ex=655341f7&is=6540ccf7&hm=956eddad32a5e7640ffceb2493fd78a3cb8fb535342dd982e9fff97c82f2bbaf&",
   textSize = 16,
+  disabled = false,
 }) => {
   const [fontsLoaded] = useFonts({
     SourceSansPro_600SemiBold,
   });
 
   // if (!fontsLoaded) {
-  //   return <Text> Font loading</Text>;
+  //   return <Text>Font loading</Text>;
   // }
 
-  if (hasIcon === false) {
+  const buttonStyles = disabled
+    ? styles(textColor, "#AEB3BE", width, height, textSize).buttonDisabled
+    : styles(textColor, backgroundColor, width, height, textSize).button;
+
+  const textStyles = styles(textColor, backgroundColor, width, height, textSize)
+    .textButton;
+
+  if (!hasIcon) {
     return (
       <TouchableOpacity
-        style={
-          styles(textColor, backgroundColor, width, height, textSize).boutton
-        }
-        onPress={onPress}
+        style={buttonStyles}
+        onPress={!disabled ? onPress : undefined}
+        disabled={disabled}
       >
-        <Text
-          style={
-            styles(textColor, backgroundColor, width, height, textSize)
-              .textButton
-          }
-        >
-          {texte}
-        </Text>
+        <Text style={textStyles}>{texte}</Text>
       </TouchableOpacity>
     );
   } else {
     return (
       <TouchableOpacity
-        style={
-          styles(textColor, backgroundColor, width, height, textSize)
-            .oauthButton
-        }
-        onPress={onPress}
+        style={buttonStyles}
+        onPress={!disabled ? onPress : undefined}
+        disabled={disabled}
       >
         <Image
           source={{ uri: iconPath }}
           style={{ height: 25, width: 25, margin: 10 }}
         />
-        <Text
-          style={
-            (styles().textButton,
-            {
-              color: textColor,
-              fontSize: 16,
-              fontFamily: "SourceSansPro_600SemiBold",
-              textAlign: "center",
-            })
-          }
-        >
-          {texte}
-        </Text>
+        <Text style={textStyles}>{texte}</Text>
       </TouchableOpacity>
     );
   }
 };
 
-// @ts-ignore
-const styles = (textColor?, backgroundColor?, width?, height?, textSize?) => {
-  return StyleSheet.create({
-    boutton: {
+const styles = (textColor: string, backgroundColor: string, width: number, height: number, textSize: number) =>
+  StyleSheet.create({
+    button: {
       width: width,
       borderRadius: 50,
       height: height,
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: backgroundColor,
-      // marginTop: 50,
+      opacity: 1,
+    },
+    buttonDisabled: {
+      width: width,
+      borderRadius: 50,
+      height: height,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: backgroundColor,
+      opacity: 0.5,
     },
     textButton: {
       fontFamily: "SourceSansPro_600SemiBold",
       fontSize: textSize,
       color: textColor,
     },
-    oauthButton: {
-      borderRadius: 25,
-      borderWidth: 1,
-      borderColor: "#F4F6F9",
-      height: height,
-      width: width,
-      alignItems: "center",
-      justifyContent: "center",
-      marginHorizontal: 10,
-      backgroundColor: backgroundColor,
-      flexDirection: "row",
-      shadowColor: "black",
-      shadowOffset: {
-        width: 2,
-        height: 1,
-      }, // Shadow offset
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
-    },
   });
-};
 
 export default Buttons;

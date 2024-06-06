@@ -23,15 +23,9 @@ import { UbService } from "../../services/UbServices";
 import { AuthService } from "../../services/AuthService";
 import { API_URL, CLIENT_ID_WEB } from "@env";
 import LoadingPage from "../Loading";
+
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
-
-//A décommenter au moment de build
-// import {
-//   GoogleSignin,
-//   GoogleSigninButton,
-//   statusCodes,
-// } from "@react-native-google-signin/google-signin";
 
 async function navigateTo() {
   try {
@@ -69,24 +63,7 @@ const Login2 = ({ navigation }) => {
   });
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // if (!fontsLoaded) {
-  //   // return (
-  //   //   <View>
-  //   //     <Text>Loading</Text>
-  //   //   </View>
-  //   // );
-  //   return <LoadingPage />;
-  // }
-
-  //A décommenter au moment de build
-  // GoogleSignin.configure({
-  //   scopes: [
-  //     "https://www.googleapis.com/auth/drive.readonly",
-  //     "https://www.googleapis.com/auth/calendar.readonly",
-  //   ], // what API you want to access on behalf of the user, default is email and profile
-  //   webClientId: `${CLIENT_ID_WEB}`, // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
-  // });
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   return (
     <View style={styles().container}>
@@ -96,7 +73,6 @@ const Login2 = ({ navigation }) => {
       >
         <ScrollView>
           <View style={styles().Mainbox}>
-            {/* <Auth /> */}
             <Image
               source={require("../../../assets/logo2.gif")}
               style={{ height: 200, width: 200 }}
@@ -120,6 +96,7 @@ const Login2 = ({ navigation }) => {
               placeholder="Mot de passe"
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
+              setPasswordValid={setIsPasswordValid}
             />
             <RootSiblingParent>
               <View style={{ marginBottom: 10 }}></View>
@@ -143,7 +120,6 @@ const Login2 = ({ navigation }) => {
                       const tmp = await navigateTo();
                       if (tmp === true) navigation.replace("Accueil3");
                       else navigation.replace("Choose");
-                      // navigation.replace("Choose");
                     } else {
                       Toast.show("Mot de passe ou Email incorrect", {
                         duration: Toast.durations.LONG,
@@ -168,6 +144,8 @@ const Login2 = ({ navigation }) => {
                     );
                   }
                 }}
+                disabled={!isPasswordValid}
+                style={!isPasswordValid ? styles().buttonDisabled : styles().button}
               />
             </RootSiblingParent>
             <TouchableOpacity
@@ -266,23 +244,17 @@ const styles = (textColor) => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      //   marginTop: screenHeight < 768 ? 41 : 50,
-      // backgroundColor: "white",
     },
     Mainbox: {
       flex: 1,
       alignItems: "center",
-      //   justifyContent: "center",
-      //   marginTop: screenHeight < 768 ? 41 : 50,
       marginVertical: screenHeight < 768 ? 41 : 50,
       marginHorizontal: screenWidth / 15,
-      // backgroundColor: "white",
     },
     h1: {
       fontSize: screenHeight < 768 ? 20 : 24,
       fontFamily: "SourceSansPro_600SemiBold",
       textAlign: "center",
-      //   marginHorizontal: screenWidth / 30,
       marginBottom: screenHeight / 30,
     },
     titleTextField: {
@@ -301,19 +273,13 @@ const styles = (textColor) => {
     colorStar: {
       color: "#E1604D",
     },
-    boutton: {
-      width: "80%",
-      borderRadius: 50,
-      height: 50,
-      alignItems: "center",
-      justifyContent: "center",
+    button: {
       backgroundColor: "#E1604D",
-      marginTop: 50,
+      opacity: 1,
     },
-    textButton: {
-      fontFamily: "SourceSansPro_600SemiBold",
-      fontSize: 16,
-      color: "white",
+    buttonDisabled: {
+      backgroundColor: "#E1604D",
+      opacity: 0.5,
     },
   });
 };

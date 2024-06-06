@@ -48,13 +48,13 @@ const MotDePasse = ({ navigation }) => {
     SourceSansPro_600SemiBold,
   });
   const [email, setEmail] = useState("");
-  if (!fontsLoaded) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
-  }
+  // if (!fontsLoaded) {
+  //   return (
+  //     <View>
+  //       <Text>Loading</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <View style={styles().container}>
