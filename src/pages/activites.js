@@ -6,6 +6,8 @@ import {
   ImageBackground,
   TouchableOpacity,
   Linking,
+  Modal,
+  Button,
 } from "react-native";
 import TinderCard from "react-tinder-card";
 import Navbar from "../components/NavigationBar";
@@ -17,6 +19,10 @@ const Activities = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(9);
   const [swipeDirection, setSwipeDirection] = useState(null);
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false); // state for filter modal visibility
+  const [dataUrl, setDataUrl] = useState(
+    "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=group%3A%22Parcs%20et%20jardins%22"
+  ); // default URL
 
   const swiped = (direction, nameToDelete, index) => {
     console.log("prout", direction);
@@ -60,7 +66,8 @@ const Activities = ({ navigation }) => {
     if (str) {
       return str.split(charToRemove).join("");
     }
-  };
+  }
+
   function formatDateToISO(originalDate) {
     if (originalDate) {
       const dateParts = originalDate.split(/[\s/:\-]/);
@@ -74,6 +81,7 @@ const Activities = ({ navigation }) => {
       return isoDateString;
     }
   }
+
   const createEvent = async (currentIndex) => {
     console.log("tezst,", currentIndex);
     const formattedDate = formatDateToISO(
@@ -120,30 +128,35 @@ const Activities = ({ navigation }) => {
     }
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=date_end%3A%222024%2F05%22",
-          {
-            method: "GET",
-            headers: {},
-          }
-        );
-        const responseData = await response.json();
-        setData(responseData);
-        console.log("caca", responseData);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      }
-    };
+  const fetchData = async (url) => {
+    try {
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {},
+      });
+      const responseData = await response.json();
+      setData(responseData);
+      console.log("caca", responseData);
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
 
-    fetchData();
-  }, []);
+  useEffect(() => {
+    fetchData(dataUrl);
+  }, [dataUrl]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Match une nouvelle activité !</Text>
+      <View style={styles.headerContainer}>
+        <Text style={styles.header}>Match une nouvelle activité !</Text>
+        <TouchableOpacity
+          style={styles.filterButton}
+          onPress={() => setIsFilterModalVisible(true)}
+        >
+          <Icon name="filter" size={24} color="#E1604D" />
+        </TouchableOpacity>
+      </View>
       <View style={styles.cardContainer}>
         {data &&
           data.results.map((character, index) => (
@@ -206,7 +219,7 @@ const Activities = ({ navigation }) => {
             </View>
             <TouchableOpacity onPress={handleLinkPress}>
               <Text style={styles.cardInfoText2}>
-              Accédez au site en cliquant ici !
+                Accédez au site en cliquant ici !
               </Text>
             </TouchableOpacity>
           </View>
@@ -215,9 +228,51 @@ const Activities = ({ navigation }) => {
       <View style={styles.bottomNavbarContainer}>
         <Navbar navigation={navigation} />
       </View>
+
+      <Modal
+        visible={isFilterModalVisible}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Filter Activities</Text>
+            <TouchableOpacity
+              style={styles.filterOptionButton}
+              onPress={() => {
+                setDataUrl(
+                  "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=group%3A%22Parcs%20et%20jardins%22"
+                );
+                setIsFilterModalVisible(false);
+              }}
+            >
+              <Text style={styles.filterOptionText}>Filter 1</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.filterOptionButton}
+              onPress={() => {
+                setDataUrl(
+                  "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=group%3A%22Biblioth%C3%A8ques%22"
+                );
+                setIsFilterModalVisible(false);
+              }}
+            >
+              <Text style={styles.filterOptionText}>Filter 2</Text>
+            </TouchableOpacity>
+            {/* Add more filter buttons as needed */}
+            <TouchableOpacity
+              style={styles.filterOptionButton}
+              onPress={() => setIsFilterModalVisible(false)}
+            >
+              <Text style={styles.filterOptionText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -225,13 +280,22 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  headerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "90%",
+    marginTop: -300,
+    marginBottom: 30,
+  },
   header: {
     color: "#E1604D",
     fontSize: 23,
-    marginTop: -300,
-    marginBottom: 30,
     padding: 10,
     borderRadius: 10,
+  },
+  filterButton: {
+    padding: 10,
   },
   titleText: {
     fontSize: 15,
@@ -247,7 +311,6 @@ const styles = StyleSheet.create({
     top: -40, // Adjust this value according to your layout
     left: 10, // Adjust this value according to your layout
   },
-
   cardContainer: {
     width: "90%",
     maxWidth: 400,
@@ -289,6 +352,18 @@ const styles = StyleSheet.create({
   icon: {
     // marginRight: 10,
   },
+  filterOptionButton: {
+    backgroundColor: "#E1604D",
+    padding: 10,
+    marginVertical: 5,
+    width: "100%",
+    alignItems: "center",
+    borderRadius: 5,
+  },
+  filterOptionText: {
+    color: "white",
+    fontSize: 16,
+  },
   iconBackground: {
     backgroundColor: "lightgrey",
     borderRadius: 50, // Make sure it's large enough to cover the icon
@@ -308,7 +383,7 @@ const styles = StyleSheet.create({
     color: "#E1604D",
     fontSize: 15,
     padding: 10,
-    fontWeight:"bold",
+    fontWeight: "bold",
   },
   cardInfoText: {
     color: "black",
@@ -329,6 +404,24 @@ const styles = StyleSheet.create({
   },
   swipeLeft: {
     backgroundColor: "rgba(255, 0, 0)", // light transparent red
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: "80%",
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 20,
   },
 });
 

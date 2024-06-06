@@ -182,7 +182,7 @@ const Profile = ({ navigation }) => {
     handleProfileFetch();
     const timer = setTimeout(() => {
       setIsLoading(false); // After 2 seconds, set isLoading to false
-    }, 3000);
+    }, 1000);
 
     // Clear the timeout if the component unmounts before 2 seconds
     return () => clearTimeout(timer);

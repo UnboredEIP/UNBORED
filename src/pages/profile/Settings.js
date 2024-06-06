@@ -149,6 +149,9 @@ const Settings = ({ navigation }) => {
   const navigatetoavatar = async () => {
     navigation.navigate("Avatar");
   };
+  const navigatetoshop = async () => {
+    navigation.navigate("shop");
+  };
   const handleSave = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -295,6 +298,12 @@ const Settings = ({ navigation }) => {
               onPress={navigatetoavatar}
             >
               <Text style={styles.loginBtnText2}>Créer ton avatar !</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.loginBtn3}
+              onPress={navigatetoshop}
+            >
+              <Text style={styles.loginBtnText2}>Shop !</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
               <Text style={styles.loginBtnText}>Sauvegarder</Text>
