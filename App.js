@@ -33,6 +33,8 @@ import activites from "./src/pages/activites";
 import Event from "./src/pages/Events/Event";
 import FriendsRequest from "./src/pages/profile/FriendsRequest";
 import SavedEventsPage from "./src/pages/Events/SavedEvents";
+import shop from "./src/pages/shop";
+import UserUbPage from "./src/pages/profile/UserUb";
 import { ImagePickerIOS } from "react-native";
 class OTP2 extends React.Component {
   render() {
@@ -131,6 +133,9 @@ const AppNavigator = createStackNavigator(
       navigationOptions: {
         ...TransitionPresets.ModalTransition,
       },
+    },
+    shop: {
+      screen: shop,
     },
     avatareyes: {
       screen: avatareyes,
@@ -237,6 +242,12 @@ const AppNavigator = createStackNavigator(
     },
     SavedEventsPage: {
       screen: SavedEventsPage,
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
+    },
+    UserUbPage: {
+      screen: UserUbPage,
       // navigationOptions: {
       // ...TransitionPresets.ModalTransition,
       // },

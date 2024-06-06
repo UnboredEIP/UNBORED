@@ -88,7 +88,7 @@ const listBeard = [
   "null",
   "medium",
   "majestic",
-  "ligth",
+  "light",
   "mustachemagnum",
   "mustache",
 ];

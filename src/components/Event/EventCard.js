@@ -334,7 +334,7 @@ const EventCard = ({
                     hideOnPress: true,
                   });
               } else {
-                const response = await ubService.leaveEvent([id]);
+                const response = await ubService.deleteFavEvent([id]);
                 if (response) {
                   let favourites = global.favEvents;
 

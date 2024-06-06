@@ -9,10 +9,6 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import {
-  useFonts,
-  SourceSansPro_600SemiBold,
-} from "@expo-google-fonts/source-sans-pro";
 import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../components/TextField";
 import { RootSiblingParent } from "react-native-root-siblings";
@@ -44,17 +40,17 @@ async function makeRLoginRequest(email) {
 }
 
 const MotDePasse = ({ navigation }) => {
-  const [fontsLoaded] = useFonts({
-    SourceSansPro_600SemiBold,
-  });
+  // const [fontsLoaded] = useFonts({
+  //   SourceSansPro_600SemiBold,
+  // });
   const [email, setEmail] = useState("");
-  if (!fontsLoaded) {
-    return (
-      <View>
-        <Text>Loading</Text>
-      </View>
-    );
-  }
+  // if (!fontsLoaded) {
+  //   return (
+  //     <View>
+  //       <Text>Loading</Text>
+  //     </View>
+  //   );
+  // }
 
   return (
     <View style={styles().container}>
@@ -167,7 +163,7 @@ const styles = (textColor) => {
     },
     h1: {
       fontSize: screenHeight < 768 ? 20 : 24,
-      fontFamily: "SourceSansPro_600SemiBold",
+      // fontFamily: "SourceSansPro_600SemiBold",
       textAlign: "center",
       //   marginHorizontal: screenWidth / 30,
       marginBottom: screenHeight / 30,
@@ -175,14 +171,14 @@ const styles = (textColor) => {
     titleTextField: {
       fontSize: 16,
       alignSelf: "flex-start",
-      fontFamily: "SourceSansPro_600SemiBold",
+      // fontFamily: "SourceSansPro_600SemiBold",
       opacity: 0.4,
       marginLeft: 20,
     },
     loginText: {
       fontSize: 16,
       alignSelf: "center",
-      fontFamily: "SourceSansPro_600SemiBold",
+      // fontFamily: "SourceSansPro_600SemiBold",
       color: "#858C94",
     },
     colorStar: {
@@ -198,7 +194,7 @@ const styles = (textColor) => {
       marginTop: 50,
     },
     textButton: {
-      fontFamily: "SourceSansPro_600SemiBold",
+      // fontFamily: "SourceSansPro_600SemiBold",
       fontSize: 16,
       color: "white",
     },

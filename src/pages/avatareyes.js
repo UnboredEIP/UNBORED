@@ -39,7 +39,7 @@ const avatareyes = ({ navigation }) => {
             Authorization: `Bearer ${authToken}`,
           },
           body: JSON.stringify({
-            eyebrows:{
+            eyebrows: {
               id: selectedEyebrowId.toString(),
             },
             hair: {
@@ -477,9 +477,9 @@ const avatareyes = ({ navigation }) => {
         <View style={styles.row}>
           <TouchableOpacity
             style={styles.buttonZ}
-            onPress={() => onPressImageBeard("ligth", 3)}
+            onPress={() => onPressImageBeard("light", 3)}
           >
-            <MyAvatar size={90} colorSkin={avatarColor} beard={"ligth"} />
+            <MyAvatar size={90} colorSkin={avatarColor} beard={"light"} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.buttonZ2}

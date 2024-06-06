@@ -17,12 +17,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../../components/TextField";
 import RNPickerSelect from "react-native-picker-select";
 import Toast from "react-native-root-toast";
-const screenWidth = Dimensions.get("screen").width;
-const screenHeight = Dimensions.get("screen").height;
 import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import { AuthService } from "../../../services/AuthService";
 import LoadingPage from "../../Loading";
+
+const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
+
 const RegisterStep3 = ({ navigation }) => {
   const authService = new AuthService();
   const [fontsLoaded] = useFonts({
@@ -35,10 +37,28 @@ const RegisterStep3 = ({ navigation }) => {
   const [number, setNumber] = useState("");
   const [description, setDescription] = useState("");
   const [birthdate, setBirthdate] = useState("");
+  const [isDisabled, setIsDisabled] = useState(true);
 
-  if (!fontsLoaded) {
-    return <LoadingPage />;
-  }
+  const validateForm = () => {
+    if (password !== password2) {
+      Toast.show("Mot de passe non similaire !", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        backgroundColor: "red",
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
+      setPassword("");
+      setPassword2("");
+      return false;
+    }
+    return true;
+  };
+
+  // if (!fontsLoaded) {
+  //   return <LoadingPage />;
+  // }
 
   return (
     <View style={styles().container}>
@@ -62,6 +82,7 @@ const RegisterStep3 = ({ navigation }) => {
               placeholder="Mot de passe"
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
+              setPasswordValid={setIsDisabled}
             />
 
             <Text style={styles().titleTextField}>
@@ -72,33 +93,17 @@ const RegisterStep3 = ({ navigation }) => {
               placeholder="Mot de passe"
               secureTextEntry={true}
               onChangeText={(password2) => setPassword2(password2)}
-              handleOnBlur={() => {
-                if (password2 !== password) {
-                  Toast.show("Mot de passe non similaire !", {
-                    duration: Toast.durations.LONG,
-                    position: Toast.positions.BOTTOM,
-                    backgroundColor: "red",
-                    shadow: true,
-                    animation: true,
-                    hideOnPress: true,
-                  });
-                  setPassword("");
-                  setPassword2("");
-                } else console.log("MATCH !");
-              }}
+              handleOnBlur={validateForm}
+              setPasswordValid={setIsDisabled}
             />
             <Text style={styles().titleTextField}>Description</Text>
             <MyTextInput
               placeholder="Description"
               onChangeText={(description) => setDescription(description)}
             />
-            {/* <Text style={styles().titleTextField}>
-              {JSON.parse(global.RegisterData).username}
-            </Text> */}
             <RNPickerSelect
               onValueChange={(value) => {
                 setGender(value);
-                console.log(gender);
               }}
               items={[
                 { label: "Homme", value: "Homme" },
@@ -140,12 +145,17 @@ const RegisterStep3 = ({ navigation }) => {
                 texte={"S'inscrire"}
                 backgroundColor="#E1604D"
                 onPress={async () => {
+                  if (!validateForm()) {
+                    return;
+                  }
+
                   if (
                     JSON.parse(global.RegisterData).username !== "" &&
                     JSON.parse(global.RegisterData).email !== "" &&
                     password !== "" &&
                     gender !== ""
                   ) {
+                    setIsDisabled(false);
                     const response = await authService.getRegister(
                       JSON.parse(global.RegisterData).username,
                       JSON.parse(global.RegisterData).email,
@@ -155,8 +165,8 @@ const RegisterStep3 = ({ navigation }) => {
                       JSON.parse(global.RegisterData).birthdate,
                       global.OTPValue
                     );
+                    setIsDisabled(false);
                     if (response === true) {
-                      console.log("success");
                       Toast.show("Registration succeed", {
                         duration: Toast.durations.LONG,
                         position: Toast.positions.BOTTOM,
@@ -167,13 +177,8 @@ const RegisterStep3 = ({ navigation }) => {
                       });
                       navigation.replace("Login2");
                     } else {
-                      console.log(JSON.parse(global.RegisterData).username);
-                      console.log(JSON.parse(global.RegisterData).email);
-                      console.log(password),
-                        console.log(gender),
-                        console.log(JSON.parse(global.RegisterData).birthdate);
                       Toast.show(
-                        `Inscription échouée: identifiants déjà utilisé.`,
+                        `Inscription échouée: identifiants déjà utilisés.`,
                         {
                           duration: Toast.durations.LONG,
                           position: Toast.positions.BOTTOM,
@@ -206,36 +211,11 @@ const RegisterStep3 = ({ navigation }) => {
                     });
                   }
                 }}
+                disabled={!isDisabled}
               />
             </RootSiblingParent>
 
-            <View
-              style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
-            ></View>
-            {/* <View style={{ flexDirection: "row", marginBottom: 32 }}>
-              <RootSiblingParent>
-                <Buttons
-                  hasIcon={true}
-                  iconPath={
-                    "https://www.facebook.com/images/fb_icon_325x325.png"
-                  }
-                  textColor="black"
-                  width={screenWidth < 350 ? 145 : 160}
-                  backgroundColor="white"
-                  texte="Facebook"
-                />
-                <Buttons
-                  hasIcon={true}
-                  iconPath={
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png"
-                  }
-                  textColor="black"
-                  width={screenWidth < 350 ? 145 : 160}
-                  backgroundColor="white"
-                  texte="Google"
-                />
-              </RootSiblingParent>
-            </View> */}
+            <View style={{ marginTop: 30, marginBottom: 30 }}></View>
 
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}
@@ -250,27 +230,21 @@ const RegisterStep3 = ({ navigation }) => {
   );
 };
 
-const styles = (textColor) => {
+const styles = () => {
   return StyleSheet.create({
     container: {
       flex: 1,
-      //   marginTop: screenHeight < 768 ? 41 : 50,
-      // backgroundColor: "white",
     },
     Mainbox: {
       flex: 1,
       alignItems: "center",
-      //   justifyContent: "center",
-      //   marginTop: screenHeight < 768 ? 41 : 50,
       marginVertical: screenHeight < 768 ? 41 : 50,
       marginHorizontal: screenWidth / 15,
-      // backgroundColor: "white",
     },
     h1: {
       fontSize: screenHeight < 768 ? 20 : 24,
       fontFamily: "SourceSansPro_600SemiBold",
       textAlign: "center",
-      //   marginHorizontal: screenWidth / 30,
       marginBottom: screenHeight / 30,
     },
     titleTextField: {
@@ -288,38 +262,6 @@ const styles = (textColor) => {
     },
     colorStar: {
       color: "#E1604D",
-    },
-    boutton: {
-      width: "80%",
-      borderRadius: 50,
-      height: 50,
-      alignItems: "center",
-      justifyContent: "center",
-      backgroundColor: "#E1604D",
-      marginTop: 50,
-    },
-    textButton: {
-      fontFamily: "SourceSansPro_600SemiBold",
-      fontSize: 16,
-      color: "white",
-    },
-    oauthButton: {
-      borderRadius: 25,
-      borderWidth: 1,
-      borderColor: "#F4F6F9",
-      height: 50,
-      width: screenWidth < 350 ? 145 : 160,
-      alignItems: "center",
-      justifyContent: "center",
-      marginHorizontal: 10,
-      flexDirection: "row",
-      shadowColor: "black",
-      shadowOffset: {
-        width: 2,
-        height: 1,
-      },
-      shadowOpacity: 0.1,
-      shadowRadius: 2,
     },
   });
 };

@@ -112,9 +112,14 @@ const listEyes = [
   "wacky",
   "surprised",
   "squint",
+  "angry",
+  "updown",
+  "unibrow",
+  "sad2",
+  "sad",
 ];
 
-const ParticipantsActivity = ({ participents }) => {
+const FriendsList = ({ users, onPress }) => {
   return (
     <View
       style={{
@@ -127,9 +132,9 @@ const ParticipantsActivity = ({ participents }) => {
         justifyContent: "center",
       }}
     >
-      <Text>Fais connaissances avec eux</Text>
-      {participents.length > 0 ? (
-        participents.map((participent, index) => (
+      <Text>Ma liste d'ami</Text>
+      {users.length > 0 ? (
+        users.map((user, index) => (
           <View
             key={index}
             style={{
@@ -138,56 +143,37 @@ const ParticipantsActivity = ({ participents }) => {
           >
             <AvatarCard
               key={index}
-              name={participent.username}
+              name={user.username}
               size={100}
-              colorHair={participent.style.hair.color}
-              hair={listHair[participent.style.hair.id]}
-              colorSkin={participent.style.head.color}
-              clothTop={listTop[participent.style.accessory.id]}
-              colorClothingTop={participent.style.accessory.color}
-              colorBeard={participent.style.beard.color}
-              eyes={listEyes[participent.style.eyes.id]}
-              colorEye={participent.style.eyes.color}
-              eyebrow={
-                participent.style.eyebrows.id
-                  ? listEyebrow[participent.style.eyebrows.id]
-                  : listEyebrow[1]
-              }
-              mouth={listMouth[participent.style.mouth.id]}
-              beard={listBeard[participent.style.beard.id]}
-              invitations={participent.invitations}
-              friends={participent.friends}
-              id={participent._id}
-              // key={index}
-              // name={participent.username}
-              // size={100}
-              // colorHair={participent.style.hair.color}
-              // hair={listHair[participent.style.hair.id]}
-              // colorSkin={participent.style.head.color}
-              // clothTop={listTop[participent.style.accessory.id]}
-              // colorClothingTop={participent.style.accessory.color}
-              // colorBeard={participent.style.beard.color}
-              // eyes={listEyes[participent.style.eyes.id]}
-              // // eyebrow={
-              // //   participent.style.eyebrows.id
-              // //     ? listEyebrow[participent.style.eyebrows.id]
-              // //     : listEyebrow[1]
-              // // }
-              // mouth={listMouth[participent.style.mouth.id]}
-              // beard={listBeard[participent.style.beard.id]}
-              // invitations={participent.invitations}
-              // friends={participent.friends}
-              // id={participent._id}
+              colorHair={user.style.hair.color}
+              hair={listHair[user.style.hair.id]}
+              colorSkin={user.style.head.color}
+              clothTop={listTop[user.style.accessory.id]}
+              colorClothingTop={user.style.accessory.color}
+              colorBeard={user.style.beard.color}
+              eyes={listEyes[user.style.eyes.id]}
+              // eyebrow={
+              //   user.style.eyebrows.id
+              //     ? listEyebrow[user.style.eyebrows.id]
+              //     : listEyebrow[1]
+              // }
+              mouth={listMouth[user.style.mouth.id]}
+              beard={listBeard[user.style.beard.id]}
+              invitations={user.invitations}
+              friends={user.friends}
+              id={user._id}
+              onPress={() => {}}
+              // onPress={onPress}
             />
           </View>
         ))
       ) : (
         <View>
-          <Text>Pas encore de participent, sois le premier !</Text>
+          <Text>Tu n'as pas encore d'amis {"):"}</Text>
         </View>
       )}
     </View>
   );
 };
 
-export default ParticipantsActivity;
+export default FriendsList;

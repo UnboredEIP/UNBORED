@@ -20,12 +20,112 @@ import ParticipantsActivity from "../../components/Modals/ParticipantsActivity";
 import Toast from "react-native-root-toast";
 import LoadingPage from "../Loading";
 import { BackArrow } from "../../../assets/avatars/avatars";
+import Swiper from "react-native-swiper";
+import MyAvatar from "../../components/Avatar";
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
 
 const IS_ENROLL = 1;
 const NOT_ENROLL = 2;
+const defaultImage = {
+  id: 1,
+  url: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
+  description: "Default Image",
+};
+
+const listHair = [
+  "null",
+  "calvitie",
+  "buzzcut",
+  "big",
+  "afro",
+  "frizzy",
+  "curvy",
+  "curlyshort",
+  "curly",
+  "mediumdreads",
+  "medium",
+  "longstraight",
+  "longdreads",
+  "shaggymullet",
+  "shaggy",
+  "minidreads",
+  "mediumlong",
+  "square",
+  "shortwaved",
+  "shortflat",
+];
+
+const listMouth = [
+  "null",
+  "grimace",
+  "eating",
+  "desbelief",
+  "default",
+  "serious",
+  "scream",
+  "sad",
+  "open",
+  "vomit",
+  "twinkle",
+  "tongue",
+  "smile",
+];
+
+const listTop = [
+  "null",
+  "hoodie",
+  "crewneck",
+  "blazer",
+  "shirt",
+  "scoopneck",
+  "polo",
+  "vneck",
+  "overall",
+];
+
+const listEyebrow = [
+  "null",
+  "natural",
+  "flat",
+  "exited",
+  "angry",
+  "updown",
+  "unibrow",
+  "sad2",
+  "sad",
+];
+
+const listBeard = [
+  "null",
+  "medium",
+  "majestic",
+  "light",
+  "mustachemagnum",
+  "mustache",
+];
+
+const listEyes = [
+  "null",
+  "dizzy",
+  "default",
+  "cry",
+  "closed",
+  "side",
+  "heart",
+  "happy",
+  "eyeroll",
+  "wink",
+  "wacky",
+  "surprised",
+  "squint",
+  "angry",
+  "updown",
+  "unibrow",
+  "sad2",
+  "sad",
+];
 
 function formatDate(dateString) {
   const dateObj = new Date(dateString);
@@ -79,55 +179,44 @@ const renderStars = (ratings) => {
   return stars;
 };
 
-const Event = ({ navigation }) => {
-  const [eventData, setEventData] = useState(null);
+const UserUbPage = ({ navigation }) => {
+  const [userData, setUserData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(defaultImage);
   const [participents, setParticipents] = useState([]);
   const [isEnroll, setIsEnroll] = useState(NOT_ENROLL);
   const ubService = new UbService();
 
-  function userIsEnroll(events, id) {
-    // for (const invitation of invitations) {
-    for (const event of events) {
-      if (event === id) {
-        setIsEnroll(IS_ENROLL);
-        // console.log("ENROLL");
-        return true;
-      }
-      // }
-    }
+  //   function userIsEnroll(events, id) {
+  //     // for (const invitation of invitations) {
+  //     for (const event of events) {
+  //       if (event === id) {
+  //         setIsEnroll(IS_ENROLL);
+  //         // console.log("ENROLL");
+  //         return true;
+  //       }
+  //       // }
+  //     }
 
-    return false; // ID not found in invitations
-  }
+  //     return false; // ID not found in invitations
+  //   }
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await ubService.getEventById(global.currentEventId);
+        const response = await ubService.getUserById(global.currentUserId);
         if (!response) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const responseData = response;
-        setEventData(responseData);
-        userIsEnroll(global.reservedEvents, global.currentEventId);
 
-        global.reservedEvents;
-        const img = await ubService.getImage(responseData.pictures[0].id);
-        setImage(img);
+        if (responseData) setUserData(responseData);
+        // userIsEnroll(global.reservedEvents, global.currentEventId);
 
-        if (responseData.participents.length > 0) {
-          const users = [];
-          for (const participent of responseData.participents) {
-            const user = await ubService.getUserById(participent);
-            // console.log(user);
-            if (user) {
-              users.push(user);
-            }
-          }
-          setParticipents(users);
-
-          // console.log(users);
+        console.log("USER style:", responseData);
+        if (responseData.profilePhoto) {
+          const img = await ubService.getImage(responseData.profilePhoto);
+          setImage(img);
         }
       } catch (error) {
         console.error("Error fetchData:", error);
@@ -135,9 +224,14 @@ const Event = ({ navigation }) => {
     };
 
     fetchData();
-  }, [participents, isEnroll]);
+  }, [userData]);
 
-  if (eventData === null || image === null) {
+  if (
+    userData === null ||
+    (userData !== null &&
+      userData.profilePhoto !== undefined &&
+      image === defaultImage)
+  ) {
     return <LoadingPage />;
   } else {
     return (
@@ -149,134 +243,80 @@ const Event = ({ navigation }) => {
             left: screenWidth / 20,
             zIndex: 1,
           }}
-          onPress={() => navigation.replace(global.currentScreen)}
+          onPress={() => navigation.goBack()}
         >
           <BackArrow
             style={{
               width: screenWidth / 12,
               height: screenWidth / 12,
-              color: "white",
+              color: "black",
             }}
           />
         </TouchableOpacity>
-        <Image style={styles.image} source={{ uri: image.url }} />
-        <View style={styles.categoryContainer}>
-          <View style={styles.participantsContainer}>
-            <Text style={styles.participantsText}>
-              {eventData.participents.length} personne(s)
-            </Text>
+
+        <Swiper
+          style={styles.swiperContainer}
+          loop={false}
+          nestedScrollEnabled={true}
+        >
+          <View style={styles.slide}>
+            <Image
+              source={{ uri: image.url }}
+              style={{
+                width: 400,
+                height: 400,
+                borderRadius: 10,
+                marginBottom: 10,
+              }}
+            />
           </View>
-          <TouchableOpacity>
+          <View style={styles.slide2}>
+            <MyAvatar
+              size={200}
+              colorSkin={userData.style.head.color}
+              eyes={listEyes[userData.style.eyes.id]}
+              clothTop={listTop[userData.style.accessory.id]}
+              colorClothingTop={userData.style.accessory.color}
+              hair={listHair[userData.style.hair.id]}
+              colorHair={userData.style.hair.color}
+              colorEye={userData.style.eyes.color}
+              beard={listBeard[userData.style.beard.id]}
+              mouth={listMouth[userData.style.mouth.id]}
+              eyebrow={listEyebrow[userData.style.eyebrows.color]}
+            />
+          </View>
+        </Swiper>
+
+        {/* <Image style={styles.image} source={{ uri: image.url }} /> */}
+        <View style={styles.categoryContainer}>
+          {/* <View style={styles.participantsContainer}>
+            <Text style={styles.participantsText}>
+              {userData.participents.length} personne(s)
+            </Text>
+          </View> */}
+          {/* <TouchableOpacity>
             <View style={styles.category}>
-              <Text style={styles.categoryText}>{eventData.categories[0]}</Text>
+              <Text style={styles.categoryText}>{userData.categories[0]}</Text>
             </View>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
-        <Text style={styles.title}>{eventData.name}</Text>
-        <Text style={styles.date}>{formatDate(eventData.start_date)}</Text>
-        <Text style={styles.time}>
-          Heure début: {extractTime(eventData.start_date)}
-        </Text>
-
-        {isEnroll == IS_ENROLL ? (
-          <Buttons
-            texte="Inscrit(e)"
-            backgroundColor="green"
-            onPress={async () => {
-              const response = await ubService.leaveEvent([
-                global.currentEventId,
-              ]);
-              if (response === true) {
-                setIsEnroll(NOT_ENROLL);
-                let favourites = global.reservedEvents;
-
-                if (favourites === null) {
-                  favourites = [];
-                }
-                const existingFavourite = global.reservedEvents.findIndex(
-                  (event) => event === global.currentEventId
-                );
-                if (existingFavourite !== -1) {
-                  // console.log("CACA");
-                  favourites.splice(existingFavourite, 1);
-                  global.reservedEvents = favourites;
-                  console.log("SECOND GLOB:", global.reservedEvents);
-                }
-                Toast.show("Activité quitté", {
-                  duration: Toast.durations.LONG,
-                  position: Toast.positions.BOTTOM,
-                  backgroundColor: "green",
-                  shadow: true,
-                  animation: true,
-                  hideOnPress: true,
-                });
-              } else {
-                // console.log("ERROR:", response);
-                console.log("ERROR WHEN LEAVE ACTIVITY");
-                Toast.show("Veuillez réessayez", {
-                  duration: Toast.durations.LONG,
-                  position: Toast.positions.BOTTOM,
-                  backgroundColor: "red",
-                  shadow: true,
-                  animation: true,
-                  hideOnPress: true,
-                });
-              }
-            }}
-          />
-        ) : (
-          <Buttons
-            texte="Rejoindre activité"
-            onPress={async () => {
-              const response = await ubService.joinEvent([
-                global.currentEventId,
-              ]);
-              if (response == true) {
-                setIsEnroll(IS_ENROLL);
-                global.reservedEvents.push(global.currentEventId);
-                console.log("NEW ACTIVITY JOIN:", eventData.name);
-                Toast.show("Activité rejoints", {
-                  duration: Toast.durations.LONG,
-                  position: Toast.positions.BOTTOM,
-                  backgroundColor: "green",
-                  shadow: true,
-                  animation: true,
-                  hideOnPress: true,
-                });
-              } else {
-                console.log("ERROR WHEN JOIN ACTIVITY");
-                Toast.show("Veuillez réessayez", {
-                  duration: Toast.durations.LONG,
-                  position: Toast.positions.BOTTOM,
-                  backgroundColor: "red",
-                  shadow: true,
-                  animation: true,
-                  hideOnPress: true,
-                });
-              }
-            }}
-          />
-        )}
+        <Text style={styles.title}>{userData.username}</Text>
+        {/* <Text style={styles.date}>{formatDate(userData.start_date)}</Text> */}
+        {/* <Text style={styles.time}>
+          Heure début: {extractTime(userData.start_date)}
+        </Text> */}
         <View
           style={{
             marginVertical: 10,
           }}
         />
-        <Buttons
+        {/* <Buttons
           texte="Voir les participants"
           onPress={() => {
             setModalVisible(true);
           }}
-        />
-        <View style={styles.locationContainer}>
-          <View style={styles.locationTextContainer}>
-            <Image style={styles.locationIcon} source={loc} />
-            <Text style={styles.locationText}>{eventData.address}</Text>
-          </View>
-        </View>
-        <View style={styles.ratingContainer}>
-          {renderStars(eventData.rate)}
-        </View>
+        /> */}
+        {/* <View style={styles.ratingContainer}>{renderStars(userData.rate)}</View> */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -326,7 +366,7 @@ const Event = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: screenHeight * 0.0062,
+    flexGrow: screenHeight * 0.00027,
     alignItems: "center",
     justifyContent: "center",
     // paddingTop: screenHeight / 10,
@@ -351,12 +391,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: screenHeight * 0.03,
   },
-  date: {
-    textAlign: "center",
-    color: "#E1604D",
-    fontWeight: "600",
-    fontSize: screenHeight * 0.023,
-  },
+
   time: {
     textAlign: "left",
     color: "black",
@@ -421,6 +456,27 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: screenHeight * 0.01,
   },
+  swiperContainer: {
+    // width: "100%",
+    height: 150,
+    marginBottom: 10,
+  },
+  slide: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  slide2: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10,
+    overflow: "hidden",
+    right: screenWidth * 0.25,
+    paddingBottom: 140,
+  },
 });
 
-export default Event;
+export default UserUbPage;
