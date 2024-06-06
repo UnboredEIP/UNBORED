@@ -117,7 +117,7 @@ const Profile = ({ navigation }) => {
     "null",
     "medium",
     "majestic",
-    "ligth",
+    "light",
     "mustachemagnum",
     "mustache",
   ];
@@ -160,9 +160,9 @@ const Profile = ({ navigation }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+      global.currentScreen = "Profile";
       const profileData = await response.json();
-      console.log("Profile Data:", profileData);
+      // console.log("Profile Data:", profileData);
       setUsername(profileData.user.username);
       setPreferences(profileData.user.preferences);
       setDescription(profileData.user.description);
@@ -328,7 +328,7 @@ const Profile = ({ navigation }) => {
                 backgroundColor: "rgba(0,0,0,0.5)",
               }}
             >
-              <TouchableWithoutFeedback>
+              <TouchableWithoutFeedback onPress={() => {}}>
                 <View
                   style={{
                     flex: 1,
@@ -342,7 +342,13 @@ const Profile = ({ navigation }) => {
                       borderRadius: 20,
                     }}
                   >
-                    <FriendsList users={friends} />
+                    <FriendsList
+                      users={friends}
+                      onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate("UserUbPage");
+                      }}
+                    />
                   </View>
                 </View>
               </TouchableWithoutFeedback>

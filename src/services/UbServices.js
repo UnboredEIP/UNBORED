@@ -48,7 +48,7 @@ export class UbService {
       }
       //   await AsyncStorage.setItem("allEvents", responseData.events);
     } catch (error) {
-      console.error("Error when try to get events:", error);
+      console.error("Error when try to join events:", error);
     }
   };
   leaveEvent = async (events) => {
@@ -72,7 +72,7 @@ export class UbService {
       }
       //   await AsyncStorage.setItem("allEvents", responseData.events);
     } catch (error) {
-      console.error("Error when try to get events:", error);
+      console.error("Error when try to leave events:", error);
     }
   };
   favEvent = async (events) => {
@@ -96,7 +96,7 @@ export class UbService {
       }
       //   await AsyncStorage.setItem("allEvents", responseData.events);
     } catch (error) {
-      console.error("Error when try to get events:", error);
+      console.error("Error when try to fav events:", error);
     }
   };
   deleteFavEvent = async (events) => {
@@ -121,7 +121,7 @@ export class UbService {
       }
       //   await AsyncStorage.setItem("allEvents", responseData.events);
     } catch (error) {
-      console.error("Error when try to get events:", error);
+      console.error("Error when try to delete events:", error);
     }
   };
   getEventById = async (id) => {
@@ -144,7 +144,7 @@ export class UbService {
       const responseData = await response.json();
       return responseData.event;
     } catch (error) {
-      console.error("Error when try to get event:", error);
+      console.error("Error when try to get event by id:", error);
     }
   };
   getUserById = async (id) => {
@@ -286,7 +286,7 @@ export class UbService {
       return response;
       //   await AsyncStorage.setItem("allEvents", responseData.events);
     } catch (error) {
-      console.error("Error when try to get events:", error);
+      console.error("Error when try to get images:", error);
     }
   };
 

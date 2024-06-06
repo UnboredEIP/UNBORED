@@ -93,7 +93,7 @@ const listBeard = [
   "null",
   "medium",
   "majestic",
-  "ligth",
+  "light",
   "mustachemagnum",
   "mustache",
 ];
@@ -119,7 +119,7 @@ const listEyes = [
   "sad",
 ];
 
-const FriendsList = ({ users }) => {
+const FriendsList = ({ users, onPress }) => {
   return (
     <View
       style={{
@@ -162,6 +162,7 @@ const FriendsList = ({ users }) => {
               invitations={user.invitations}
               friends={user.friends}
               id={user._id}
+              onPress={onPress}
             />
           </View>
         ))

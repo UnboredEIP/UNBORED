@@ -93,7 +93,7 @@ const listBeard = [
   "null",
   "medium",
   "majestic",
-  "ligth",
+  "light",
   "mustachemagnum",
   "mustache",
 ];
@@ -112,11 +112,6 @@ const listEyes = [
   "wacky",
   "surprised",
   "squint",
-  "angry",
-  "updown",
-  "unibrow",
-  "sad2",
-  "sad",
 ];
 
 const ParticipantsActivity = ({ participents }) => {
@@ -152,16 +147,37 @@ const ParticipantsActivity = ({ participents }) => {
               colorClothingTop={participent.style.accessory.color}
               colorBeard={participent.style.beard.color}
               eyes={listEyes[participent.style.eyes.id]}
-              // eyebrow={
-              //   participent.style.eyebrows.id
-              //     ? listEyebrow[participent.style.eyebrows.id]
-              //     : listEyebrow[1]
-              // }
+              colorEye={participent.style.eyes.color}
+              eyebrow={
+                participent.style.eyebrows.id
+                  ? listEyebrow[participent.style.eyebrows.id]
+                  : listEyebrow[1]
+              }
               mouth={listMouth[participent.style.mouth.id]}
               beard={listBeard[participent.style.beard.id]}
               invitations={participent.invitations}
               friends={participent.friends}
               id={participent._id}
+              // key={index}
+              // name={participent.username}
+              // size={100}
+              // colorHair={participent.style.hair.color}
+              // hair={listHair[participent.style.hair.id]}
+              // colorSkin={participent.style.head.color}
+              // clothTop={listTop[participent.style.accessory.id]}
+              // colorClothingTop={participent.style.accessory.color}
+              // colorBeard={participent.style.beard.color}
+              // eyes={listEyes[participent.style.eyes.id]}
+              // // eyebrow={
+              // //   participent.style.eyebrows.id
+              // //     ? listEyebrow[participent.style.eyebrows.id]
+              // //     : listEyebrow[1]
+              // // }
+              // mouth={listMouth[participent.style.mouth.id]}
+              // beard={listBeard[participent.style.beard.id]}
+              // invitations={participent.invitations}
+              // friends={participent.friends}
+              // id={participent._id}
             />
           </View>
         ))
