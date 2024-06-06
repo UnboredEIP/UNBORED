@@ -34,6 +34,7 @@ import Event from "./src/pages/Events/Event";
 import FriendsRequest from "./src/pages/profile/FriendsRequest";
 import SavedEventsPage from "./src/pages/Events/SavedEvents";
 import shop from "./src/pages/shop";
+import UserUbPage from "./src/pages/profile/UserUb";
 import { ImagePickerIOS } from "react-native";
 class OTP2 extends React.Component {
   render() {
@@ -80,7 +81,7 @@ class InitialScreen extends React.Component {
       return;
     }
     const initialRoute = await checkKeys("authToken");
-    this.props.navigation.replace(initialRoute ? "shop" : "Login2");
+    this.props.navigation.replace(initialRoute ? "Accueil3" : "Login2");
   }
 
   render() {
@@ -134,7 +135,7 @@ const AppNavigator = createStackNavigator(
       },
     },
     shop: {
-      screen:shop,
+      screen: shop,
     },
     avatareyes: {
       screen: avatareyes,
@@ -241,6 +242,12 @@ const AppNavigator = createStackNavigator(
     },
     SavedEventsPage: {
       screen: SavedEventsPage,
+      // navigationOptions: {
+      // ...TransitionPresets.ModalTransition,
+      // },
+    },
+    UserUbPage: {
+      screen: UserUbPage,
       // navigationOptions: {
       // ...TransitionPresets.ModalTransition,
       // },

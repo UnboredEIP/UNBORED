@@ -4,18 +4,21 @@ import {
   View,
   Image,
   useWindowDimensions,
+  Dimensions,
+  ScrollView,
 } from "react-native";
 import React from "react";
 import Button from "./components/Buttons";
-import { ScrollView } from "react-native";
 
+const width = Dimensions.get("screen").width;
+const height = Dimensions.get("screen").height;
 const OnBoardingItem = ({ item, navigation }) => {
-  const { width } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   return (
-    <View style={[styles.container, { width }]}>
-      <ScrollView nestedScrollEnabled={true}>
-        <Image source={item.image} style={[styles.image, { width }]} />
-        <View style={{ flex: 0.3 }}>
+    <View style={[styles.container, { width, height }]}>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <Image source={item.image} style={[styles.image]} />
+        <View style={styles.textContainer}>
           <Text style={styles.title}>
             <Text>{item.title}</Text>
             <Text style={{ color: "#E1604D", fontWeight: "bold" }}>
@@ -45,14 +48,27 @@ export default OnBoardingItem;
 
 const styles = StyleSheet.create({
   container: {
-    height: 100 + "%",
-    alignContent: "center",
-    // justifyContent: "center",
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: height * 0.10,
+  },
+  scrollViewContainer: {
+    // flexGrow: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   image: {
     flex: 0.7,
     justifyContent: "center",
     resizeMode: "contain",
+    height: height / 2,
+    width: height / 2,
+  },
+  textContainer: {
+    flex: 0.3,
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontWeight: "600",
@@ -60,13 +76,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "#02013d",
     textAlign: "left",
-    paddingHorizontal: 5 + "%",
-    width: "60%",
+    paddingHorizontal: "5%",
+    // width: "60%",
   },
   description: {
-    fontWeight: "300",
     fontWeight: "bold",
     textAlign: "left",
-    paddingHorizontal: 5 + "%",
+    paddingHorizontal: "5%",
   },
 });

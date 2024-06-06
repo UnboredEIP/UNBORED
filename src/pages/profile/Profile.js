@@ -7,8 +7,10 @@ import {
   TextInput,
   KeyboardAvoidingView,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Dimensions,
   ScrollView,
+  Modal,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Navbar from "../../components/NavigationBar";
@@ -16,7 +18,9 @@ import Icon from "react-native-vector-icons/FontAwesome";
 import Accueil3 from "../Accueil";
 import Buttons from "../../components/Buttons";
 import MyAvatar from "../../components/Avatar";
-import Swiper from 'react-native-swiper';
+import Swiper from "react-native-swiper";
+import FriendsList from "../../components/Modals/Friends";
+import { UbService } from "../../services/UbServices";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -33,6 +37,7 @@ const Profile = ({ navigation }) => {
   const [selectedGlasses, setSelectedGlasses] = useState(null);
   const [selectedCloth, setSelectedCloth] = useState(null);
   const [nbFriends, setNbFriends] = useState(0);
+  const [friends, setFriends] = useState([]);
   const [nbActivity, setNbActivity] = useState(0);
   const [selectedHair, setSelectedHair] = useState("");
   const [selectedBeard, setSelectedBeard] = useState("");
@@ -43,6 +48,8 @@ const Profile = ({ navigation }) => {
   const [clothColor, setClothColor] = useState("");
   const [HairColor, setHairColor] = useState("black");
   const [EyeColor, setEyeColor] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const ubService = new UbService();
   const listHair = [
     "null",
     "calvitie",
@@ -65,7 +72,7 @@ const Profile = ({ navigation }) => {
     "shortwaved",
     "shortflat",
   ];
-  
+
   const listMouth = [
     "null",
     "grimace",
@@ -81,7 +88,7 @@ const Profile = ({ navigation }) => {
     "tongue",
     "smile",
   ];
-  
+
   const listTop = [
     "null",
     "hoodie",
@@ -93,7 +100,7 @@ const Profile = ({ navigation }) => {
     "vneck",
     "overall",
   ];
-  
+
   const listEyebrow = [
     "null",
     "natural",
@@ -105,16 +112,16 @@ const Profile = ({ navigation }) => {
     "sad2",
     "sad",
   ];
-  
+
   const listBeard = [
     "null",
     "medium",
     "majestic",
-    "ligth",
+    "light",
     "mustachemagnum",
     "mustache",
   ];
-  
+
   const listEyes = [
     "null",
     "dizzy",
@@ -153,9 +160,9 @@ const Profile = ({ navigation }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-
+      global.currentScreen = "Profile";
       const profileData = await response.json();
-      console.log("Profile Data:", profileData);
+      // console.log("Profile Data:", profileData);
       setUsername(profileData.user.username);
       setPreferences(profileData.user.preferences);
       setDescription(profileData.user.description);
@@ -168,6 +175,18 @@ const Profile = ({ navigation }) => {
       setSelectedMouth(profileData.user.style.mouth.id);
       setClothColor(profileData.user.style.accessory.color);
       setNbFriends(profileData.user.friends.length);
+
+      if (profileData.user.friends.length > 0) {
+        const users = [];
+        for (const friend of profileData.user.friends) {
+          // console.log("FRIENDS:", friend);
+          const user = await ubService.getUserById(friend._id);
+          if (user) {
+            users.push(user);
+          }
+        }
+        setFriends(users);
+      }
       setNbActivity(profileData.user.reservations.length);
       setHairColor(profileData.user.style.hair.color);
       setImage(
@@ -186,88 +205,158 @@ const Profile = ({ navigation }) => {
 
     // Clear the timeout if the component unmounts before 2 seconds
     return () => clearTimeout(timer);
-  }, []);
-  if (isLoading) {
-    return<Image
-    source={require("../../../assets/loading.gif")}
-    style={{ height: 400, width: 400, alignContent:"center", alignItems:"center", marginTop:200 }}
-  ></Image> ;
+  }, [friends]);
+  if (username !== "" && nbFriends !== friends.length) {
+    return (
+      <Image
+        source={require("../../../assets/loading.gif")}
+        style={{
+          height: 400,
+          width: 400,
+          alignContent: "center",
+          alignItems: "center",
+          marginTop: 200,
+        }}
+      ></Image>
+    );
   } else
-  return (
-    <View style={{ flex: 1 }}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior="padding"
-        enabled={true}
-      >
-        <View style={styles.container}>
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Text style={styles.textAboveImage}>Mon profil UnBored</Text>
-              <TouchableOpacity
-                style={styles.loginBtn}
-                onPress={() => navigation.navigate("Settings")}
+    return (
+      <View style={{ flex: 1 }}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior="padding"
+          enabled={true}
+        >
+          <View style={styles.container}>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text style={styles.textAboveImage}>Mon profil UnBored</Text>
+                <TouchableOpacity
+                  style={styles.loginBtn}
+                  onPress={() => navigation.navigate("Settings")}
+                >
+                  <Icon name="gears" size={20} color={"#E1604D"} />
+                </TouchableOpacity>
+              </View>
+              <Swiper
+                style={styles.swiperContainer}
+                loop={false}
+                nestedScrollEnabled={true}
               >
-                <Icon name="gears" size={20} color={"#E1604D"} />
-              </TouchableOpacity>
-            </View>
-            <Swiper style={styles.swiperContainer} loop={false} nestedScrollEnabled={true}>
-              <View style={styles.slide}>
-                <Image
-                  source={{ uri: image }}
-                  style={{
-                    width: 150,
-                    height: 150,
-                    borderRadius: 10,
-                    marginBottom: 10,
+                <View style={styles.slide}>
+                  <Image
+                    source={{ uri: image }}
+                    style={{
+                      width: 150,
+                      height: 150,
+                      borderRadius: 10,
+                      marginBottom: 10,
+                    }}
+                  />
+                </View>
+                <View style={styles.slide2}>
+                  <MyAvatar
+                    size={120}
+                    colorSkin={avatarColor}
+                    eyes={listEyes[selectedGlasses]}
+                    clothTop={listTop[selectedCloth]}
+                    colorClothingTop={clothColor}
+                    hair={listHair[selectedHair]}
+                    colorHair={HairColor}
+                    colorEye={EyeColor}
+                    beard={listBeard[selectedBeard]}
+                    mouth={listMouth[selectedMouth]}
+                    eyebrow={listEyebrow[selectedEyebrow]}
+                  />
+                </View>
+              </Swiper>
+              <Text style={styles.textBelowImage}>{username}</Text>
+                <View style={styles.numbersContainer}>
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(true);
                   }}
-                />
-              </View>
-              <View style={styles.slide2}>
-                <MyAvatar
-                  size={120}
-                  colorSkin={avatarColor}
-                  eyes={listEyes[selectedGlasses]}
-                  clothTop={listTop[selectedCloth]}
-                  colorClothingTop={clothColor}
-                  hair={listHair[selectedHair]}
-                  colorHair={HairColor}
-                  colorEye={EyeColor}
-                  beard={listBeard[selectedBeard]}
-                  mouth={listMouth[selectedMouth]}
-                  eyebrow={listEyebrow[selectedEyebrow]}
-                />
-              </View>
-            </Swiper>
-            <Text style={styles.textBelowImage}>{username}</Text>
-            <View style={styles.numbersContainer}>
+                  >
               <View style={styles.numberItem}>
                 <Text style={styles.numberValue2}>{nbFriends}</Text>
                 <Text style={styles.numberLabel}>      amis</Text>
               </View>
+                </TouchableOpacity>
               <View style={styles.divider} />
               <View style={styles.numberItem}>
                 <Text style={styles.numberValue}>{nbActivity}</Text>
                 <Text style={styles.numberLabel}>activités</Text>
               </View>
             </View>
-            <View style={styles.dividerhorz} />
-            <Text style={styles.textPreferences}>À propos de moi</Text>
-            <Text style={styles.descriptionpersonne}>{description}</Text>
-            <Text style={styles.textPreferences}>Mes intérêts :</Text>
-            <ScrollView horizontal contentContainerStyle={styles.preferenceRow}   nestedScrollEnabled={true} >
-              {preferences.map((preference, index) => (
-                <Text key={index} style={styles.preferenceItem}>
-                  {preference}
-                </Text>
-              ))}
-            </ScrollView>
+              <View style={styles.dividerhorz} />
+              <Text style={styles.textPreferences}>À propos de moi</Text>
+              <Text style={styles.descriptionpersonne}>{description}</Text>
+              <Text style={styles.textPreferences}>Mes intérêts :</Text>
+              <ScrollView
+                horizontal
+                contentContainerStyle={styles.preferenceRow}
+                nestedScrollEnabled={true}
+              >
+                {preferences.map((preference, index) => (
+                  <Text key={index} style={styles.preferenceItem}>
+                    {preference}
+                  </Text>
+                ))}
+              </ScrollView>
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-      <Navbar navigation={navigation} />
-    </View>
-  );
+        </KeyboardAvoidingView>
+        <Navbar navigation={navigation} />
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,0.5)",
+              }}
+            >
+              <TouchableWithoutFeedback onPress={() => {}}>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 20,
+                    }}
+                  >
+                    <FriendsList
+                      users={friends}
+                      onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate("UserUbPage");
+                      }}
+                    />
+                  </View>
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      </View>
+    );
 };
 
 const styles = StyleSheet.create({
@@ -319,7 +408,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   numberValue2: {
-    marginLeft:20,
+    marginLeft: 20,
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -393,8 +482,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
     overflow: "hidden",
-    right:60,
-    paddingBottom:140,
+    right: 60,
+    paddingBottom: 140,
   },
   loginBtnText: {
     color: "#E1604D",

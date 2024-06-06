@@ -38,6 +38,7 @@ const AvatarCard = ({
   friends,
   //@ts-ignore
   id,
+  onPress,
 }) => {
   const uberservice = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
@@ -85,7 +86,13 @@ const AvatarCard = ({
   }, [isFollowed]);
 
   return (
-    <TouchableOpacity style={styles(size).container}>
+    <TouchableOpacity
+      style={styles(size).container}
+      onPress={() => {
+        global.currentUserId = id;
+        onPress();
+      }}
+    >
       <View style={styles(size).leftSection}>
         <View style={styles(size).avatarContainer}>
           <MyAvatar
@@ -165,6 +172,7 @@ const AvatarCardFriendAccept = ({
   invitations,
   //@ts-ignore
   id,
+  onPress,
 }) => {
   const uberservice = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
@@ -203,7 +211,13 @@ const AvatarCardFriendAccept = ({
   }, [isFollowed]);
 
   return (
-    <TouchableOpacity style={styles(size).container}>
+    <TouchableOpacity
+      style={styles(size).container}
+      onPress={() => {
+        global.currentUserId = id;
+        onPress();
+      }}
+    >
       <View style={styles(size).leftSection}>
         <View style={styles(size).avatarContainer}>
           <MyAvatar

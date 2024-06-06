@@ -150,8 +150,8 @@ const Accueil3 = ({ navigation }) => {
         }
       } catch (error) {
         console.error("Error fetchData:", error);
-        // await AsyncStorage.removeItem("authToken");
-        // navigation.replace("Login2");
+        await AsyncStorage.removeItem("authToken");
+        navigation.replace("Login2");
       }
     };
 
