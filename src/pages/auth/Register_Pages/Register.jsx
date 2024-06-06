@@ -54,9 +54,9 @@ const Register = ({ navigation }) => {
   const [description, setDescription] = useState("");
   const [birthdate, setBirthdate] = useState("");
 
-  if (!fontsLoaded) {
-    return <LoadingPage />;
-  }
+  // if (!fontsLoaded) {
+  //   return <LoadingPage />;
+  // }
 
   // //A décommenter au moment de build
   // GoogleSignin.configure({

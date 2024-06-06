@@ -33,9 +33,9 @@ const RegisterStep2 = ({ navigation }) => {
     SourceSansPro_600SemiBold,
   });
 
-  if (!fontsLoaded) {
-    return <LoadingPage />;
-  }
+  // if (!fontsLoaded) {
+  //   return <LoadingPage />;
+  // }
 
   return (
     <View style={styles().container}>

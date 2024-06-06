@@ -168,7 +168,7 @@ const FriendsList = ({ users, onPress }) => {
         ))
       ) : (
         <View>
-          <Text>Tu n'as pas d'amis akhy !</Text>
+          <Text>Tu n'as pas encore d'amis {"):"}</Text>
         </View>
       )}
     </View>
