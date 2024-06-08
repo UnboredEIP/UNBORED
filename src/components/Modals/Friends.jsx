@@ -152,18 +152,18 @@ const FriendsList = ({ users, onPress }) => {
               colorClothingTop={user.style.accessory.color}
               colorBeard={user.style.beard.color}
               eyes={listEyes[user.style.eyes.id]}
-              // eyebrow={
-              //   user.style.eyebrows.id
-              //     ? listEyebrow[user.style.eyebrows.id]
-              //     : listEyebrow[1]
-              // }
+              eyebrow={
+                user.style.eyebrows.id
+                  ? listEyebrow[user.style.eyebrows.id]
+                  : listEyebrow[1]
+              }
               mouth={listMouth[user.style.mouth.id]}
               beard={listBeard[user.style.beard.id]}
               invitations={user.invitations}
               friends={user.friends}
               id={user._id}
-              onPress={() => {}}
-              // onPress={onPress}
+              // onPress={() => {}}
+              onPress={onPress}
             />
           </View>
         ))
