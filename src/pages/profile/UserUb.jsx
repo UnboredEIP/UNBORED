@@ -245,7 +245,53 @@ const UserUbPage = ({ navigation }) => {
 
         {/* <Image style={styles().image} source={{ uri: image.url }} /> */}
         <Text style={styles().title}>{userData.username}</Text>
-        <Text style={styles().description}>{userData.description}</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            flex: 1,
+            alignSelf: "center",
+          }}
+        >
+          <View style={styles().followersContainer}>
+            <Text
+              style={{ ...styles().network, fontSize: screenHeight * 0.03 }}
+            >
+              {userData.friends.length}
+            </Text>
+            <Text style={styles().network}>ami(s)</Text>
+          </View>
+          <View style={styles().followersContainer}>
+            <Text
+              style={{ ...styles().network, fontSize: screenHeight * 0.03 }}
+            >
+              {userData.reservations.length}
+            </Text>
+            <Text style={styles().network}>activité(s)</Text>
+          </View>
+        </View>
+        <Text
+          style={{
+            fontSize: screenHeight * 0.03,
+            alignSelf: "flex-start",
+            marginLeft: screenWidth * 0.04,
+            marginBottom: screenWidth * 0.06,
+          }}
+        >
+          Biography
+        </Text>
+        <Text style={{ ...styles().description }}>{userData.description}</Text>
+
+        <Text
+          style={{
+            fontSize: screenHeight * 0.03,
+            alignSelf: "flex-start",
+            marginLeft: screenWidth * 0.04,
+            marginVertical: screenWidth * 0.06,
+          }}
+        >
+          Intérêts
+        </Text>
         <View
           style={{
             position: "relative",
@@ -385,19 +431,36 @@ const styles = (len) => {
       fontSize: screenHeight * 0.04,
       paddingTop: screenHeight * 0.01,
     },
-    description: {
+    network: {
       textAlign: "center",
       // color: "#E1604D",
       // fontWeight: "6",
-      fontSize: screenHeight * 0.02,
+      fontSize: screenHeight * 0.015,
       // paddingTop: screenHeight * 0.01,
+    },
+    description: {
+      fontSize: screenHeight * 0.02,
+      alignSelf: "flex-start",
+      marginLeft: screenWidth * 0.04,
+      color: "grey",
+      // paddingTop: screenHeight * 0.01,
+    },
+    followersContainer: {
+      // alignSelf: "flex-start",
+      // flex: 1,
+      flexDirection: "column",
+      marginHorizontal: screenWidth * 0.01,
+      // paddingLeft: screenWidth * 0.015,
+      // paddingTop: screenHeight * 0.01,
+      // alignItems: "center",
     },
     categoryContainer: {
       alignSelf: "flex-start",
       flexDirection: "row",
-      paddingLeft: screenWidth * 0.015,
+      // paddingLeft: screenWidth * 0.015,
       paddingTop: screenHeight * 0.01,
       alignItems: "center",
+      marginLeft: screenWidth * 0.04,
     },
     category: {
       width: screenHeight * 0.1,
