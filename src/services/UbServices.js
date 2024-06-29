@@ -150,8 +150,8 @@ export class UbService {
   getUserById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/profile?id=${id}`, {
-        method: "POST",
+      const response = await fetch(`${API_URL}/profile/get?id=${id}`, {
+        method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${authToken}`,
