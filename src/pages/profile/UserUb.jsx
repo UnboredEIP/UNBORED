@@ -255,15 +255,31 @@ const UserUbPage = ({ navigation }) => {
         >
           <View style={styles().followersContainer}>
             <Text
-              style={{ ...styles().network, fontSize: screenHeight * 0.03 }}
+              style={{
+                ...styles().network,
+                fontSize: screenHeight * 0.03,
+                marginHorizontal: screenWidth * 0.08,
+              }}
             >
               {userData.friends.length}
             </Text>
             <Text style={styles().network}>ami(s)</Text>
           </View>
+
+          <View
+            style={{
+              width: 1,
+              height: 30,
+              backgroundColor: "#e0e0e0",
+            }}
+          />
           <View style={styles().followersContainer}>
             <Text
-              style={{ ...styles().network, fontSize: screenHeight * 0.03 }}
+              style={{
+                ...styles().network,
+                fontSize: screenHeight * 0.03,
+                marginHorizontal: screenWidth * 0.08,
+              }}
             >
               {userData.reservations.length}
             </Text>
@@ -278,7 +294,7 @@ const UserUbPage = ({ navigation }) => {
             marginBottom: screenWidth * 0.06,
           }}
         >
-          Biography
+          Biographie
         </Text>
         <Text style={{ ...styles().description }}>{userData.description}</Text>
 
@@ -343,6 +359,16 @@ const UserUbPage = ({ navigation }) => {
             </View>
           </ScrollView>
         </View>
+        <Text
+          style={{
+            fontSize: screenHeight * 0.03,
+            alignSelf: "flex-start",
+            marginLeft: screenWidth * 0.04,
+            marginVertical: screenWidth * 0.06,
+          }}
+        >
+          Prochaines Activités
+        </Text>
         <View
           style={{
             marginVertical: 10,
