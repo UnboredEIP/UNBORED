@@ -141,7 +141,7 @@ const EventCard = ({
             textAlign: "center",
             color: "#E1604D",
             fontWeight: 600,
-            fontSize: size * 0.033,
+            fontSize: size * 0.03,
           }}
         >
           {formatDate(date)}
