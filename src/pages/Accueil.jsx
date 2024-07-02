@@ -432,23 +432,5 @@ const Accueil3 = ({ navigation }) => {
     );
 };
 
-const styles = (top = screenHeight / 3, left = 100, right, bottom) => {
-  return StyleSheet.create({
-    svgBody: {
-      position: "absolute",
-      top: top,
-      left: left,
-      right: right,
-      bottom: bottom,
-    },
-    svgTop: {
-      position: "absolute",
-      top: top + 134,
-      left: left - 32,
-      right: right,
-      bottom: bottom,
-    },
-  });
-};
 
 export default Accueil3;

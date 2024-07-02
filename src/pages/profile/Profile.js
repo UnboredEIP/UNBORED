@@ -1,28 +1,23 @@
-import React, { useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
+  Dimensions,
+  Image, KeyboardAvoidingView,
+  Modal,
+  ScrollView,
   StyleSheet,
-  Image,
-  TextInput,
-  KeyboardAvoidingView,
+  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  Dimensions,
-  ScrollView,
-  Modal,
+  View
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Navbar from "../../components/NavigationBar";
-import Icon from "react-native-vector-icons/FontAwesome";
-import Accueil3 from "../Accueil";
-import Buttons from "../../components/Buttons";
-import MyAvatar from "../../components/Avatar";
 import Swiper from "react-native-swiper";
+import Icon from "react-native-vector-icons/FontAwesome";
+import MyAvatar from "../../components/Avatar";
 import FriendsList from "../../components/Modals/Friends";
+import Navbar from "../../components/NavigationBar";
 import { UbService } from "../../services/UbServices";
 
-const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 const Profile = ({ navigation }) => {
