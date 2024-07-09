@@ -20,11 +20,36 @@ export class UbService {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const responseData = await response.json();
-      // console.log(responseData);
+
       return responseData.events.filter((event) => !event.private);
       //   await AsyncStorage.setItem("allEvents", responseData.events);
     } catch (error) {
       console.error("Error when try to get events:", error);
+    }
+  };
+  getSubscribedEvents = async () => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/reservations`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      // console.log(responseData.reservations);
+      return responseData.reservations;
+      //   await AsyncStorage.setItem("allEvents", responseData.events);
+    } catch (error) {
+      console.error("Error when try to get subscribed events:", error);
     }
   };
   joinEvent = async (events) => {

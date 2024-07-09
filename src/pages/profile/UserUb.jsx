@@ -22,6 +22,7 @@ import LoadingPage from "../Loading";
 import { BackArrow } from "../../../assets/avatars/avatars";
 import Swiper from "react-native-swiper";
 import MyAvatar from "../../components/Avatar";
+import EventCard from "../../components/Event/EventCard";
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
@@ -155,7 +156,9 @@ const UserUbPage = ({ navigation }) => {
   const [image, setImage] = useState(defaultImage);
   const [participents, setParticipents] = useState([]);
   const [isEnroll, setIsEnroll] = useState(NOT_ENROLL);
+  const [events, setEvents] = useState([]);
   const ubService = new UbService();
+  const [images, setImages] = useState([defaultImage]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -165,9 +168,18 @@ const UserUbPage = ({ navigation }) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const responseData = response;
+        const eventsObj = await ubService.getSubscribedEvents();
 
+        if (eventsObj) {
+          setEvents(eventsObj);
+          const imagePromises = eventsObj.map(async (event) => {
+            const img = await ubService.getImage(event.pictures[0].id);
+            return img;
+          });
+          const imageResults = await Promise.all(imagePromises);
+          setImages(imageResults);
+        }
         if (responseData) setUserData(responseData);
-        // userIsEnroll(global.reservedEvents, global.currentEventId);
 
         console.log("USER style:", responseData);
         if (responseData.profilePhoto) {
@@ -180,7 +192,7 @@ const UserUbPage = ({ navigation }) => {
     };
 
     fetchData();
-  }, [navigation]);
+  }, [navigation, events]);
 
   if (
     userData === null ||
@@ -367,8 +379,61 @@ const UserUbPage = ({ navigation }) => {
             marginVertical: screenWidth * 0.06,
           }}
         >
-          Prochaines Activités
+          Prochaine{"(s)"} Activité{"(s)"}
         </Text>
+
+        <View
+          style={{
+            position: "relative",
+            marginTop: screenHeight * 0.02,
+            flex: 1,
+            height: 50 + "%",
+            // width: 90 + "%",
+            // paddingHorizontal: 20,
+            alignItems: "center",
+            marginBottom: 7 + "%",
+          }}
+        >
+          <ScrollView
+            showsHorizontalScrollIndicator={false}
+            nestedScrollEnabled={true}
+            horizontal={true}
+          >
+            {events.length > 0 ? (
+              events
+                // .filter((event) =>
+                //   event.categories.some((category) =>
+                //     preferences.includes(category)
+                //   )
+                // )
+                .map((event, index) => (
+                  <EventCard
+                    onPress={() => {
+                      navigation.navigate("Event");
+                    }}
+                    key={index}
+                    name={event.name}
+                    address={event.address}
+                    pictures={images[index].url}
+                    categories={event.categories}
+                    date={event.start_date}
+                    participents={event.participents.length}
+                    id={event._id}
+                    handleRefresh={() => {
+                      handleRefresh(0);
+                    }}
+                    rate={event.rate}
+                    // isSaved={isActivitySaved(event._id) === true ? true : false}
+                    // rate={ubService.getEventRate(event._id)}
+                  />
+                ))
+            ) : (
+              <View>
+                <Text>Pas d'activité</Text>
+              </View>
+            )}
+          </ScrollView>
+        </View>
         <View
           style={{
             marginVertical: 10,
