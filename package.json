@@ -38,7 +38,7 @@
     "eas": "^0.1.0",
     "eas-cli": "^8.0.0",
     "emotion": "^11.0.0",
-    "expo": "~51.0.7",
+    "expo": "^51.0.32",
     "expo-app-loading": "^2.1.1",
     "expo-auth-session": "~5.5.2",
     "expo-build-properties": "~0.12.1",

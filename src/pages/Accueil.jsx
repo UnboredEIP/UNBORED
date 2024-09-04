@@ -17,6 +17,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UbService } from "../services/UbServices";
 import EventCard from "../components/Event/EventCard";
 import LoadingPage from "./Loading";
+import SearchFilter from "../components/SearchFilter";
+
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 const MAX_NAME_LENGTH = screenWidth / 32;
@@ -27,6 +29,15 @@ const truncateName = (name) => {
   }
   return name;
 };
+
+const data = [
+  { id: "1", name: "Idrissa" },
+  { id: "2", name: "Yacine" },
+  { id: "3", name: "Steeven" },
+  { id: "4", name: "Rémi" },
+  { id: "5", name: "Jimy" },
+  { id: "6", name: "Pottin" },
+];
 
 const Accueil3 = ({ navigation }) => {
   // const [fontsLoaded] = useFonts({
@@ -185,6 +196,7 @@ const Accueil3 = ({ navigation }) => {
           // marginHorizontal: screenHeight * 0.01,
         }}
       >
+        
         <ScrollView
           horizontal={false}
           nestedScrollEnabled={true}
@@ -218,6 +230,7 @@ const Accueil3 = ({ navigation }) => {
                   marginHorizontal: 5,
                 }}
               ></View>
+              
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
                   style={{
@@ -275,7 +288,7 @@ const Accueil3 = ({ navigation }) => {
                 // alignItems: "center",
               }}
             >
-              {/* <Image src="../../assets/avatars/avatars/body/blazer.svg"></Image> */}
+              <Image src="../../assets/avatars/avatars/body/blazer.svg"></Image>
               <Text
                 style={{
                   fontWeight: "bold",
@@ -287,6 +300,7 @@ const Accueil3 = ({ navigation }) => {
               >
                 Ces activités sont faites pour toi !
               </Text>
+              <SearchFilter data={data} />
               <TouchableOpacity
                 onPress={() => navigation.replace("TimelineEventsPage")}
               >
@@ -431,6 +445,5 @@ const Accueil3 = ({ navigation }) => {
       </View>
     );
 };
-
 
 export default Accueil3;
