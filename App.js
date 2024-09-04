@@ -81,7 +81,7 @@ class InitialScreen extends React.Component {
       return;
     }
     const initialRoute = await checkKeys("authToken");
-    this.props.navigation.replace(initialRoute ? "Accueil3" : "Login2");
+    this.props.navigation.replace(initialRoute ? "Accueil3" : "OnBoarding3");
   }
 
   render() {
