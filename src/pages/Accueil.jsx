@@ -288,7 +288,6 @@ const Accueil3 = ({ navigation }) => {
                 // alignItems: "center",
               }}
             >
-              <Image src="../../assets/avatars/avatars/body/blazer.svg"></Image>
               <Text
                 style={{
                   fontWeight: "bold",

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
 
 interface Item {
   id: string;
@@ -35,13 +36,13 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
   data,
   placeholder = "Rechercher...",
   borderColor = "#E1604D",
-  inputHeight = 40,
+  inputHeight = screenHeight * 0.05,
   inputTextColor = "black",
   inputBackgroundColor = "white",
   itemTextColor = "black",
   itemBackgroundColor = "white",
-  itemHeight = 50,
-  itemWidth = screenWidth - 40,
+  itemHeight = screenHeight * 0.05,
+  itemWidth = screenWidth * 1.5,
   itemFontSize = 18,
   itemBorderColor = "gray",
 }) => {
@@ -61,7 +62,6 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
     return StyleSheet.create({
       container: {
         flex: 1,
-        padding: 20,
       },
       inputContainer: {
         flexDirection: "row",
@@ -117,15 +117,19 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
           }}
         />
       </View>
-      <FlatList
-        data={filteredData}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={dynamicStyles.item}>
-            <Text style={dynamicStyles.itemText}>{item.name}</Text>
-          </View>
-        )}
-      />
+      {searchText === "" ? (
+        <View></View>
+      ) : (
+        <FlatList
+          data={filteredData}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={dynamicStyles.item}>
+              <Text style={dynamicStyles.itemText}>{item.name}</Text>
+            </View>
+          )}
+        />
+      )}
     </SafeAreaView>
   );
 };
