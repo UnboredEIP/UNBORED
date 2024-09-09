@@ -172,6 +172,29 @@ export class UbService {
       console.error("Error when try to get event by id:", error);
     }
   };
+  getUserEvents = async () => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      return responseData.reservations;
+    } catch (error) {
+      console.error("Error when try to get event from user:", error);
+    }
+  };
   getUserById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");

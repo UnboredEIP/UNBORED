@@ -119,7 +119,8 @@ const MyAvatar = ({
   //@ts-ignore
   colorSkin, //= "#D08B5B", C bon
   //@ts-ignore
-  colorEye, //="green", C bon
+  colorEye = "black", //="green", C bon
+  //@ts-ignore
   colorHair = "black",
   colorBeard = colorHair, // C bon
   //@ts-ignore

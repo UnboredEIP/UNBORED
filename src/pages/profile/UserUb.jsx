@@ -192,7 +192,7 @@ const UserUbPage = ({ navigation }) => {
     };
 
     fetchData();
-  }, [navigation, events]);
+  }, [navigation]);
 
   if (
     userData === null ||
@@ -247,7 +247,7 @@ const UserUbPage = ({ navigation }) => {
               colorClothingTop={userData.style.accessory.color}
               hair={listHair[userData.style.hair.id]}
               colorHair={userData.style.hair.color}
-              colorEye={userData.style.eyes.color}
+              // colorEye={userData.style.eyes.color}
               beard={listBeard[userData.style.beard.id]}
               mouth={listMouth[userData.style.mouth.id]}
               eyebrow={listEyebrow[userData.style.eyebrows.id]}

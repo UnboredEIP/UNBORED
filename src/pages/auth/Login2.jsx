@@ -23,7 +23,7 @@ import LoadingPage from "../Loading";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-//A décommenter au moment de build
+// //A décommenter au moment de build
 // import {
 //   GoogleSignin,
 //   GoogleSigninButton,

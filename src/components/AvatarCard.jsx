@@ -26,7 +26,7 @@ const AvatarCard = ({
   hair,
   beard,
   colorSkin = "#E1604D",
-  colorEye = "green",
+  colorEye = "black",
   colorHair = "black",
   colorClothingTop = "black",
   mouth,
@@ -38,7 +38,7 @@ const AvatarCard = ({
   friends,
   //@ts-ignore
   id,
-  onPress,
+  onPress = () => {},
 }) => {
   const uberservice = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
@@ -172,7 +172,7 @@ const AvatarCardFriendAccept = ({
   invitations,
   //@ts-ignore
   id,
-  onPress,
+  onPress = () => {},
 }) => {
   const uberservice = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
