@@ -133,8 +133,19 @@ const Accueil3 = ({ navigation }) => {
           setImages(imageResults);
 
           //
-          const reservedEvents2 = responseData.user.reservations;
 
+          const tmpReservedEvents = await ubService.getUserEvents();
+          if (tmpReservedEvents) {
+            console.log("DATA FROM NEW ROUTE:", tmpReservedEvents);
+            // setReservedEvents(tmpReservedEvents);
+            // const imagePromises2 = tmpReservedEvents.map(async (event) => {
+            //   const img = await ubService.getImage(event.pictures[0].id);
+            //   return img;
+            // });
+            // const imageResults2 = await Promise.all(imagePromises2);
+            // setFavouritesImages(imageResults2);
+          }
+          const reservedEvents2 = responseData.user.reservations;
           global.reservedEvents = responseData.user.reservations;
           if (reservedEvents2 !== null) {
             if (reservedEvents2.length > 0 && refresh === 0) {
@@ -196,7 +207,6 @@ const Accueil3 = ({ navigation }) => {
           // marginHorizontal: screenHeight * 0.01,
         }}
       >
-        
         <ScrollView
           horizontal={false}
           nestedScrollEnabled={true}
@@ -230,7 +240,7 @@ const Accueil3 = ({ navigation }) => {
                   marginHorizontal: 5,
                 }}
               ></View>
-              
+
               <View style={{ flexDirection: "row" }}>
                 <TouchableOpacity
                   style={{
