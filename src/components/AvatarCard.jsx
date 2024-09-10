@@ -237,6 +237,7 @@ const AvatarCardFriendAccept = ({
           />
         </View>
         <Text style={styles(size).name}>{truncateName(name)}</Text>
+     
       </View>
       <Buttons
         texte="Accepter"
