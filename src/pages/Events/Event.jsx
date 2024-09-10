@@ -8,7 +8,6 @@ import {
   TouchableOpacity,
   StyleSheet,
   Modal,
-  TouchableWithoutFeedback,
 } from "react-native";
 import vector from "../../../asset/Vector.png";
 import loc from "../../../asset/location_on.png";
@@ -60,19 +59,23 @@ const renderStars = (ratings) => {
   for (let i = 1; i <= maxStars; i++) {
     if (i <= averageStars) {
       stars.push(
-        <Image
-          key={i}
-          style={{ width: screenHeight * 0.04, height: screenHeight * 0.04 }}
-          source={startFilled}
-        />
+        <TouchableOpacity key={i}>
+          <Image
+            key={i}
+            style={{ width: screenHeight * 0.04, height: screenHeight * 0.04 }}
+            source={startFilled}
+          />
+        </TouchableOpacity>
       );
     } else {
       stars.push(
-        <Image
-          key={i}
-          style={{ width: screenHeight * 0.04, height: screenHeight * 0.04 }}
-          source={startUnfilled}
-        />
+        <TouchableOpacity key={i}>
+          <Image
+            key={i}
+            style={{ width: screenHeight * 0.04, height: screenHeight * 0.04 }}
+            source={startUnfilled}
+          />
+        </TouchableOpacity>
       );
     }
   }
@@ -86,6 +89,8 @@ const Event = ({ navigation }) => {
   const [participents, setParticipents] = useState([]);
   const [isEnroll, setIsEnroll] = useState(NOT_ENROLL);
   const ubService = new UbService();
+
+  const date = new Date().toISOString().split("T")[0];
 
   function userIsEnroll(events, id) {
     // for (const invitation of invitations) {
@@ -140,7 +145,7 @@ const Event = ({ navigation }) => {
   if (eventData === null || image === null) {
     return <LoadingPage />;
   } else {
-    return (
+    return formatDate(eventData.start_date) > date ? (
       <ScrollView contentContainerStyle={styles.container}>
         <TouchableOpacity
           style={{
@@ -177,6 +182,7 @@ const Event = ({ navigation }) => {
         <Text style={styles.time}>
           Heure début: {extractTime(eventData.start_date)}
         </Text>
+        <Text style={styles.description}>{eventData.description}</Text>
 
         {isEnroll == IS_ENROLL ? (
           <Buttons
@@ -268,6 +274,7 @@ const Event = ({ navigation }) => {
             setModalVisible(true);
           }}
         />
+
         <View style={styles.locationContainer}>
           <View style={styles.locationTextContainer}>
             <Image style={styles.locationIcon} source={loc} />
@@ -285,7 +292,7 @@ const Event = ({ navigation }) => {
             setModalVisible(false);
           }}
         >
-          <TouchableWithoutFeedback
+          <TouchableOpacity
             onPress={() => {
               setModalVisible(false);
             }}
@@ -298,7 +305,7 @@ const Event = ({ navigation }) => {
                 backgroundColor: "rgba(0,0,0,0.5)",
               }}
             >
-              <TouchableWithoutFeedback>
+              <TouchableOpacity>
                 <View
                   style={{
                     flex: 1,
@@ -315,9 +322,159 @@ const Event = ({ navigation }) => {
                     <ParticipantsActivity participents={participents} />
                   </View>
                 </View>
-              </TouchableWithoutFeedback>
+              </TouchableOpacity>
             </View>
-          </TouchableWithoutFeedback>
+          </TouchableOpacity>
+        </Modal>
+      </ScrollView>
+    ) : (
+      //
+      //
+      //
+      //
+      //
+      //
+      //La date de l'event est passé
+      //
+      //
+      //
+      //
+      //
+      //
+      <ScrollView contentContainerStyle={styles.container}>
+        <TouchableOpacity
+          style={{
+            position: "absolute",
+            top: screenHeight / 15,
+            left: screenWidth / 20,
+            zIndex: 1,
+          }}
+          onPress={() => navigation.replace(global.currentScreen)}
+        >
+          <BackArrow
+            style={{
+              width: screenWidth / 12,
+              height: screenWidth / 12,
+              color: "white",
+            }}
+          />
+        </TouchableOpacity>
+        <Image style={styles.image} source={{ uri: image.url }} />
+        <View style={styles.categoryContainer}>
+          <View style={styles.participantsContainer}>
+            <Text style={styles.participantsText}>
+              {eventData.participents.length} personne(s)
+            </Text>
+          </View>
+          <TouchableOpacity>
+            <View style={styles.category}>
+              <Text style={styles.categoryText}>{eventData.categories[0]}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.title}>{eventData.name}</Text>
+        <Text style={styles.date}>{formatDate(eventData.start_date)}</Text>
+        <Text style={styles.time}>
+          Heure début: {extractTime(eventData.start_date)}
+        </Text>
+
+        {isEnroll == IS_ENROLL ? (
+          <View></View>
+        ) : (
+          <Buttons
+            texte="Rejoindre activité"
+            onPress={async () => {
+              const response = await ubService.joinEvent([
+                global.currentEventId,
+              ]);
+              if (response == true) {
+                setIsEnroll(IS_ENROLL);
+                global.reservedEvents.push(global.currentEventId);
+                console.log("NEW ACTIVITY JOIN:", eventData.name);
+                Toast.show("Activité rejoints", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.BOTTOM,
+                  backgroundColor: "green",
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                });
+              } else {
+                console.log("ERROR WHEN JOIN ACTIVITY");
+                Toast.show("Veuillez réessayez", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.BOTTOM,
+                  backgroundColor: "red",
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                });
+              }
+            }}
+          />
+        )}
+        <View
+          style={{
+            marginVertical: 10,
+          }}
+        />
+        <Buttons
+          texte="Voir les participants"
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        />
+
+        <View style={styles.locationContainer}>
+          <View style={styles.locationTextContainer}>
+            <Image style={styles.locationIcon} source={loc} />
+            <Text style={styles.locationText}>{eventData.address}</Text>
+          </View>
+        </View>
+        <View style={styles.ratingContainer}>
+          {renderStars(eventData.rate)}
+        </View>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(false);
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              setModalVisible(false);
+            }}
+          >
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                backgroundColor: "rgba(0,0,0,0.5)",
+              }}
+            >
+              <TouchableOpacity>
+                <View
+                  style={{
+                    flex: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <View
+                    style={{
+                      backgroundColor: "white",
+                      borderRadius: 20,
+                    }}
+                  >
+                    <ParticipantsActivity participents={participents} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         </Modal>
       </ScrollView>
     );
@@ -361,8 +518,16 @@ const styles = StyleSheet.create({
     textAlign: "left",
     color: "black",
     fontWeight: "500",
-    fontSize: screenHeight * 0.04,
+    fontSize: screenHeight * 0.03,
     marginTop: screenHeight * 0.017,
+  },
+  description: {
+    textAlign: "left",
+    color: "black",
+    fontWeight: "50",
+    fontSize: screenHeight * 0.017,
+    marginVertical: screenHeight * 0.017,
+    paddingHorizontal: screenWidth * 0.02,
   },
   categoryContainer: {
     alignSelf: "flex-start",
