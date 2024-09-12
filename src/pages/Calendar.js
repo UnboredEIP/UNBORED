@@ -6,11 +6,13 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
+  Dimensions,
   ActivityIndicator,
 } from "react-native";
 import Navbar from "../components/NavigationBar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Moment from "moment";
+const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
 
 const Calendar = ({ navigation }) => {
   const [selectedDay, setSelectedDay] = useState(null);
@@ -344,6 +346,7 @@ const Calendar = ({ navigation }) => {
                   formattedDayOnly === formattedDayDay
                 ) {
                   filteredEvents.push({
+                    mois:formattedMonth,
                     heuredebut: hours,
                     minutesdebut: minutes,
                     heurefin: hours2,
@@ -369,37 +372,36 @@ const Calendar = ({ navigation }) => {
   );
 
   const MonthDaysList = () => {
-    const today = new Date();
-    const currentDay = today.getUTCDate();
-    console.log("filtered",filteredEvents);
-    const lastDayOfMonth = new Date(today.getUTCFullYear(), today.getUTCMonth() + 1, 0).getUTCDate();
-    const lastDayOfNextMonth = new Date(today.getUTCFullYear(), today.getUTCMonth() + 2, 0).getUTCDate();
-    let data = Array.from({ length: Math.min(31, lastDayOfMonth - currentDay + 1) }, (_, index) => currentDay + index);
-    if (data.length < 31) {
-        const daysToAdd = 31 - data.length;
-        data = data.concat(Array.from({ length: daysToAdd }, (_, index) => index + 1));
-    }
-
+    console.log(filteredEvents);
+    
+    // Filter events for the current month
+    const monthEvents = filteredEvents.filter(event => {
+      const currentMonth = new Date().getMonth() + 1;
+      const eventMonth = parseInt(event.mois, 10); // Convert event.mois to an integer
+      return eventMonth === currentMonth;
+    });
+  
+    // Sort events by date (earliest first)
+    monthEvents.sort((a, b) => parseInt(a.date, 10) - parseInt(b.date, 10));
+  
+    console.log("List of events for the month:", monthEvents);
+  
     return (
-       <FlatList
-         data={data}
-         numColumns={8}
-         renderItem={({ item }) => (
-           <TouchableOpacity
-             style={[
-               styles.monthDayItem,
-               item === selectedDay && styles.selectedMonthDayItem,
-             ]}
-             onPress={() => handleDayPress(item)}
-           >
-             <Text style={styles.monthDayNumber}>{item}</Text>
-           </TouchableOpacity>
-         )}
-         keyExtractor={(item) => item.toString()}
-         contentContainerStyle={styles.centeredMonthDaysContainer}
-       />
+      <View style={styles.centeredMonthDaysContainer}>
+        <Text style={styles.brutText}>This is some brute text for the month view.</Text>
+        {monthEvents.map((event, index) => {
+          const formattedDate = `${event.date.padStart(2, '0')}/${event.mois.padStart(2, '0')}`;
+          return (
+            <Text key={index} style={styles.eventNameText}>
+              {`${event.name} - ${formattedDate}`}
+            </Text>
+          );
+        })}
+      </View>
     );
-};
+  };
+  
+  
 
 
   return (
@@ -453,13 +455,13 @@ const Calendar = ({ navigation }) => {
           style={styles.daysOfWeekContainer}
           extraData={allEvents} // Pass allEvents as extraData to force re-render when allEvents changes
         />
-      ) : (
-        <MonthDaysList />
+      ) : (null
       )}
+
 <View style={styles.detailsContainer}>
   {selectedDay ? (
     <>
-      <Text style={styles.detailsText}>Détail pour la journée !</Text>
+      <Text style={styles.detailsText}>Votre calendrier UnBored !</Text>
       {filteredEvents.length > 0 ? (
         <>
           <FlatList
@@ -485,15 +487,9 @@ const Calendar = ({ navigation }) => {
             )}
             keyExtractor={(item, index) => index.toString()}
           />
-          {viewMode === 'week' ? (
+          {viewMode === "week" ? (
             <HoursGrid selectedDay={formattedSelectedDayNumber} />
-          ) : (
-            <>
-              {selectedDay && (
-                <HoursGrid selectedDay={selectedDay < 10 ? "0" + selectedDay : selectedDay.toString()} />
-              )}
-            </>
-          )}
+          ) : null}
         </>
       ) : (
         <Text style={styles.noDetailsText}>
@@ -502,6 +498,11 @@ const Calendar = ({ navigation }) => {
       )}
     </>
   ) : null}
+
+  {/* Display the MonthDaysList component with brute text when in month view mode */}
+  {viewMode === "month" && (
+    <MonthDaysList />
+  )}
 </View>
 
 
@@ -716,6 +717,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(211, 211, 211, 0.2)",
     borderRadius: 20,
+    padding: 20,
+  },
+  eventNameText: {
+    fontSize: 16,
+    color: 'black',
+    marginTop: 5,
+    textAlign: 'center',
   },
 });
 

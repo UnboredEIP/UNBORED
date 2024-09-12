@@ -8,6 +8,7 @@ import {
   Linking,
   Modal,
   Button,
+  TextInput,
 } from "react-native";
 import TinderCard from "react-tinder-card";
 import Navbar from "../components/NavigationBar";
@@ -19,10 +20,11 @@ const Activities = ({ navigation }) => {
   const [data, setData] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(9);
   const [swipeDirection, setSwipeDirection] = useState(null);
-  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false); // state for filter modal visibility
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
   const [dataUrl, setDataUrl] = useState(
     "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=group%3A%22Parcs%20et%20jardins%22"
-  ); // default URL
+  );
+  const [zipcode, setZipcode] = useState(""); // State for zipcode input
 
   const swiped = (direction, nameToDelete, index) => {
     console.log("prout", direction);
@@ -66,7 +68,7 @@ const Activities = ({ navigation }) => {
     if (str) {
       return str.split(charToRemove).join("");
     }
-  }
+  };
 
   function formatDateToISO(originalDate) {
     if (originalDate) {
@@ -145,6 +147,14 @@ const Activities = ({ navigation }) => {
   useEffect(() => {
     fetchData(dataUrl);
   }, [dataUrl]);
+
+  const applyZipcodeFilter = () => {
+    setDataUrl(
+      `https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=address_zipcode%3A%22${zipcode}%22`
+    );
+    setIsFilterModalVisible(false);
+    setCurrentCardIndex(9);
+  };
 
   return (
     <View style={styles.container}>
@@ -236,7 +246,18 @@ const Activities = ({ navigation }) => {
       >
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Filter Activities</Text>
+            <Text style={styles.modalTitle}>Filtre tes Activités !</Text>
+            <TextInput
+              style={styles.zipcodeInput}
+              placeholder="Entrez le code postal"
+              onChangeText={(text) => setZipcode(text)}
+            />
+            <TouchableOpacity
+              style={styles.filterOptionButton2}
+              onPress={applyZipcodeFilter}
+            >
+              <Text style={styles.filterOptionText}>Filtrer par Code Postal</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.filterOptionButton}
               onPress={() => {
@@ -246,7 +267,7 @@ const Activities = ({ navigation }) => {
                 setIsFilterModalVisible(false);
               }}
             >
-              <Text style={styles.filterOptionText}>Filter 1</Text>
+              <Text style={styles.filterOptionText}>Parcs & Jardins</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.filterOptionButton}
@@ -257,14 +278,35 @@ const Activities = ({ navigation }) => {
                 setIsFilterModalVisible(false);
               }}
             >
-              <Text style={styles.filterOptionText}>Filter 2</Text>
+              <Text style={styles.filterOptionText}>Bibliothèques</Text>
             </TouchableOpacity>
-            {/* Add more filter buttons as needed */}
+            <TouchableOpacity
+              style={styles.filterOptionButton}
+              onPress={() => {
+                setDataUrl(
+                  "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=tags%3A%22Concert%22"
+                );
+                setIsFilterModalVisible(false);
+              }}
+            >
+              <Text style={styles.filterOptionText}>Concerts</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.filterOptionButton}
+              onPress={() => {
+                setDataUrl(
+                  "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=tags%3A%22Jeux%202024%22"
+                );
+                setIsFilterModalVisible(false);
+              }}
+            >
+              <Text style={styles.filterOptionText}>JO 2024</Text>
+            </TouchableOpacity>
             <TouchableOpacity
               style={styles.filterOptionButton}
               onPress={() => setIsFilterModalVisible(false)}
             >
-              <Text style={styles.filterOptionText}>Close</Text>
+              <Text style={styles.filterOptionText2}>Fermer</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -272,7 +314,6 @@ const Activities = ({ navigation }) => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
@@ -360,9 +401,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 5,
   },
+  filterOptionButton2: {
+    backgroundColor: "#E1604D",
+    padding: 10,
+    marginVertical: 5,
+    width: "100%",
+    alignItems: "center",
+    borderRadius: 5,
+    marginBottom:20,
+  },
   filterOptionText: {
     color: "white",
     fontSize: 16,
+  },
+  filterOptionText2: {
+    color: "white",
+    fontSize: 20,
+    fontWeight: "bold",
   },
   iconBackground: {
     backgroundColor: "lightgrey",
@@ -392,7 +447,7 @@ const styles = StyleSheet.create({
   },
   bottomNavbarContainer: {
     position: "center",
-    top: 350,
+    top: 337,
     width: "100%",
   },
   infoText: {
@@ -422,6 +477,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
+  },
+  zipcodeInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    width: "100%",
+    marginBottom: 10,
   },
 });
 

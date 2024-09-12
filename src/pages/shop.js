@@ -5,6 +5,9 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Modal,
+  Button,
+  Alert,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyAvatar from "../components/Avatar";
@@ -23,7 +26,10 @@ const shop = ({ navigation }) => {
   const [clothColor, setClothColor] = useState("");
   const [HairColor, setHairColor] = useState("black");
   const [EyeColor, setEyeColor] = useState("");
-  const [coins, setCoins] = useState(200); // Example coin count
+  const [coins, setCoins] = useState(0); // Example coin count
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+  const [avatarPrice, setAvatarPrice] = useState(50);
 
   const listHair = [
     "null",
@@ -148,34 +154,60 @@ const shop = ({ navigation }) => {
       setSelectedMouth(profileData.user.style.mouth.id);
       setClothColor(profileData.user.style.accessory.color);
       setHairColor(profileData.user.style.hair.color);
+      setCoins(profileData.user.coins);
     } catch (error) {
       console.error("Error fetching profile:", error);
     }
   };
 
-  const handleSave = async () => {
-    try {
-      const authToken = await AsyncStorage.getItem("authToken");
+  const handleAvatarPress = (avatar) => {
+    setSelectedAvatar(avatar);
+    console.log(avatar);
+    setModalVisible(true);
+  };
 
-      // Step 1: Update user profile information
-      const profileResponse = await fetch(
-        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/update",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify({
-            description,
-          }),
+  const handleConfirm = async () => {
+    if (coins >= avatarPrice) {
+      try {
+        const authToken = await AsyncStorage.getItem("authToken");
+  
+        const updatedCoins = coins - avatarPrice;
+  
+        const profileResponse = await fetch(
+          "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/avatar/buy",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              coins: avatarPrice,
+              unlock: selectedAvatar,
+            }),
+          }
+        );
+  
+        const responseBody = await profileResponse.json();
+        console.log("Response Body:", responseBody);
+  
+        if (!profileResponse.ok) {
+          throw new Error(`HTTP error! Status: ${profileResponse.status}`);
         }
-      );
-    } catch (error) {
-      console.error("Error updating profile:", error);
+  
+        setCoins(updatedCoins);
+        setModalVisible(false);
+      } catch (error) {
+        // console.error("Error updating profile:", error);
+        Alert.alert("Item déjà possédé", "Vous avez déjà cet item, vous ne pouvez pas l'acheter");
+      }
+    } else {
+      Alert.alert("Fonds insuffisant", "Vous n'avez pas assez de pièces.");
     }
+  };
 
-    navigation.navigate("Accueil3");
+  const handleCancel = () => {
+    setModalVisible(false);
   };
 
   useEffect(() => {
@@ -204,39 +236,54 @@ const shop = ({ navigation }) => {
         />
       </View>
       <Text style={styles.username2}>{username}</Text>
-      <TouchableOpacity style={styles.buttonZ2}>
-            <MyAvatar size={100} colorSkin={avatarColor} clothTop={"crewneck"} />
-            <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
-            <Text style={styles.coinText}>{coins - 50}</Text>
+      <TouchableOpacity style={styles.buttonZ2} onPress={() => handleAvatarPress("squint")}>
+        <MyAvatar size={100} colorSkin={avatarColor} eyes={"squint"} />
+        <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
+        <Text style={styles.coinText}>{avatarPrice}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonZ1}>
-            <MyAvatar size={100} colorSkin={avatarColor} clothTop={"blazer"} />
-            <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
-        <Text style={styles.coinText}>{coins - 50}</Text>
+      <TouchableOpacity style={styles.buttonZ1} onPress={() => handleAvatarPress("surprised")}>
+        <MyAvatar size={100} colorSkin={avatarColor} eyes={"surprised"} />
+        <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
+        <Text style={styles.coinText}>{avatarPrice}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonZ3}>
-            <MyAvatar size={100} colorSkin={avatarColor} clothTop={"shirt"} />
-            <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
-            <Text style={styles.coinText}>{coins - 50}</Text>
+      <TouchableOpacity style={styles.buttonZ3} onPress={() => handleAvatarPress("wacky")}>
+        <MyAvatar size={100} colorSkin={avatarColor} eyes={"wacky"} />
+        <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
+        <Text style={styles.coinText}>{avatarPrice}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonZ4}>
-            <MyAvatar size={100} colorSkin={avatarColor} clothTop={"polo"} />
-            <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
-        <Text style={styles.coinText}>{coins - 50}</Text>
+      <TouchableOpacity style={styles.buttonZ4} onPress={() => handleAvatarPress("wink")}>
+        <MyAvatar size={100} colorSkin={avatarColor} eyes={"wink"} />
+        <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
+        <Text style={styles.coinText}>{avatarPrice}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonZ5}>
-            <MyAvatar size={100} colorSkin={avatarColor} clothTop={"vneck"} />
-            <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
-            <Text style={styles.coinText}>{coins - 50}</Text>
+      <TouchableOpacity style={styles.buttonZ5} onPress={() => handleAvatarPress("side")}>
+        <MyAvatar size={100} colorSkin={avatarColor} eyes={"side"} />
+        <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
+        <Text style={styles.coinText}>{avatarPrice}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buttonZ6}>
-            <MyAvatar size={100} colorSkin={avatarColor} clothTop={"overall"} />
-            <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
-        <Text style={styles.coinText}>{coins - 50}</Text>
+      <TouchableOpacity style={styles.buttonZ6} onPress={() => handleAvatarPress("heart")}>
+        <MyAvatar size={100} colorSkin={avatarColor} eyes={"heart"} />
+        <Image source={require("../../assets/coin.png")} style={styles.coinImage} />
+        <Text style={styles.coinText}>{avatarPrice}</Text>
       </TouchableOpacity>
-      <View style={styles.bottomNavbarContainer}>
-        <Navbar navigation={navigation} />
-      </View>
+      <Modal visible={isModalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>
+              Êtes vous certain de vouloir acheter cet item pour {avatarPrice} pièces?
+            </Text>
+            <View style={styles.modalButtonContainer}>
+              <TouchableOpacity style={styles.modalButton} onPress={handleCancel}>
+                <Text style={styles.modalButtonText}>Non</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalButton} onPress={handleConfirm}>
+                <Text style={styles.modalButtonText}>Oui</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      <Navbar navigation={navigation} />
     </View>
   );
 };
@@ -250,48 +297,48 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    right:120,
-    bottom:70,
+    right: 120,
+    bottom: 70,
   },
   buttonZ1: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    left:20,
-    bottom:138,
+    left: 20,
+    bottom: 138,
   },
   buttonZ3: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    left:20,
-    bottom:32,
+    left: 20,
+    bottom: 32,
   },
   buttonZ4: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    right:120,
-    bottom:100,
+    right: 120,
+    bottom: 100,
   },
   buttonZ5: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    left:20,
-    bottom:20,
+    left: 20,
+    bottom: 20,
   },
   buttonZ6: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    right:120,
-    bottom:85,
+    right: 120,
+    bottom: 85,
   },
   topLeftItems: {
     position: "absolute",
@@ -310,9 +357,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
   },
-  username2:{
-    bottom:120,
-    left:145,
+  username2: {
+    bottom: 110,
+    left: 145,
     fontSize: 18,
     fontWeight: "bold",
   },
@@ -321,13 +368,53 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    right:60,
+    right: 60,
+    top: 50,
     overflow: "hidden",
     paddingBottom: 280,
   },
   username: {
     marginTop: 10,
     fontSize: 18,
+    fontWeight: "bold",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  modalButtonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    marginTop: 20,
+  },
+  modalButton: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 10,
+    marginHorizontal: 10,
+    backgroundColor: "#007BFF",
+    borderRadius: 5,
+  },
+  modalButtonText: {
+    color: "white",
+    fontSize: 16,
     fontWeight: "bold",
   },
 });

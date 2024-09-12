@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import MyAvatar from "../components/Avatar";
+
+const screenWidth = Dimensions.get("screen").width;
+const screenHeight = Dimensions.get("screen").height;
+
 const avatareyes = ({ navigation }) => {
   const [selectedGlasses, setSelectedGlasses] = useState(null);
   const [selectedCloth, setSelectedCloth] = useState(null);
@@ -22,6 +26,12 @@ const avatareyes = ({ navigation }) => {
   const [selectedMouthId, setSelectedMouthId] = useState(null);
   const [selectedHatId, setSelectedHatId] = useState(null);
   const [selectedEyebrowId, setSelectedEyebrowId] = useState(null);
+  const [squintUnlocked, setSquintUnlocked] = useState(false);
+  const [surprisedUnlocked, setSurprisedUnlocked] = useState(false);
+  const [wackyUnlocked, setWackyUnlocked] = useState(false);
+  const [winkUnlocked, setWinkUnlocked] = useState(false);
+  const [sideUnlocked, setSideUnlocked] = useState(false);
+  const [heartUnlocked, setHeartUnlocked] = useState(false);  
   const [continuePressed, setContinuePressed] = useState(0);
   const [reward, setReward] = useState(null);
 
@@ -84,20 +94,15 @@ const avatareyes = ({ navigation }) => {
           },
         }
       );
-
+  
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const profileData = await response.json();
       console.log(profileData);
-
-      if (
-        profileData.user.reservations &&
-        profileData.user.reservations.length > 0
-      ) {
-        // Iterate through each reservation
+  
+      if (profileData.user.reservations && profileData.user.reservations.length > 0) {
         for (const reservationId of profileData.user.reservations) {
-          // Make a call to fetch reservation details
           const reservationResponse = await fetch(
             `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/events/show?id=${reservationId}`,
             {
@@ -108,25 +113,30 @@ const avatareyes = ({ navigation }) => {
               },
             }
           );
-
+  
           if (!reservationResponse.ok) {
-            throw new Error(
-              `HTTP error! Stattus: ${reservationResponse.status}`
-            );
+            throw new Error(`HTTP error! Status: ${reservationResponse.status}`);
           }
-
+  
           const reservationData = await reservationResponse.json();
-          console.log("prouuuuut", reservationData);
-          // Check if the reservation contains a reward
+          console.log("Reservation Data:", reservationData);
+  
           if (reservationData.event.rewards[0]) {
-            // Set state or perform any action accordingly
-            // For example, you can set a state variable indicating the presence of a reward
             setReward(true);
             console.log("This reservation has a reward!");
           }
         }
       }
-      console.log("CACAAAAAAA:", profileData.user.style.head.color);
+  
+      if (profileData.user.unlockedStyle) {
+        setSquintUnlocked(profileData.user.unlockedStyle.includes("squint"));
+        setSurprisedUnlocked(profileData.user.unlockedStyle.includes("surprised"));
+        setWackyUnlocked(profileData.user.unlockedStyle.includes("wacky"));
+        setWinkUnlocked(profileData.user.unlockedStyle.includes("wink"));
+        setSideUnlocked(profileData.user.unlockedStyle.includes("side"));
+        setHeartUnlocked(profileData.user.unlockedStyle.includes("heart"));
+      }
+  
       setAvatarColor(profileData.user.style.head.color);
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -168,19 +178,20 @@ const avatareyes = ({ navigation }) => {
   };
 
   const onPressBack = () => {
-    setContinuePressed((prevIndex) => prevIndex - 1); // Increment the index
+    setContinuePressed((prevIndex) => prevIndex - 1); // Decrement the index
   };
 
   const onPressFinish = () => {
     console.log("Selected Hair ID:", selectedHairId);
     console.log("Selected Glasses ID:", selectedGlassesId);
     console.log("Selected Cloth ID:", selectedClothId);
-    console.log("Selected beard ID:", selectedBeardId);
-    console.log("Selected mouth ID:", selectedMouthId);
+    console.log("Selected Beard ID:", selectedBeardId);
+    console.log("Selected Mouth ID:", selectedMouthId);
     saveAvatarData();
     navigation.navigate("Settings");
   };
 
+ 
   const renderGlassesImages = () => {
     if (!continuePressed) {
       return (
@@ -224,50 +235,106 @@ const avatareyes = ({ navigation }) => {
             >
               <MyAvatar size={90} colorSkin={avatarColor} eyes={"happy"} />
             </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button3}
-              onPress={() => onPressImage("heart", 6)}
-            >
-              <MyAvatar size={90} colorSkin={avatarColor} eyes={"heart"} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button4}
-              onPress={() => onPressImage("side", 5)}
-            >
-              <MyAvatar size={90} colorSkin={avatarColor} eyes={"side"} />
-            </TouchableOpacity>
+            {heartUnlocked ? (
+              <TouchableOpacity
+                style={styles.button3}
+                onPress={() => onPressImage("heart", 6)}
+              >
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"heart"} />
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.button3, styles.lockedButton]}>
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"heart"} />
+                <View style={styles.lockOverlay}>
+                  <Text style={styles.lockText}>🔒</Text>
+                </View>
+              </View>
+            )}
+            {sideUnlocked ? (
+              <TouchableOpacity
+                style={styles.button4}
+                onPress={() => onPressImage("side", 5)}
+              >
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"side"} />
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.button4, styles.lockedButton]}>
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"side"} />
+                <View style={styles.lockOverlay}>
+                  <Text style={styles.lockText}>🔒</Text>
+                </View>
+              </View>
+            )}
           </View>
           <View style={styles.row3}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => onPressImage("squint", 12)}
-            >
-              <MyAvatar size={90} colorSkin={avatarColor} eyes={"squint"} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button2}
-              onPress={() => onPressImage("surprised", 11)}
-            >
-              <MyAvatar size={90} colorSkin={avatarColor} eyes={"surprised"} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button3}
-              onPress={() => onPressImage("wacky", 10)}
-            >
-              <MyAvatar size={90} colorSkin={avatarColor} eyes={"wacky"} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.button4}
-              onPress={() => onPressImage("wink", 9)}
-            >
-              <MyAvatar size={90} colorSkin={avatarColor} eyes={"wink"} />
-            </TouchableOpacity>
+            {squintUnlocked ? (
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => onPressImage("squint", 12)}
+              >
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"squint"} />
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.button, styles.lockedButton]}>
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"squint"} />
+                <View style={styles.lockOverlay}>
+                  <Text style={styles.lockText}>🔒</Text>
+                </View>
+              </View>
+            )}
+            {surprisedUnlocked ? (
+              <TouchableOpacity
+                style={styles.button2}
+                onPress={() => onPressImage("surprised", 11)}
+              >
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"surprised"} />
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.button2, styles.lockedButton]}>
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"surprised"} />
+                <View style={styles.lockOverlay}>
+                  <Text style={styles.lockText}>🔒</Text>
+                </View>
+              </View>
+            )}
+            {wackyUnlocked ? (
+              <TouchableOpacity
+                style={styles.button3}
+                onPress={() => onPressImage("wacky", 10)}
+              >
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"wacky"} />
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.button3, styles.lockedButton]}>
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"wacky"} />
+                <View style={styles.lockOverlay}>
+                  <Text style={styles.lockText}>🔒</Text>
+                </View>
+              </View>
+            )}
+            {winkUnlocked ? (
+              <TouchableOpacity
+                style={styles.button4}
+                onPress={() => onPressImage("wink", 9)}
+              >
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"wink"} />
+              </TouchableOpacity>
+            ) : (
+              <View style={[styles.button4, styles.lockedButton]}>
+                <MyAvatar size={90} colorSkin={avatarColor} eyes={"wink"} />
+                <View style={styles.lockOverlay}>
+                  <Text style={styles.lockText}>🔒</Text>
+                </View>
+              </View>
+            )}
           </View>
         </View>
       );
     }
     return null;
   };
+  
+
 
   const renderClothImages = () => {
     return (
@@ -968,6 +1035,23 @@ const styles = StyleSheet.create({
     // marginTop: 20,
     marginBottom: -300,
   },
+  lockedButton: {
+    opacity: 0.5,
+  },
+  lockOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  lockText: {
+    fontSize: 24,
+    color: 'white',
+  },
   colorBox: {
     width: 40,
     height: 40,
@@ -975,6 +1059,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   title: {
+    marginTop: screenHeight / 20,
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 10,
@@ -992,29 +1077,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     resizeMode: "contain",
-  },
-  glasses: {
-    position: "absolute",
-    top: "22%", // Adjust the position as needed
-    left: "32%", // Adjust the position as needed
-  },
-  mouth: {
-    position: "absolute",
-    top: "40%", // Adjust the position as needed
-    left: "38%", // Adjust the position as needed
-  },
-  eyebrowes: {
-    position: "absolute",
-    top: "13%", // Adjust the position as needed
-    left: "33%", // Adjust the position as needed
-  },
-  hair: {
-    resizeMode: "contain",
-    width: 190,
-    height: 170,
-    position: "absolute",
-    top: "-13%", // Adjust the position as needed
-    left: "3.5%", // Adjust the position as needed
   },
   imagesContainer: {
     flexDirection: "column",
