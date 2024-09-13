@@ -8,10 +8,12 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  FlatList,
   ScrollView,
 } from "react-native";
 import Navbar from "../components/NavigationBar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const NewEvent = ({ navigation }) => {
   const [selectedDay, setSelectedDay] = useState(null);
@@ -22,7 +24,7 @@ const NewEvent = ({ navigation }) => {
   const [startMinutes, setStartMinutes] = useState("");
   const [endMinutes, setEndMinutes] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(""); // State to hold the selected category
-
+  const [suggestions, setSuggestions] = useState([]);
   const handleDaySelection = (day) => {
     setSelectedDay(day);
   };
@@ -35,7 +37,40 @@ const NewEvent = ({ navigation }) => {
     { name: "Travail", color: "#33E6FF" },
     { name: "Autre", color: "#E62933" },
   ];
-
+  const fetchAddressSuggestions = async (text) => {
+    if (text.length > 2) { // Commence à chercher après 3 caractères
+      try {
+        const response = await fetch(
+          `https://us1.locationiq.com/v1/autocomplete.php?key=pk.7de32014388395165add149132f2b239&q=${text}&limit=1&countrycodes=fr&format=json`
+        );
+        const data = await response.json();
+        
+        // Vérifie si la réponse contient un tableau valide
+        if (Array.isArray(data)) {
+          // Filtrer les doublons en utilisant un Set pour les adresses uniques
+          const uniqueSuggestions = data.filter((item, index, self) =>
+            index === self.findIndex((t) => t.display_name === item.display_name)
+          );
+          
+          setSuggestions(uniqueSuggestions);
+        } else {
+          // Si la donnée n'est pas un tableau, on vide les suggestions
+          setSuggestions([]);
+        }
+      } catch (error) {
+        console.error('Error fetching suggestions:', error);
+        setSuggestions([]); // Vide les suggestions en cas d'erreur
+      }
+    } else {
+      setSuggestions([]); // Vide les suggestions si l'input est trop court
+    }
+  };
+  
+  const handleSelectAddress = (selectedAddress) => {
+    setAddress(selectedAddress);
+    Keyboard.dismiss(); // Ferme le clavier pour éviter que l'input ne reste en focus
+    setSuggestions([]); // Vide les suggestions après avoir sélectionné une adresse
+  };
   const navigatetocalendar = async () => {
     navigation.navigate("Accueil3");
   };
@@ -136,11 +171,11 @@ const NewEvent = ({ navigation }) => {
       alert("Network error");
     }
   };
-
+  
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding">
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <View contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.inner}>
             <Text style={styles.title}>
               Ajoute une activité dans ton calendrier !
@@ -202,13 +237,32 @@ const NewEvent = ({ navigation }) => {
               </View>
             </View>
             <Text style={styles.username}>Adresse</Text>
+            <View>
             <TextInput
-              style={[styles.input, styles.addressInput]}
+              style={{ borderWidth: 1, padding: 10, marginBottom: 10 }}
               placeholder="Adresse"
               value={address}
-              onChangeText={setAddress}
+              onChangeText={(text) => {
+                setAddress(text);
+                fetchAddressSuggestions(text);
+              }}
               multiline={true}
             />
+            {/* Afficher uniquement si les suggestions existent */}
+            {suggestions.length > 0 && (
+              <FlatList
+                data={suggestions}
+                keyExtractor={(item) => item.place_id}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleSelectAddress(item.display_name)}>
+                    <Text style={{ padding: 10, backgroundColor: '#f0f0f0' }}>
+                      {item.display_name}
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
+          </View>
             <View style={styles.categoryContainer}>
               {categories.map((category, index) => (
                 <TouchableOpacity
@@ -292,7 +346,7 @@ const NewEvent = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           </View>
-        </ScrollView>
+        </View>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
   );
@@ -390,7 +444,6 @@ const styles = StyleSheet.create({
   username: {
     position: "relative",
     marginTop: 0,
-    marginBottom: -8,
     color: "black",
   },
   addressInput: {

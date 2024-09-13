@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  Modal,
+  ScrollView,
   ActivityIndicator,
 } from "react-native";
 import Navbar from "../components/NavigationBar";
@@ -372,35 +374,76 @@ const Calendar = ({ navigation }) => {
   );
 
   const MonthDaysList = () => {
-    console.log(filteredEvents);
-    
-    // Filter events for the current month
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+  
     const monthEvents = filteredEvents.filter(event => {
       const currentMonth = new Date().getMonth() + 1;
-      const eventMonth = parseInt(event.mois, 10); // Convert event.mois to an integer
+      const eventMonth = parseInt(event.mois, 10);
       return eventMonth === currentMonth;
     });
   
-    // Sort events by date (earliest first)
     monthEvents.sort((a, b) => parseInt(a.date, 10) - parseInt(b.date, 10));
   
-    console.log("List of events for the month:", monthEvents);
+    const openModal = (event) => {
+      setSelectedEvent(event);
+      setModalVisible(true);
+    };
+  
+    const closeModal = () => {
+      setSelectedEvent(null);
+      setModalVisible(false);
+    };
   
     return (
       <View style={styles.centeredMonthDaysContainer}>
-        <Text style={styles.brutText}>This is some brute text for the month view.</Text>
-        {monthEvents.map((event, index) => {
-          const formattedDate = `${event.date.padStart(2, '0')}/${event.mois.padStart(2, '0')}`;
-          return (
-            <Text key={index} style={styles.eventNameText}>
-              {`${event.name} - ${formattedDate}`}
-            </Text>
-          );
-        })}
+        <Text style={styles.brutText}>
+          Voici une liste des événements auxquels vous pouvez participer ce mois !
+        </Text>
+  
+        {/* Utilisation de ScrollView si le nombre d'événements dépasse 4 */}
+        <ScrollView style={{ maxHeight: monthEvents.length > 4 ? 200 : 'auto' }}>
+          {monthEvents.map((event, index) => {
+            const formattedDate = `${event.date.padStart(2, '0')}/${event.mois.padStart(2, '0')}`;
+            return (
+              <View key={index}>
+                <TouchableOpacity onPress={() => openModal(event)} style={styles.eventButton}>
+                  <Text style={styles.eventNameText}>
+                    {`${event.name} - ${formattedDate}`}
+                  </Text>
+                </TouchableOpacity>
+                <View style={styles.separator} />
+              </View>
+            );
+          })}
+        </ScrollView>
+  
+        {selectedEvent && (
+          <Modal
+            visible={modalVisible}
+            animationType="slide"
+            onRequestClose={closeModal}
+          >
+            <View style={styles.modalContainer}>
+              <Image source={require('../../assets/logo2.gif')} style={styles.logo} />
+              <Text style={styles.modalTitle}>{selectedEvent.name}</Text>
+              <Text>Adresse: {selectedEvent.address}</Text>
+              <View style={styles.separator2} />
+              <Text>Catégorie: {selectedEvent.category.join(', ')}</Text>
+              <View style={styles.separator2} />
+              <Text>Heure: {`${selectedEvent.heuredebut.padStart(2, '0')}h${selectedEvent.minutesdebut.padStart(2, '0')} - ${selectedEvent.heurefin.padStart(2, '0')}h${selectedEvent.minutesfin.padStart(2, '0')}`}</Text>
+              <View style={styles.separator2} />
+              <Text>Date: {`${selectedEvent.date.padStart(2, '0')}/${selectedEvent.mois.padStart(2, '0')}`}</Text>
+              <View style={styles.separator2} />
+              <TouchableOpacity style={styles.loginBtn2} onPress={closeModal}>
+                <Text style={styles.loginBtnText}>Fermer</Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+        )}
       </View>
     );
   };
-  
   
 
 
@@ -543,6 +586,11 @@ const styles = StyleSheet.create({
     color: "#FFF",
     textAlign: "center",
   },
+  loginBtnText: {
+    color: "#FFF",
+    fontSize:18,
+    textAlign: "center",
+  },
   loginBtn2: {
     marginTop: 20,
     marginLeft: 5,
@@ -557,6 +605,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#E1604D",
     borderColor: "#b3b3b3",
     borderWidth: 1,
+  },
+  loginBtn3: {
+    backgroundColor: "#E1604D",
+    borderColor: "#b3b3b3",
   },
   bottomNavbarContainer: {
     position: "center",
@@ -712,18 +764,55 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "black",
   },
+  brutText: {
+    paddingBottom:20,
+  },
   centeredMonthDaysContainer: {
+    top:-20,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "rgba(211, 211, 211, 0.2)",
     borderRadius: 20,
     padding: 20,
   },
+  eventButton: {
+    backgroundColor: '#E1604D',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginVertical: 5,
+    alignItems: 'center',
+  },
   eventNameText: {
-    fontSize: 16,
-    color: 'black',
-    marginTop: 5,
-    textAlign: 'center',
+    fontSize: 12,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  separator: {
+    height: 1,
+    backgroundColor: '#ddd',
+    marginVertical: 10,
+  },
+  separator2: {
+    height: 10,
+    backgroundColor: 'black',
+    marginVertical: 10,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    marginBottom: 20,
   },
 });
 
