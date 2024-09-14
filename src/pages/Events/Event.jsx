@@ -6,6 +6,7 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   StyleSheet,
   Modal,
 } from "react-native";
@@ -292,7 +293,7 @@ const Event = ({ navigation }) => {
             setModalVisible(false);
           }}
         >
-          <TouchableOpacity
+          <TouchableWithoutFeedback
             onPress={() => {
               setModalVisible(false);
             }}
@@ -305,7 +306,7 @@ const Event = ({ navigation }) => {
                 backgroundColor: "rgba(0,0,0,0.5)",
               }}
             >
-              <TouchableOpacity>
+              <TouchableWithoutFeedback>
                 <View
                   style={{
                     flex: 1,
@@ -322,9 +323,9 @@ const Event = ({ navigation }) => {
                     <ParticipantsActivity participents={participents} />
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableWithoutFeedback>
             </View>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </Modal>
       </ScrollView>
     ) : (
