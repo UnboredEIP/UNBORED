@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import {
   View,
   Text,
@@ -64,10 +63,9 @@ const Accueil3 = ({ navigation }) => {
   const isActivitySaved = (id) => {
     if (!favourites) return false;
     if (favourites.length === 0) return false;
-    const existingFavourite = favourites.findIndex(
+    const existingFavourite = profileData.user.favorites.findIndex(
       (preference) => preference === id
     );
-
     if (existingFavourite) {
       return true;
     }
@@ -382,6 +380,7 @@ const Accueil3 = ({ navigation }) => {
                         isSaved={
                           isActivitySaved(event._id) === true ? true : false
                         }
+
                         // rate={ubService.getEventRate(event._id)}
                       />
                     ))
