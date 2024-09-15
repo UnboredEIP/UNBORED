@@ -146,8 +146,10 @@ const Event = ({ navigation }) => {
   if (eventData === null || image === null) {
     return <LoadingPage />;
   } else {
-    return formatDate(eventData.start_date) > date ? (
-      <ScrollView contentContainerStyle={styles.container}>
+    return eventData.end !== true ? (
+      <ScrollView
+        contentContainerStyle={styles(eventData.name.length).container}
+      >
         <TouchableOpacity
           style={{
             position: "absolute",
@@ -166,25 +168,48 @@ const Event = ({ navigation }) => {
             }}
           />
         </TouchableOpacity>
-        <Image style={styles.image} source={{ uri: image.url }} />
-        <View style={styles.categoryContainer}>
-          <View style={styles.participantsContainer}>
-            <Text style={styles.participantsText}>
+        <Image
+          style={styles(eventData.name.length).image}
+          source={{ uri: image.url }}
+        />
+        <View style={styles(eventData.name.length).categoryContainer}>
+          <View style={styles(eventData.name.length).participantsContainer}>
+            <Text style={styles(eventData.name.length).participantsText}>
               {eventData.participents.length} personne(s)
             </Text>
           </View>
           <TouchableOpacity>
-            <View style={styles.category}>
-              <Text style={styles.categoryText}>{eventData.categories[0]}</Text>
+            <View style={styles(eventData.name.length).category}>
+              <Text style={styles(eventData.name.length).categoryText}>
+                {eventData.categories[0]}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>{eventData.name}</Text>
-        <Text style={styles.date}>{formatDate(eventData.start_date)}</Text>
-        <Text style={styles.time}>
+        <Text style={styles(eventData.name.length).title}>
+          {eventData.name}
+        </Text>
+
+        <Text style={styles(eventData.name.length).date}>
+          {formatDate(eventData.start_date)}
+        </Text>
+        <Text style={styles(eventData.name.length).time}>
           Heure début: {extractTime(eventData.start_date)}
         </Text>
-        <Text style={styles.description}>{eventData.description}</Text>
+        <View style={styles(eventData.name.length).locationContainer}>
+          <View style={styles(eventData.name.length).locationTextContainer}>
+            <Image
+              style={styles(eventData.name.length).locationIcon}
+              source={loc}
+            />
+            <Text style={styles(eventData.name.length).locationText}>
+              {eventData.address}
+            </Text>
+          </View>
+        </View>
+        <Text style={styles(eventData.name.length).description}>
+          {eventData.description}
+        </Text>
 
         {isEnroll == IS_ENROLL ? (
           <Buttons
@@ -277,15 +302,6 @@ const Event = ({ navigation }) => {
           }}
         />
 
-        <View style={styles.locationContainer}>
-          <View style={styles.locationTextContainer}>
-            <Image style={styles.locationIcon} source={loc} />
-            <Text style={styles.locationText}>{eventData.address}</Text>
-          </View>
-        </View>
-        <View style={styles.ratingContainer}>
-          {renderStars(eventData.rate)}
-        </View>
         <Modal
           animationType="fade"
           transparent={true}
@@ -343,7 +359,9 @@ const Event = ({ navigation }) => {
       //
       //
       //
-      <ScrollView contentContainerStyle={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles(eventData.name.length).container}
+      >
         <TouchableOpacity
           style={{
             position: "absolute",
@@ -362,60 +380,47 @@ const Event = ({ navigation }) => {
             }}
           />
         </TouchableOpacity>
-        <Image style={styles.image} source={{ uri: image.url }} />
-        <View style={styles.categoryContainer}>
-          <View style={styles.participantsContainer}>
-            <Text style={styles.participantsText}>
+        <Image
+          style={styles(eventData.name.length).image}
+          source={{ uri: image.url }}
+        />
+        <View style={styles(eventData.name.length).categoryContainer}>
+          <View style={styles(eventData.name.length).participantsContainer}>
+            <Text style={styles(eventData.name.length).participantsText}>
               {eventData.participents.length} personne(s)
             </Text>
           </View>
           <TouchableOpacity>
-            <View style={styles.category}>
-              <Text style={styles.categoryText}>{eventData.categories[0]}</Text>
+            <View style={styles(eventData.name.length).category}>
+              <Text style={styles(eventData.name.length).categoryText}>
+                {eventData.categories[0]}
+              </Text>
             </View>
           </TouchableOpacity>
         </View>
-        <Text style={styles.title}>{eventData.name}</Text>
-        <Text style={styles.date}>{formatDate(eventData.start_date)}</Text>
-        <Text style={styles.time}>
+        <Text style={styles(eventData.name.length).title}>
+          {eventData.name}
+        </Text>
+        <Text style={styles(eventData.name.length).date}>
+          {formatDate(eventData.start_date)}
+        </Text>
+        <View style={styles(eventData.name.length).locationContainer}>
+          <View style={styles(eventData.name.length).locationTextContainer}>
+            <Image
+              style={styles(eventData.name.length).locationIcon}
+              source={loc}
+            />
+            <Text style={styles(eventData.name.length).locationText}>
+              {eventData.address}
+            </Text>
+          </View>
+        </View>
+        <Text style={styles(eventData.name.length).time}>
           Heure début: {extractTime(eventData.start_date)}
         </Text>
-
-        {isEnroll == IS_ENROLL ? (
-          <View></View>
-        ) : (
-          <Buttons
-            texte="Rejoindre activité"
-            onPress={async () => {
-              const response = await ubService.joinEvent([
-                global.currentEventId,
-              ]);
-              if (response == true) {
-                setIsEnroll(IS_ENROLL);
-                global.reservedEvents.push(global.currentEventId);
-                console.log("NEW ACTIVITY JOIN:", eventData.name);
-                Toast.show("Activité rejoints", {
-                  duration: Toast.durations.LONG,
-                  position: Toast.positions.BOTTOM,
-                  backgroundColor: "green",
-                  shadow: true,
-                  animation: true,
-                  hideOnPress: true,
-                });
-              } else {
-                console.log("ERROR WHEN JOIN ACTIVITY");
-                Toast.show("Veuillez réessayez", {
-                  duration: Toast.durations.LONG,
-                  position: Toast.positions.BOTTOM,
-                  backgroundColor: "red",
-                  shadow: true,
-                  animation: true,
-                  hideOnPress: true,
-                });
-              }
-            }}
-          />
-        )}
+        <Text style={styles(eventData.name.length).description}>
+          {eventData.description}
+        </Text>
         <View
           style={{
             marginVertical: 10,
@@ -428,13 +433,7 @@ const Event = ({ navigation }) => {
           }}
         />
 
-        <View style={styles.locationContainer}>
-          <View style={styles.locationTextContainer}>
-            <Image style={styles.locationIcon} source={loc} />
-            <Text style={styles.locationText}>{eventData.address}</Text>
-          </View>
-        </View>
-        <View style={styles.ratingContainer}>
+        <View style={styles(eventData.name.length).ratingContainer}>
           {renderStars(eventData.rate)}
         </View>
         <Modal
@@ -484,111 +483,115 @@ const Event = ({ navigation }) => {
   }
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flexGrow: screenHeight * 0.0062,
-    alignItems: "center",
-    justifyContent: "center",
-    // paddingTop: screenHeight / 10,
-  },
-  backButton: {
-    position: "absolute",
-    top: 20,
-    left: 20,
-    zIndex: 1,
-  },
-  backIcon: {
-    width: 30,
-    height: 30,
-  },
-  image: {
-    height: screenHeight * 0.4,
-    width: screenHeight * 0.49,
-  },
-  title: {
-    textAlign: "center",
-    color: "#E1604D",
-    fontWeight: "600",
-    fontSize: screenHeight * 0.03,
-  },
-  date: {
-    textAlign: "center",
-    color: "#E1604D",
-    fontWeight: "600",
-    fontSize: screenHeight * 0.023,
-  },
-  time: {
-    textAlign: "left",
-    color: "black",
-    fontWeight: "500",
-    fontSize: screenHeight * 0.03,
-    marginTop: screenHeight * 0.017,
-  },
-  description: {
-    textAlign: "left",
-    color: "black",
-    fontWeight: "50",
-    fontSize: screenHeight * 0.017,
-    marginVertical: screenHeight * 0.017,
-    paddingHorizontal: screenWidth * 0.02,
-  },
-  categoryContainer: {
-    alignSelf: "flex-start",
-    flexDirection: "row",
-    marginLeft: screenWidth * 0.05,
-    marginTop: screenHeight * 0.01,
-    alignItems: "center",
-  },
-  category: {
-    width: screenHeight * 0.1,
-    height: screenHeight * 0.04,
-    borderWidth: 1,
-    borderColor: "#E1604D",
-    borderRadius: 100,
-    justifyContent: "center",
-  },
-  categoryText: {
-    fontWeight: "600",
-    fontSize: screenHeight * 0.02,
-    color: "#E1604D",
-    textAlign: "center",
-  },
-  participantsContainer: {
-    marginTop: screenHeight * 0.017,
-  },
-  participantsText: {
-    fontWeight: "500",
-    fontSize: screenHeight * 0.027,
-  },
-  locationContainer: {
-    marginTop: screenHeight * 0.069,
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  locationTextContainer: {
-    flexDirection: "row",
-  },
-  locationIcon: {
-    width: screenHeight * 0.04,
-    height: screenHeight * 0.04,
-    marginTop: screenHeight * 0.001,
-  },
-  locationText: {
-    marginLeft: screenHeight * 0.02,
-    fontSize: screenHeight * 0.02,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  vectorIcon: {
-    width: screenHeight * 0.01,
-    height: screenHeight * 0.03,
-    marginTop: screenHeight * 0.0006,
-  },
-  ratingContainer: {
-    flexDirection: "row",
-    alignSelf: "center",
-    marginTop: screenHeight * 0.01,
-  },
-});
+const styles = (categoryLen) =>
+  StyleSheet.create({
+    container: {
+      flexGrow: screenHeight * 0.0062,
+      alignItems: "center",
+      justifyContent: "center",
+      // paddingTop: screenHeight / 10,
+    },
+    backButton: {
+      position: "absolute",
+      top: 20,
+      left: 20,
+      zIndex: 1,
+    },
+    backIcon: {
+      width: 30,
+      height: 30,
+    },
+    image: {
+      height: screenHeight * 0.4,
+      width: screenHeight * 0.49,
+    },
+    title: {
+      textAlign: "center",
+      color: "#E1604D",
+      fontWeight: "600",
+      fontSize: screenHeight * 0.03,
+    },
+    date: {
+      textAlign: "center",
+      color: "#E1604D",
+      fontWeight: "600",
+      fontSize: screenHeight * 0.023,
+    },
+    time: {
+      textAlign: "left",
+      color: "black",
+      fontWeight: "500",
+      fontSize: screenHeight * 0.03,
+      marginTop: screenHeight * 0.017,
+    },
+    description: {
+      textAlign: "left",
+      color: "black",
+      fontWeight: "50",
+      fontSize: screenHeight * 0.017,
+      marginVertical: screenHeight * 0.017,
+      paddingHorizontal: screenWidth * 0.02,
+    },
+    categoryContainer: {
+      alignSelf: "flex-start",
+      flexDirection: "row",
+      marginLeft: screenWidth * 0.05,
+      marginTop: screenHeight * 0.01,
+      alignItems: "center",
+    },
+    category: {
+      width: screenHeight * 0.1,
+      height: screenHeight * 0.04,
+      borderWidth: 1,
+      borderColor: "#E1604D",
+      borderRadius: 100,
+      justifyContent: "center",
+    },
+    categoryText: {
+      fontWeight: "600",
+      fontSize: Math.max(
+        screenHeight * 0.016,
+        screenHeight * (0.1 / categoryLen)
+      ),
+      color: "#E1604D",
+      textAlign: "center",
+    },
+    participantsContainer: {
+      marginTop: screenHeight * 0.017,
+    },
+    participantsText: {
+      fontWeight: "500",
+      fontSize: screenHeight * 0.027,
+    },
+    locationContainer: {
+      marginTop: screenHeight * 0.03,
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    locationTextContainer: {
+      flexDirection: "row",
+    },
+    locationIcon: {
+      width: screenHeight * 0.04,
+      height: screenHeight * 0.04,
+      marginTop: screenHeight * 0.001,
+    },
+    locationText: {
+      marginLeft: screenHeight * 0.02,
+      fontSize: screenHeight * 0.02,
+      fontWeight: "bold",
+      textAlign: "center",
+    },
+    vectorIcon: {
+      width: screenHeight * 0.01,
+      height: screenHeight * 0.03,
+      marginTop: screenHeight * 0.0006,
+    },
+    ratingContainer: {
+      flexDirection: "row",
+      alignSelf: "center",
+      marginTop: screenHeight * 0.01,
+    },
+  });
 
 export default Event;
