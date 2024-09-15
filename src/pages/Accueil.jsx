@@ -363,6 +363,7 @@ const Accueil3 = ({ navigation }) => {
                     .map((event, index) => (
                       <EventCard
                         onPress={() => {
+                          global.currentEventId = event._id;
                           navigation.navigate("Event");
                         }}
                         key={index}

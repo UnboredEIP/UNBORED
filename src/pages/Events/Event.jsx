@@ -23,6 +23,11 @@ import { BackArrow } from "../../../assets/avatars/avatars";
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
+const defaultImage = {
+  id: 1,
+  url: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
+  description: "Default Image",
+};
 
 const IS_ENROLL = 1;
 const NOT_ENROLL = 2;
@@ -90,8 +95,7 @@ const Event = ({ navigation }) => {
   const [participents, setParticipents] = useState([]);
   const [isEnroll, setIsEnroll] = useState(NOT_ENROLL);
   const ubService = new UbService();
-
-  const date = new Date().toISOString().split("T")[0];
+  const [dataLoaded, setDataLoaded] = useState(0);
 
   function userIsEnroll(events, id) {
     // for (const invitation of invitations) {
@@ -122,7 +126,7 @@ const Event = ({ navigation }) => {
         const img = await ubService.getImage(responseData.pictures[0].id);
         setImage(img);
 
-        if (responseData.participents.length > 0) {
+        if (responseData.participents.length > 0 && dataLoaded === 0) {
           const users = [];
           for (const participent of responseData.participents) {
             const user = await ubService.getUserById(participent);
@@ -132,8 +136,7 @@ const Event = ({ navigation }) => {
             }
           }
           setParticipents(users);
-
-          // console.log(users);
+          setDataLoaded(1);
         }
       } catch (error) {
         console.error("Error fetchData:", error);
@@ -141,7 +144,7 @@ const Event = ({ navigation }) => {
     };
 
     fetchData();
-  }, [participents, isEnroll]);
+  }, [dataLoaded, isEnroll]);
 
   if (eventData === null || image === null) {
     return <LoadingPage />;
@@ -172,12 +175,15 @@ const Event = ({ navigation }) => {
           style={styles(eventData.name.length).image}
           source={{ uri: image.url }}
         />
+        <View style={styles(eventData.name.length).participantsContainer}>
+          <Text style={styles(eventData.name.length).participantsText}>
+            {eventData.participents.length}{" "}
+            {eventData.participents.length > 1
+              ? "personne(s) participe(nt)"
+              : "personne participe"}
+          </Text>
+        </View>
         <View style={styles(eventData.name.length).categoryContainer}>
-          <View style={styles(eventData.name.length).participantsContainer}>
-            <Text style={styles(eventData.name.length).participantsText}>
-              {eventData.participents.length} personne(s)
-            </Text>
-          </View>
           <TouchableOpacity>
             <View style={styles(eventData.name.length).category}>
               <Text style={styles(eventData.name.length).categoryText}>
@@ -193,9 +199,6 @@ const Event = ({ navigation }) => {
         <Text style={styles(eventData.name.length).date}>
           {formatDate(eventData.start_date)}
         </Text>
-        <Text style={styles(eventData.name.length).time}>
-          Heure début: {extractTime(eventData.start_date)}
-        </Text>
         <View style={styles(eventData.name.length).locationContainer}>
           <View style={styles(eventData.name.length).locationTextContainer}>
             <Image
@@ -207,9 +210,24 @@ const Event = ({ navigation }) => {
             </Text>
           </View>
         </View>
+        <Text style={styles(eventData.name.length).time}>
+          Heure début: {extractTime(eventData.start_date)}
+        </Text>
         <Text style={styles(eventData.name.length).description}>
           {eventData.description}
         </Text>
+
+        <Buttons
+          texte="Voir les participants"
+          onPress={() => {
+            setModalVisible(true);
+          }}
+        />
+        <View
+          style={{
+            marginVertical: 10,
+          }}
+        />
 
         {isEnroll == IS_ENROLL ? (
           <Buttons
@@ -243,6 +261,7 @@ const Event = ({ navigation }) => {
                   animation: true,
                   hideOnPress: true,
                 });
+                setDataLoaded(0);
               } else {
                 // console.log("ERROR:", response);
                 console.log("ERROR WHEN LEAVE ACTIVITY");
@@ -276,6 +295,7 @@ const Event = ({ navigation }) => {
                   animation: true,
                   hideOnPress: true,
                 });
+                setDataLoaded(0);
               } else {
                 console.log("ERROR WHEN JOIN ACTIVITY");
                 Toast.show("Veuillez réessayez", {
@@ -290,17 +310,6 @@ const Event = ({ navigation }) => {
             }}
           />
         )}
-        <View
-          style={{
-            marginVertical: 10,
-          }}
-        />
-        <Buttons
-          texte="Voir les participants"
-          onPress={() => {
-            setModalVisible(true);
-          }}
-        />
 
         <Modal
           animationType="fade"
@@ -382,14 +391,19 @@ const Event = ({ navigation }) => {
         </TouchableOpacity>
         <Image
           style={styles(eventData.name.length).image}
-          source={{ uri: image.url }}
+          source={{
+            uri: image.url !== undefined ? image.url : defaultImage.url,
+          }}
         />
+        <View style={styles(eventData.name.length).participantsContainer}>
+          <Text style={styles(eventData.name.length).participantsText}>
+            {eventData.participents.length}{" "}
+            {eventData.participents.length > 1
+              ? "personne(s) participe(nt)"
+              : "personne participe"}
+          </Text>
+        </View>
         <View style={styles(eventData.name.length).categoryContainer}>
-          <View style={styles(eventData.name.length).participantsContainer}>
-            <Text style={styles(eventData.name.length).participantsText}>
-              {eventData.participents.length} personne(s)
-            </Text>
-          </View>
           <TouchableOpacity>
             <View style={styles(eventData.name.length).category}>
               <Text style={styles(eventData.name.length).categoryText}>
@@ -433,6 +447,13 @@ const Event = ({ navigation }) => {
           }}
         />
 
+        <Text
+          style={{
+            paddingVertical: screenHeight * 0.02,
+          }}
+        >
+          Notes cette activité
+        </Text>
         <View style={styles(eventData.name.length).ratingContainer}>
           {renderStars(eventData.rate)}
         </View>
@@ -444,7 +465,7 @@ const Event = ({ navigation }) => {
             setModalVisible(false);
           }}
         >
-          <TouchableOpacity
+          <TouchableWithoutFeedback
             onPress={() => {
               setModalVisible(false);
             }}
@@ -457,7 +478,7 @@ const Event = ({ navigation }) => {
                 backgroundColor: "rgba(0,0,0,0.5)",
               }}
             >
-              <TouchableOpacity>
+              <TouchableWithoutFeedback>
                 <View
                   style={{
                     flex: 1,
@@ -474,9 +495,9 @@ const Event = ({ navigation }) => {
                     <ParticipantsActivity participents={participents} />
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableWithoutFeedback>
             </View>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </Modal>
       </ScrollView>
     );
@@ -533,9 +554,9 @@ const styles = (categoryLen) =>
       paddingHorizontal: screenWidth * 0.02,
     },
     categoryContainer: {
-      alignSelf: "flex-start",
+      alignSelf: "flex-end",
       flexDirection: "row",
-      marginLeft: screenWidth * 0.05,
+      marginRight: screenWidth * 0.05,
       marginTop: screenHeight * 0.01,
       alignItems: "center",
     },
@@ -591,6 +612,7 @@ const styles = (categoryLen) =>
       flexDirection: "row",
       alignSelf: "center",
       marginTop: screenHeight * 0.01,
+      paddingBottom: screenHeight * 0.02,
     },
   });
 
