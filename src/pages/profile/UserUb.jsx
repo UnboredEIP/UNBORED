@@ -17,6 +17,7 @@ import startUnfilled from "../../../assets/star_unfilled.png";
 import { UbService } from "../../services/UbServices";
 import Buttons from "../../components/Buttons";
 import ParticipantsActivity from "../../components/Modals/ParticipantsActivity";
+import FriendsList from "../../components/Modals/Friends";
 import Toast from "react-native-root-toast";
 import LoadingPage from "../Loading";
 import { BackArrow } from "../../../assets/avatars/avatars";
@@ -152,6 +153,7 @@ function extractTime(dateTimeString) {
 
 const UserUbPage = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
+  const [friends, setFriends] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(defaultImage);
   const [participents, setParticipents] = useState([]);
@@ -159,6 +161,7 @@ const UserUbPage = ({ navigation }) => {
   const [events, setEvents] = useState([]);
   const ubService = new UbService();
   const [images, setImages] = useState([defaultImage]);
+  const [refresh, setRefresh] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -181,6 +184,19 @@ const UserUbPage = ({ navigation }) => {
         }
         if (responseData) setUserData(responseData);
 
+        console.log("CONSOLE DATA UBPROFILE:", responseData);
+        if (responseData.friends.length > 0) {
+          const users = [];
+          for (const friend of responseData.friends) {
+            // console.log("FRIENDS:", friend);
+            const user = await ubService.getUserById(friend._id);
+            if (user) {
+              users.push(user);
+            }
+          }
+          setFriends(users);
+        }
+
         console.log("USER style:", responseData);
         if (responseData.profilePhoto) {
           const img = await ubService.getImage(responseData.profilePhoto);
@@ -192,7 +208,7 @@ const UserUbPage = ({ navigation }) => {
     };
 
     fetchData();
-  }, [navigation]);
+  }, [navigation, refresh]);
 
   if (
     userData === null ||
@@ -266,16 +282,22 @@ const UserUbPage = ({ navigation }) => {
           }}
         >
           <View style={styles().followersContainer}>
-            <Text
-              style={{
-                ...styles().network,
-                fontSize: screenHeight * 0.03,
-                marginHorizontal: screenWidth * 0.08,
+            <TouchableOpacity
+              onPress={() => {
+                setModalVisible(true);
               }}
             >
-              {userData.friends.length}
-            </Text>
-            <Text style={styles().network}>ami(s)</Text>
+              <Text
+                style={{
+                  ...styles().network,
+                  fontSize: screenHeight * 0.03,
+                  marginHorizontal: screenWidth * 0.08,
+                }}
+              >
+                {userData.friends.length}
+              </Text>
+              <Text style={styles().network}>ami(s)</Text>
+            </TouchableOpacity>
           </View>
 
           <View
@@ -481,7 +503,13 @@ const UserUbPage = ({ navigation }) => {
                       borderRadius: 20,
                     }}
                   >
-                    <ParticipantsActivity participents={participents} />
+                    <FriendsList
+                      users={friends}
+                      onPress={() => {
+                        setModalVisible(false);
+                        setRefresh(!refresh);
+                      }}
+                    />
                   </View>
                 </View>
               </TouchableWithoutFeedback>

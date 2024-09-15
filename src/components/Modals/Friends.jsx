@@ -132,7 +132,7 @@ const FriendsList = ({ users, onPress }) => {
         justifyContent: "center",
       }}
     >
-      <Text>Ma liste d'ami</Text>
+      <Text>Liste d'ami</Text>
       {users.length > 0 ? (
         users.map((user, index) => (
           <View
