@@ -120,7 +120,7 @@ const SavedEventsPage = ({ navigation }) => {
               left: screenWidth / 20,
               zIndex: 1,
             }}
-            onPress={() => navigation.replace("Accueil3")}
+            onPress={() => navigation.goBack()}
           >
             <BackArrow
               style={{

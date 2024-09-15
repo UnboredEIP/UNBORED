@@ -175,6 +175,9 @@ const AppNavigator = createStackNavigator(
     },
     Accueil3: {
       screen: Accueil3,
+      navigationOptions: {
+        animationEnabled: false,
+      },
       // navigationOptions: {
       // ...TransitionPresets.ModalTransition,
       // },
@@ -200,6 +203,9 @@ const AppNavigator = createStackNavigator(
     },
     Profile: {
       screen: Profile,
+      navigationOptions: {
+        animationEnabled: false,
+      },
       // navigationOptions: {
       // ...TransitionPresets.ModalTransition,
       // },
@@ -212,6 +218,9 @@ const AppNavigator = createStackNavigator(
     },
     Calendar: {
       screen: Calendar,
+      navigationOptions: {
+        animationEnabled: false,
+      },
       // navigationOptions: {
       // ...TransitionPresets.ModalTransition,
       // },
@@ -242,6 +251,7 @@ const AppNavigator = createStackNavigator(
     },
     SavedEventsPage: {
       screen: SavedEventsPage,
+      
       // navigationOptions: {
       // ...TransitionPresets.ModalTransition,
       // },

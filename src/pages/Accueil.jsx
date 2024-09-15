@@ -135,39 +135,50 @@ const Accueil3 = ({ navigation }) => {
           //
 
           const tmpReservedEvents = await ubService.getUserEvents();
-          if (tmpReservedEvents) {
+          global.reservedEvents = tmpReservedEvents;
+          if (tmpReservedEvents && refresh === 0) {
             console.log("DATA FROM NEW ROUTE:", tmpReservedEvents);
-            // setReservedEvents(tmpReservedEvents);
-            // const imagePromises2 = tmpReservedEvents.map(async (event) => {
-            //   const img = await ubService.getImage(event.pictures[0].id);
-            //   return img;
-            // });
-            // const imageResults2 = await Promise.all(imagePromises2);
-            // setFavouritesImages(imageResults2);
-          }
-          const reservedEvents2 = responseData.user.reservations;
-          global.reservedEvents = responseData.user.reservations;
-          if (reservedEvents2 !== null) {
-            if (reservedEvents2.length > 0 && refresh === 0) {
-              // console.log(reservedEvents);
-              const events = [];
-              for (const favourite of reservedEvents2) {
-                const event = await ubService.getEventById(favourite);
-                // console.log(event);
-                if (event) {
-                  events.push(event);
-                }
+            console.log("DATA FROM NEW ROUTE:", responseData.user.reservations);
+            const events = [];
+            for (const favourite of tmpReservedEvents) {
+              const event = await ubService.getEventById(favourite);
+              // console.log(event);
+              if (event) {
+                events.push(event);
               }
-              setReservedEvents(events);
-              // console.log("FAVOURITES EVENTS", favourites);
-              const imagePromises2 = reservedEvents.map(async (event) => {
-                const img = await ubService.getImage(event.pictures[0].id);
-                return img;
-              });
-              const imageResults2 = await Promise.all(imagePromises2);
-              setFavouritesImages(imageResults2);
             }
+            setReservedEvents(events);
+            // console.log("FAVOURITES EVENTS", favourites);
+            const imagePromises2 = reservedEvents.map(async (event) => {
+              const img = await ubService.getImage(event.pictures[0].id);
+              return img;
+            });
+            const imageResults2 = await Promise.all(imagePromises2);
+            setFavouritesImages(imageResults2);
           }
+          // const reservedEvents2 = tmpReservedEvents;
+          // global.reservedEvents = tmpReservedEvents;
+          // if (reservedEvents2 !== null) {
+          //   if (reservedEvents2.length > 0 && refresh === 0) {
+          //     // console.log(reservedEvents);
+          //     const events = [];
+          //     for (const favourite of reservedEvents2) {
+          //       const event = await ubService.getEventById(favourite);
+          //       // console.log(event);
+          //       if (event) {
+          //         events.push(event);
+          //       }
+          //     }
+          //     setReservedEvents(events);
+          //     // console.log("FAVOURITES EVENTS", favourites);
+          //     const imagePromises2 = reservedEvents.map(async (event) => {
+          //       const img = await ubService.getImage(event.pictures[0].id);
+          //       return img;
+          //     });
+          //     const imageResults2 = await Promise.all(imagePromises2);
+          //     setFavouritesImages(imageResults2);
+          //   }
+          // }
           handleRefresh(1);
         }
       } catch (error) {
@@ -253,7 +264,7 @@ const Accueil3 = ({ navigation }) => {
                     alignItems: "center",
                   }}
                   onPress={() => {
-                    navigation.replace("FriendsRequest");
+                    navigation.navigate("FriendsRequest");
                   }}
                 >
                   <Image
@@ -274,7 +285,7 @@ const Accueil3 = ({ navigation }) => {
                     alignItems: "center",
                   }}
                   onPress={() => {
-                    navigation.replace("SavedEventsPage");
+                    navigation.navigate("SavedEventsPage");
                   }}
                 >
                   <Image
@@ -311,7 +322,7 @@ const Accueil3 = ({ navigation }) => {
               </Text>
               <SearchFilter data={data} />
               <TouchableOpacity
-                onPress={() => navigation.replace("TimelineEventsPage")}
+                onPress={() => navigation.navigate("TimelineEventsPage")}
               >
                 <Text
                   style={{
@@ -354,7 +365,7 @@ const Accueil3 = ({ navigation }) => {
                     .map((event, index) => (
                       <EventCard
                         onPress={() => {
-                          navigation.replace("Event");
+                          navigation.navigate("Event");
                         }}
                         key={index}
                         name={event.name}
@@ -421,7 +432,7 @@ const Accueil3 = ({ navigation }) => {
                 reservedEvents.map((event, index) => (
                   <EventCard
                     onPress={() => {
-                      navigation.replace("Event");
+                      navigation.navigate("Event");
                     }}
                     key={index}
                     name={event.name}
