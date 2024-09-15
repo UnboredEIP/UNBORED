@@ -2,14 +2,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
-  Image, KeyboardAvoidingView,
+  Image,
+  KeyboardAvoidingView,
   Modal,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from "react-native";
 import Swiper from "react-native-swiper";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -200,158 +201,158 @@ const Profile = ({ navigation }) => {
 
     // Clear the timeout if the component unmounts before 2 seconds
     return () => clearTimeout(timer);
-  }, [friends]);
-  if (username !== "" && nbFriends !== friends.length) {
-    return (
-      <Image
-        source={require("../../../assets/loading.gif")}
-        style={{
-          height: 400,
-          width: 400,
-          alignContent: "center",
-          alignItems: "center",
-          marginTop: 200,
-        }}
-      ></Image>
-    );
-  } else
-    return (
-      <View style={{ flex: 1 }}>
-        <KeyboardAvoidingView
-          style={styles.container}
-          behavior="padding"
-          enabled={true}
-        >
-          <View style={styles.container}>
-            <View style={{ flex: 1, alignItems: "center" }}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={styles.textAboveImage}>Mon profil UnBored</Text>
-                <TouchableOpacity
-                  style={styles.loginBtn}
-                  onPress={() => navigation.navigate("Settings")}
-                >
-                  <Icon name="gears" size={20} color={"#E1604D"} />
-                </TouchableOpacity>
-              </View>
-              <Swiper
-                style={styles.swiperContainer}
-                loop={false}
-                nestedScrollEnabled={true}
+  }, [nbFriends]);
+  // if (username !== "" && nbFriends !== friends.length) {
+  //   return (
+  //     <Image
+  //       source={require("../../../assets/loading.gif")}
+  //       style={{
+  //         height: 400,
+  //         width: 400,
+  //         alignContent: "center",
+  //         alignItems: "center",
+  //         marginTop: 200,
+  //       }}
+  //     ></Image>
+  //   );
+  // } else
+  return (
+    <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        enabled={true}
+      >
+        <View style={styles.container}>
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Text style={styles.textAboveImage}>Mon profil UnBored</Text>
+              <TouchableOpacity
+                style={styles.loginBtn}
+                onPress={() => navigation.navigate("Settings")}
               >
-                <View style={styles.slide}>
-                  <Image
-                    source={{ uri: image }}
-                    style={{
-                      width: 150,
-                      height: 150,
-                      borderRadius: 10,
-                      marginBottom: 10,
-                    }}
-                  />
-                </View>
-                <View style={styles.slide2}>
-                  <MyAvatar
-                    size={120}
-                    colorSkin={avatarColor}
-                    eyes={listEyes[selectedGlasses]}
-                    clothTop={listTop[selectedCloth]}
-                    colorClothingTop={clothColor}
-                    hair={listHair[selectedHair]}
-                    colorHair={HairColor}
-                    colorEye={EyeColor}
-                    beard={listBeard[selectedBeard]}
-                    mouth={listMouth[selectedMouth]}
-                    eyebrow={listEyebrow[selectedEyebrow]}
-                  />
-                </View>
-              </Swiper>
-              <Text style={styles.textBelowImage}>{username}</Text>
-                <View style={styles.numbersContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setModalVisible(true);
+                <Icon name="gears" size={20} color={"#E1604D"} />
+              </TouchableOpacity>
+            </View>
+            <Swiper
+              style={styles.swiperContainer}
+              loop={false}
+              nestedScrollEnabled={true}
+            >
+              <View style={styles.slide}>
+                <Image
+                  source={{ uri: image }}
+                  style={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: 10,
+                    marginBottom: 10,
                   }}
-                  >
-              <View style={styles.numberItem}>
-                <Text style={styles.numberValue2}>{nbFriends}</Text>
-                <Text style={styles.numberLabel}>      amis</Text>
+                />
               </View>
-                </TouchableOpacity>
+              <View style={styles.slide2}>
+                <MyAvatar
+                  size={120}
+                  colorSkin={avatarColor}
+                  eyes={listEyes[selectedGlasses]}
+                  clothTop={listTop[selectedCloth]}
+                  colorClothingTop={clothColor}
+                  hair={listHair[selectedHair]}
+                  colorHair={HairColor}
+                  colorEye={EyeColor}
+                  beard={listBeard[selectedBeard]}
+                  mouth={listMouth[selectedMouth]}
+                  eyebrow={listEyebrow[selectedEyebrow]}
+                />
+              </View>
+            </Swiper>
+            <Text style={styles.textBelowImage}>{username}</Text>
+            <View style={styles.numbersContainer}>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalVisible(true);
+                }}
+              >
+                <View style={styles.numberItem}>
+                  <Text style={styles.numberValue2}>{nbFriends}</Text>
+                  <Text style={styles.numberLabel}> amis</Text>
+                </View>
+              </TouchableOpacity>
               <View style={styles.divider} />
               <View style={styles.numberItem}>
                 <Text style={styles.numberValue}>{nbActivity}</Text>
                 <Text style={styles.numberLabel}>activités</Text>
               </View>
             </View>
-              <View style={styles.dividerhorz} />
-              <Text style={styles.textPreferences}>À propos de moi</Text>
-              <Text style={styles.descriptionpersonne}>{description}</Text>
-              <Text style={styles.textPreferences}>Mes intérêts :</Text>
-              <ScrollView
-                horizontal
-                contentContainerStyle={styles.preferenceRow}
-                nestedScrollEnabled={true}
-              >
-                {preferences.map((preference, index) => (
-                  <Text key={index} style={styles.preferenceItem}>
-                    {preference}
-                  </Text>
-                ))}
-              </ScrollView>
-            </View>
+            <View style={styles.dividerhorz} />
+            <Text style={styles.textPreferences}>À propos de moi</Text>
+            <Text style={styles.descriptionpersonne}>{description}</Text>
+            <Text style={styles.textPreferences}>Mes intérêts :</Text>
+            <ScrollView
+              horizontal
+              contentContainerStyle={styles.preferenceRow}
+              nestedScrollEnabled={true}
+            >
+              {preferences.map((preference, index) => (
+                <Text key={index} style={styles.preferenceItem}>
+                  {preference}
+                </Text>
+              ))}
+            </ScrollView>
           </View>
-        </KeyboardAvoidingView>
-        <Navbar navigation={navigation} />
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={modalVisible}
-          onRequestClose={() => {
+        </View>
+      </KeyboardAvoidingView>
+      <Navbar navigation={navigation} />
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(false);
+        }}
+      >
+        <TouchableWithoutFeedback
+          onPress={() => {
             setModalVisible(false);
           }}
         >
-          <TouchableWithoutFeedback
-            onPress={() => {
-              setModalVisible(false);
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0,0,0,0.5)",
             }}
           >
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-                backgroundColor: "rgba(0,0,0,0.5)",
-              }}
-            >
-              <TouchableWithoutFeedback onPress={() => {}}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
                 <View
                   style={{
-                    flex: 1,
-                    justifyContent: "center",
-                    alignItems: "center",
+                    backgroundColor: "white",
+                    borderRadius: 20,
                   }}
                 >
-                  <View
-                    style={{
-                      backgroundColor: "white",
-                      borderRadius: 20,
+                  <FriendsList
+                    users={friends}
+                    onPress={() => {
+                      setModalVisible(false);
+                      navigation.navigate("UserUbPage");
                     }}
-                  >
-                    <FriendsList
-                      users={friends}
-                      onPress={() => {
-                        setModalVisible(false);
-                        navigation.navigate("UserUbPage");
-                      }}
-                    />
-                  </View>
+                  />
                 </View>
-              </TouchableWithoutFeedback>
-            </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-      </View>
-    );
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    </View>
+  );
 };
 
 const styles = StyleSheet.create({

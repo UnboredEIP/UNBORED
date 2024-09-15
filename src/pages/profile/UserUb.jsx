@@ -605,7 +605,7 @@ const styles = (len) => {
     },
     swiperContainer: {
       height: screenHeight * 0.24,
-      marginTop: screenHeight * 0.05,
+      marginTop: screenHeight * 0.03,
     },
     slide: {
       flex: 1,

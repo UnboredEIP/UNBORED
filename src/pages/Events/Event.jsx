@@ -6,6 +6,7 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   StyleSheet,
   Modal,
 } from "react-native";
@@ -154,7 +155,8 @@ const Event = ({ navigation }) => {
             left: screenWidth / 20,
             zIndex: 1,
           }}
-          onPress={() => navigation.replace(global.currentScreen)}
+          // onPress={() => navigation.replace(global.currentScreen)}
+          onPress={() => navigation.goBack()}
         >
           <BackArrow
             style={{
@@ -292,7 +294,7 @@ const Event = ({ navigation }) => {
             setModalVisible(false);
           }}
         >
-          <TouchableOpacity
+          <TouchableWithoutFeedback
             onPress={() => {
               setModalVisible(false);
             }}
@@ -305,7 +307,7 @@ const Event = ({ navigation }) => {
                 backgroundColor: "rgba(0,0,0,0.5)",
               }}
             >
-              <TouchableOpacity>
+              <TouchableWithoutFeedback>
                 <View
                   style={{
                     flex: 1,
@@ -322,9 +324,9 @@ const Event = ({ navigation }) => {
                     <ParticipantsActivity participents={participents} />
                   </View>
                 </View>
-              </TouchableOpacity>
+              </TouchableWithoutFeedback>
             </View>
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </Modal>
       </ScrollView>
     ) : (
@@ -349,7 +351,8 @@ const Event = ({ navigation }) => {
             left: screenWidth / 20,
             zIndex: 1,
           }}
-          onPress={() => navigation.replace(global.currentScreen)}
+          // onPress={() => navigation.replace(global.currentScreen)}
+          onPress={() => navigation.goBack()}
         >
           <BackArrow
             style={{

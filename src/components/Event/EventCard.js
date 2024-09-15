@@ -89,7 +89,7 @@ const EventCard = ({
     return stars;
   };
 
-  useEffect(() => {}, [isSaved, global.favEvents]);
+  useEffect(() => {}, [global.favEvents, isActivitySaved]);
 
   return (
     <View
@@ -310,7 +310,7 @@ const EventCard = ({
           </View>
           <TouchableOpacity
             onPress={async () => {
-              if (isSaved === false) {
+              if (isActivitySaved === false) {
                 const response = await ubService.favEvent([id]);
 
                 if (response) {
@@ -373,11 +373,11 @@ const EventCard = ({
           >
             <Image
               style={{
-                width: isSaved === false ? size * 0.04 : size * 0.05,
-                height: isSaved === false ? size * 0.06 : size * 0.07,
+                width: isActivitySaved === false ? size * 0.04 : size * 0.05,
+                height: isActivitySaved === false ? size * 0.06 : size * 0.07,
                 marginTop: size * 0.001,
               }}
-              source={isSaved === false ? vector : book}
+              source={isActivitySaved === false ? vector : book}
             />
           </TouchableOpacity>
         </View>

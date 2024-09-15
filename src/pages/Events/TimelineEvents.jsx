@@ -76,13 +76,16 @@ const TimelineEventsPage = ({ navigation }) => {
       try {
         const authToken = await AsyncStorage.getItem("authToken");
 
-        const response = await fetch(`https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-        });
+        const response = await fetch(
+          `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -100,6 +103,7 @@ const TimelineEventsPage = ({ navigation }) => {
         setEvents(tmpObj);
         const imagePromises = tmpObj.map(async (event) => {
           const img = await ubService.getImage(event.pictures[0].id);
+          if (!img) return defaultImage;
           return img;
         });
         const imageResults = await Promise.all(imagePromises);
@@ -115,7 +119,7 @@ const TimelineEventsPage = ({ navigation }) => {
 
     global.currentScreen = "TimelineEventsPage";
     fetchData();
-  }, [navigation, events, refresh]);
+  }, []);
 
   useEffect(() => {
     if (profileData !== null) {
@@ -126,8 +130,8 @@ const TimelineEventsPage = ({ navigation }) => {
 
   if (
     profileData === null ||
-    events.length < 0 ||
-    images.length !== events.length
+    (events && events.length < 0) ||
+    (events && images.length !== events.length)
   ) {
     return <LoadingPage />;
   } else
@@ -327,7 +331,7 @@ const TimelineEventsPage = ({ navigation }) => {
                   paddingHorizontal: screenHeight * 0.005,
                 }}
               >
-                {events.length > 0 ? (
+                {events && events.length > 0 ? (
                   events.map(
                     (event, index) =>
                       (event.categories[0] === activitiesType[choice] ||
@@ -344,13 +348,17 @@ const TimelineEventsPage = ({ navigation }) => {
                         >
                           <EventCard
                             onPress={() => {
-                              navigation.replace("Event");
+                              navigation.navigate("Event");
                             }}
                             size={screenHeight / 3.4}
                             key={index}
                             name={event.name}
                             address={event.address}
-                            pictures={images[index].url}
+                            pictures={
+                              images !== null && images[index].url
+                                ? images[index].url
+                                : defaultImage.url
+                            }
                             categories={event.categories}
                             date={event.start_date}
                             participents={event.participents.length}
@@ -374,7 +382,7 @@ const TimelineEventsPage = ({ navigation }) => {
           </View>
         </ScrollView>
         <View>
-          <Navbar navigation={navigation} />
+          {/* <Navbar navigation={navigation} /> */}
         </View>
       </View>
     );

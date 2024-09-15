@@ -3,10 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const Navbar = ({ navigation }) => {
-  const isAccueil3Page = navigation.state.routeName === 'Accueil3';
-  const isProfilePage = navigation.state.routeName === 'Profile';
-  const isSettingsPage = navigation.state.routeName === 'SavedEventsPage'; 
-  const isCalendarPage = navigation.state.routeName === 'Calendar'; 
+  const isAccueil3Page = navigation.state.routeName === "Accueil3";
+  const isProfilePage = navigation.state.routeName === "Profile";
+  const isSettingsPage = navigation.state.routeName === "SavedEventsPage";
+  const isCalendarPage = navigation.state.routeName === "Calendar";
   const getIconBackgroundColor = (page) => {
     return page ? "#E1604D" : "#5265FF1A";
   };
@@ -26,7 +26,7 @@ const Navbar = ({ navigation }) => {
         <Icon name="home" size={25} color={getIconColor(isAccueil3Page)} />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.navigate('Calendar')}
+        onPress={() => navigation.replace("Calendar")}
         style={[
           styles.iconContainer,
           { backgroundColor: getIconBackgroundColor(isCalendarPage) },
@@ -35,7 +35,7 @@ const Navbar = ({ navigation }) => {
         <Icon name="calendar" size={25} color={getIconColor(isCalendarPage)} />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => navigation.replace("SavedEventsPage")}
+        onPress={() => navigation.navigate("SavedEventsPage")}
         style={[
           styles.iconContainer,
           { backgroundColor: getIconBackgroundColor(isSettingsPage) },
