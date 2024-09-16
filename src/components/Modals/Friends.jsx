@@ -119,7 +119,7 @@ const listEyes = [
   "sad",
 ];
 
-const FriendsList = ({ users, onPress }) => {
+const FriendsList = ({ users, onPress, onPressChat }) => {
   return (
     <View
       style={{
@@ -164,6 +164,7 @@ const FriendsList = ({ users, onPress }) => {
               id={user._id}
               // onPress={() => {}}
               onPress={onPress}
+              onPressChat={onPressChat}
             />
           </View>
         ))

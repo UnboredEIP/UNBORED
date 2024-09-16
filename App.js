@@ -34,6 +34,7 @@ import Event from "./src/pages/Events/Event";
 import FriendsRequest from "./src/pages/profile/FriendsRequest";
 import SavedEventsPage from "./src/pages/Events/SavedEvents";
 import shop from "./src/pages/shop";
+import Chat from "./src/pages/chat";
 import UserUbPage from "./src/pages/profile/UserUb";
 import { ImagePickerIOS } from "react-native";
 class OTP2 extends React.Component {
@@ -94,6 +95,9 @@ const AppNavigator = createStackNavigator(
     Initial: {
       screen: InitialScreen,
       // screen: Login2,
+    },
+    Chat: {
+      screen: Chat,
     },
     Home: {
       screen: Register,
@@ -221,9 +225,9 @@ const AppNavigator = createStackNavigator(
       navigationOptions: {
         animationEnabled: false,
       },
-      // navigationOptions: {
-      // ...TransitionPresets.ModalTransition,
-      // },
+      navigationOptions: {
+      ...TransitionPresets.ScaleFromCenterAndroid,
+      },
     },
     Description: {
       screen: Description,
@@ -252,9 +256,9 @@ const AppNavigator = createStackNavigator(
     SavedEventsPage: {
       screen: SavedEventsPage,
       
-      // navigationOptions: {
-      // ...TransitionPresets.ModalTransition,
-      // },
+      navigationOptions: {
+      ...TransitionPresets.ScaleFromCenterAndroid,
+      },
     },
     UserUbPage: {
       screen: UserUbPage,
