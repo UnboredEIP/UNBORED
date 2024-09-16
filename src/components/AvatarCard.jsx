@@ -19,6 +19,7 @@ const WAIT_FOR_ACCEPT = 2;
 const IS_FRIEND = 3;
 
 const AvatarCard = ({
+  navigation,
   name = "user",
   clothTop,
   eyes,
@@ -39,6 +40,7 @@ const AvatarCard = ({
   //@ts-ignore
   id,
   onPress = () => {},
+  onPressChat = () => {},
 }) => {
   const uberservice = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
@@ -121,7 +123,7 @@ const AvatarCard = ({
           height={size * 0.3}
           onPress={async () => {
             const response = await uberservice.sendFriendRequest(id);
-
+  
             if (response) {
               console.log("SUCCESS FRIEND REQUEST");
               setIsFollowed(WAIT_FOR_ACCEPT);
@@ -149,8 +151,17 @@ const AvatarCard = ({
       ) : (
         <View />
       )}
+      {isFollowed === NOT_FRIENDS || isFollowed === WAIT_FOR_ACCEPT || isFollowed === IS_FRIEND ? (
+        <TouchableOpacity
+        style={styles(size).messageButton}
+        onPress={() => {
+        }}
+      >
+        <Text style={styles(size).messageText}>💬</Text>
+      </TouchableOpacity>
+      ):(<View></View>)}
     </TouchableOpacity>
-  );
+  );  
 };
 
 const AvatarCardFriendAccept = ({
@@ -296,6 +307,12 @@ const styles = (size) => {
     leftSection: {
       flexDirection: "row",
       alignItems: "center",
+    },
+    messageButton: {
+      paddingLeft: screenWidth * 0.02,
+    },
+    messageText: {
+      fontSize:15,
     },
     avatarContainer: {
       paddingBottom: screenHeight * 0.06,

@@ -19,7 +19,9 @@
             "usesCleartextTraffic": true
           },
           "ios": {
-            "deploymentTarget": "15.0"
+            "supportsTablet": true,
+            "bundleIdentifier": "com.unboredeip.unboredapp",
+            "buildNumber": "2"
           }
         }
       ],
@@ -30,7 +32,7 @@
       "expo-font"
     ],
     "slug": "unbored2",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/unBored.png",
     "userInterfaceStyle": "light",
@@ -59,6 +61,7 @@
     },
     "extra": {
       "eas": {
+        "projectId": "df2f28a1-374e-4e2c-852e-855f117615d9"
       }
     }
   }
