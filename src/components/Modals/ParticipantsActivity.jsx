@@ -114,7 +114,7 @@ const listEyes = [
   "squint",
 ];
 
-const ParticipantsActivity = ({ participents }) => {
+const ParticipantsActivity = ({ participents, onPressChat }) => {
   return (
     <View
       style={{
@@ -137,6 +137,7 @@ const ParticipantsActivity = ({ participents }) => {
             }}
           >
             <AvatarCard
+              onPressChat={onPressChat}
               key={index}
               name={participent.username}
               size={100}

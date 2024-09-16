@@ -123,7 +123,7 @@ const AvatarCard = ({
           height={size * 0.3}
           onPress={async () => {
             const response = await uberservice.sendFriendRequest(id);
-  
+
             if (response) {
               console.log("SUCCESS FRIEND REQUEST");
               setIsFollowed(WAIT_FOR_ACCEPT);
@@ -151,17 +151,20 @@ const AvatarCard = ({
       ) : (
         <View />
       )}
-      {isFollowed === NOT_FRIENDS || isFollowed === WAIT_FOR_ACCEPT || isFollowed === IS_FRIEND ? (
+      {isFollowed === NOT_FRIENDS ||
+      isFollowed === WAIT_FOR_ACCEPT ||
+      isFollowed === IS_FRIEND ? (
         <TouchableOpacity
-        style={styles(size).messageButton}
-        onPress={() => {
-        }}
-      >
-        <Text style={styles(size).messageText}>💬</Text>
-      </TouchableOpacity>
-      ):(<View></View>)}
+          style={styles(size).messageButton}
+          onPress={onPressChat}
+        >
+          <Text style={styles(size).messageText}>💬</Text>
+        </TouchableOpacity>
+      ) : (
+        <View></View>
+      )}
     </TouchableOpacity>
-  );  
+  );
 };
 
 const AvatarCardFriendAccept = ({
@@ -248,7 +251,6 @@ const AvatarCardFriendAccept = ({
           />
         </View>
         <Text style={styles(size).name}>{truncateName(name)}</Text>
-     
       </View>
       <Buttons
         texte="Accepter"
@@ -312,7 +314,7 @@ const styles = (size) => {
       paddingLeft: screenWidth * 0.02,
     },
     messageText: {
-      fontSize:15,
+      fontSize: 15,
     },
     avatarContainer: {
       paddingBottom: screenHeight * 0.06,

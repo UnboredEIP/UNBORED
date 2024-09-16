@@ -321,7 +321,13 @@ const Event = ({ navigation }) => {
                       borderRadius: 20,
                     }}
                   >
-                    <ParticipantsActivity participents={participents} />
+                    <ParticipantsActivity
+                      participents={participents}
+                      onPressChat={() => {
+                        // navigation.navigate("ChatPage");
+                        console.log("GO LE CHAT");
+                      }}
+                    />
                   </View>
                 </View>
               </TouchableWithoutFeedback>
@@ -472,7 +478,13 @@ const Event = ({ navigation }) => {
                       borderRadius: 20,
                     }}
                   >
-                    <ParticipantsActivity participents={participents} />
+                    <ParticipantsActivity
+                      participents={participents}
+                      onPressChat={() => {
+                        // navigation.navigate("ChatPage");
+                        console.log("GO LE CHAT");
+                      }}
+                    />
                   </View>
                 </View>
               </TouchableOpacity>
