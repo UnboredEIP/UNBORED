@@ -139,8 +139,6 @@ const UserUbPage = ({ navigation }) => {
   const [friends, setFriends] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [image, setImage] = useState(defaultImage);
-  const [participents, setParticipents] = useState([]);
-  const [isEnroll, setIsEnroll] = useState(NOT_ENROLL);
   const [events, setEvents] = useState([]);
   const ubService = new UbService();
   const [images, setImages] = useState([defaultImage]);
@@ -152,7 +150,6 @@ const UserUbPage = ({ navigation }) => {
     for (const friend of invitations.friends) {
       if (friend._id === global.myId) {
         setIsFollowed(WAIT_FOR_ACCEPT);
-        console.log("BAWE");
         return true; // ID found in invitations
       }
       // }

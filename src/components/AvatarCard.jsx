@@ -91,6 +91,7 @@ const AvatarCard = ({
       style={styles(size).container}
       onPress={() => {
         global.currentUserId = id;
+        console.log(id);
         onPress();
       }}
     >
@@ -228,6 +229,7 @@ const AvatarCardFriendAccept = ({
       style={styles(size).container}
       onPress={() => {
         global.currentUserId = id;
+
         onPress();
       }}
     >
