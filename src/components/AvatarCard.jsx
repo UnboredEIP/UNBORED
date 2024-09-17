@@ -39,8 +39,9 @@ const AvatarCard = ({
   //@ts-ignore
   id,
   onPress = () => {},
+  onPressChat = () => {},
 }) => {
-  const uberservice = new UbService();
+  const ubService = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
   const MAX_NAME_LENGTH = screenWidth * 0.0305;
 
@@ -120,7 +121,7 @@ const AvatarCard = ({
           width={size * 0.6}
           height={size * 0.3}
           onPress={async () => {
-            const response = await uberservice.sendFriendRequest(id);
+            const response = await ubService.sendFriendRequest(id);
 
             if (response) {
               console.log("SUCCESS FRIEND REQUEST");
@@ -149,6 +150,18 @@ const AvatarCard = ({
       ) : (
         <View />
       )}
+      {isFollowed === NOT_FRIENDS ||
+      isFollowed === WAIT_FOR_ACCEPT ||
+      isFollowed === IS_FRIEND ? (
+        <TouchableOpacity
+          style={styles(size).messageButton}
+          onPress={onPressChat}
+        >
+          <Text style={styles(size).messageText}>💬</Text>
+        </TouchableOpacity>
+      ) : (
+        <View></View>
+      )}
     </TouchableOpacity>
   );
 };
@@ -174,7 +187,7 @@ const AvatarCardFriendAccept = ({
   id,
   onPress = () => {},
 }) => {
-  const uberservice = new UbService();
+  const ubService = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
   const MAX_NAME_LENGTH = 11;
 
@@ -237,7 +250,6 @@ const AvatarCardFriendAccept = ({
           />
         </View>
         <Text style={styles(size).name}>{truncateName(name)}</Text>
-     
       </View>
       <Buttons
         texte="Accepter"
@@ -245,7 +257,7 @@ const AvatarCardFriendAccept = ({
         width={size * 0.6}
         height={size * 0.3}
         onPress={async () => {
-          const response = await uberservice.acceptFriendRequest(id);
+          const response = await ubService.acceptFriendRequest(id);
           if (response) {
             console.log("SUCCESS FRIEND REQUEST");
             Toast.show("Nouvel(le) ami(e)", {
@@ -297,12 +309,19 @@ const styles = (size) => {
       flexDirection: "row",
       alignItems: "center",
     },
+    messageButton: {
+      // paddingLeft: screenWidth * 0.02,
+    },
+    messageText: {
+      fontSize: 15,
+    },
     avatarContainer: {
       paddingBottom: screenHeight * 0.06,
     },
     name: {
       fontSize: size * 0.14,
       marginLeft: size * 0.6,
+      fontWeight: "bold",
     },
   });
 };

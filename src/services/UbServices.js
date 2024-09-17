@@ -55,16 +55,19 @@ export class UbService {
   joinEvent = async (events) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          events,
-        }),
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            events,
+          }),
+        }
+      );
       if (response.ok) {
         return true;
       } else {
@@ -79,16 +82,19 @@ export class UbService {
   leaveEvent = async (events) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/delete`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          events,
-        }),
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            events,
+          }),
+        }
+      );
       if (response.ok) {
         return true;
       } else {
@@ -103,16 +109,19 @@ export class UbService {
   favEvent = async (events) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/favorites/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          events,
-        }),
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/favorites/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            events,
+          }),
+        }
+      );
       if (response.ok) {
         return true;
       } else {
@@ -127,16 +136,19 @@ export class UbService {
   deleteFavEvent = async (events) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/event/favorites/delete`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify({
-          events,
-        }),
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/favorites/delete`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            events,
+          }),
+        }
+      );
 
       if (response.ok) {
         return true;
@@ -198,13 +210,16 @@ export class UbService {
   getUserById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/profile/get?id=${id}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/get?id=${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -217,16 +232,44 @@ export class UbService {
     }
   };
 
+  getAllUsers = async () => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/all`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      if (!responseData.users) throw new Error(`status: ${response.status}`);
+      return responseData.users;
+    } catch (error) {
+      console.error("Error when try to get all users:", error);
+    }
+  };
+
   sendFriendRequest = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/friends/invite?user_id=${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/friends/invite?user_id=${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -241,13 +284,16 @@ export class UbService {
   acceptFriendRequest = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
-      const response = await fetch(`${API_URL}/friends/accept?user_id=${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-      });
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/friends/accept?user_id=${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -392,6 +438,38 @@ export class UbService {
         return true;
       } else {
         console.error(response.toString());
+        return false;
+      }
+    } catch (error) {
+      console.error("Request error: ", error);
+      return false;
+    }
+  };
+
+  sendReview = async (id, stars, comments) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/rate?id=${id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            stars,
+            comments,
+          }),
+        }
+      );
+      if (response.ok) {
+        console.log(
+          `Event ${id} rated successfully:\nSTARS: ${stars}\nCOMMENT: ${comments}`
+        );
+        return true;
+      } else {
+        console.error(response.status);
         return false;
       }
     } catch (error) {

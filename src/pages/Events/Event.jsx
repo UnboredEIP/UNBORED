@@ -20,6 +20,7 @@ import ParticipantsActivity from "../../components/Modals/ParticipantsActivity";
 import Toast from "react-native-root-toast";
 import LoadingPage from "../Loading";
 import { BackArrow } from "../../../assets/avatars/avatars";
+import MyTextInput from "../../components/TextField";
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
@@ -28,6 +29,7 @@ const defaultImage = {
   url: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
   description: "Default Image",
 };
+let star = 5;
 
 const IS_ENROLL = 1;
 const NOT_ENROLL = 2;
@@ -54,40 +56,6 @@ function extractTime(dateTimeString) {
   return timeString;
 }
 
-const renderStars = (ratings) => {
-  let totalStars = 0;
-  ratings.forEach((rating) => {
-    totalStars += parseInt(rating.stars); // Sum up all the stars
-  });
-  const averageStars = Math.round(totalStars / ratings.length); // Calculate average stars and round to nearest integer
-  const stars = [];
-  const maxStars = 5; // Maximum number of stars
-  for (let i = 1; i <= maxStars; i++) {
-    if (i <= averageStars) {
-      stars.push(
-        <TouchableOpacity key={i}>
-          <Image
-            key={i}
-            style={{ width: screenHeight * 0.04, height: screenHeight * 0.04 }}
-            source={startFilled}
-          />
-        </TouchableOpacity>
-      );
-    } else {
-      stars.push(
-        <TouchableOpacity key={i}>
-          <Image
-            key={i}
-            style={{ width: screenHeight * 0.04, height: screenHeight * 0.04 }}
-            source={startUnfilled}
-          />
-        </TouchableOpacity>
-      );
-    }
-  }
-  return stars;
-};
-
 const Event = ({ navigation }) => {
   const [eventData, setEventData] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -96,6 +64,8 @@ const Event = ({ navigation }) => {
   const [isEnroll, setIsEnroll] = useState(NOT_ENROLL);
   const ubService = new UbService();
   const [dataLoaded, setDataLoaded] = useState(0);
+  const [review, setReview] = useState("");
+  const [selectedStar, setSelectedStar] = useState(0); // État pour la star sélectionnée
 
   function userIsEnroll(events, id) {
     // for (const invitation of invitations) {
@@ -110,6 +80,34 @@ const Event = ({ navigation }) => {
 
     return false; // ID not found in invitations
   }
+
+  const renderStars = () => {
+    const maxStars = 5;
+    const handleStarPress = (i) => {
+      console.log(i);
+      setSelectedStar(i);
+    };
+
+    const stars = [];
+    for (let i = 1; i <= maxStars; i++) {
+      stars.push(
+        <TouchableOpacity
+          key={i}
+          onPress={() => handleStarPress(i)} // Met à jour la sélection en fonction de l'étoile cliquée
+        >
+          <Image
+            style={{
+              width: screenHeight * 0.04,
+              height: screenHeight * 0.04,
+            }}
+            source={i <= selectedStar ? startFilled : startUnfilled} // Remplie ou non en fonction de la sélection
+          />
+        </TouchableOpacity>
+      );
+    }
+
+    return stars;
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -199,6 +197,9 @@ const Event = ({ navigation }) => {
         <Text style={styles(eventData.name.length).date}>
           {formatDate(eventData.start_date)}
         </Text>
+        <Text style={styles(eventData.name.length).time}>
+          Heure début: {extractTime(eventData.start_date)}
+        </Text>
         <View style={styles(eventData.name.length).locationContainer}>
           <View style={styles(eventData.name.length).locationTextContainer}>
             <Image
@@ -210,9 +211,6 @@ const Event = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <Text style={styles(eventData.name.length).time}>
-          Heure début: {extractTime(eventData.start_date)}
-        </Text>
         <Text style={styles(eventData.name.length).description}>
           {eventData.description}
         </Text>
@@ -346,7 +344,17 @@ const Event = ({ navigation }) => {
                       borderRadius: 20,
                     }}
                   >
-                    <ParticipantsActivity participents={participents} />
+                    <ParticipantsActivity
+                      onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate("UserUbPage");
+                      }}
+                      participents={participents}
+                      onPressChat={() => {
+                        console.log("GO LE CHAT");
+                        navigation.navigate("Chat");
+                      }}
+                    />
                   </View>
                 </View>
               </TouchableWithoutFeedback>
@@ -418,6 +426,9 @@ const Event = ({ navigation }) => {
         <Text style={styles(eventData.name.length).date}>
           {formatDate(eventData.start_date)}
         </Text>
+        <Text style={styles(eventData.name.length).time}>
+          Heure début: {extractTime(eventData.start_date)}
+        </Text>
         <View style={styles(eventData.name.length).locationContainer}>
           <View style={styles(eventData.name.length).locationTextContainer}>
             <Image
@@ -429,9 +440,6 @@ const Event = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <Text style={styles(eventData.name.length).time}>
-          Heure début: {extractTime(eventData.start_date)}
-        </Text>
         <Text style={styles(eventData.name.length).description}>
           {eventData.description}
         </Text>
@@ -450,13 +458,19 @@ const Event = ({ navigation }) => {
         <Text
           style={{
             paddingVertical: screenHeight * 0.02,
+            fontSize: screenHeight * 0.001,
           }}
         >
-          Notes cette activité
+          Donnes ton avis sur cette activité
         </Text>
         <View style={styles(eventData.name.length).ratingContainer}>
-          {renderStars(eventData.rate)}
+          {renderStars()}
         </View>
+
+        <MyTextInput
+          placeholder={"Laisse ton avis !"}
+          onChangeText={(review) => setReview(review)}
+        />
         <Modal
           animationType="fade"
           transparent={true}
@@ -492,13 +506,65 @@ const Event = ({ navigation }) => {
                       borderRadius: 20,
                     }}
                   >
-                    <ParticipantsActivity participents={participents} />
+                    <ParticipantsActivity
+                      onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate("UserUbPage");
+                      }}
+                      participents={participents}
+                      onPressChat={() => {
+                        console.log("GO LE CHAT");
+                        navigation.navigate("Chat");
+                      }}
+                    />
                   </View>
                 </View>
               </TouchableWithoutFeedback>
             </View>
           </TouchableWithoutFeedback>
         </Modal>
+        <View
+          style={{
+            marginBottom: screenHeight * 0.03,
+          }}
+        >
+          <Buttons
+            texte="Envoyer"
+            onPress={async () => {
+              try {
+                const response = await ubService.sendReview(
+                  String(global.currentEventId),
+                  selectedStar.toString(),
+                  review
+                );
+
+                if (!response) {
+                  Toast.show("Veuillez réessayez", {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                Toast.show("Avis envoyé", {
+                  duration: Toast.durations.LONG,
+                  position: Toast.positions.BOTTOM,
+                  backgroundColor: "green",
+                  shadow: true,
+                  animation: true,
+                  hideOnPress: true,
+                });
+                console.log(`STARS: ${selectedStar}: COMMENT: ${review}`);
+                navigation.replace("Accueil3");
+              } catch (error) {
+                console.error("Error send review:", error);
+              }
+            }}
+          />
+        </View>
       </ScrollView>
     );
   }

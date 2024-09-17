@@ -30,6 +30,11 @@ const screenWidth = Dimensions.get("screen").width;
 
 const IS_ENROLL = 1;
 const NOT_ENROLL = 2;
+
+const NOT_FRIENDS = 1;
+const WAIT_FOR_ACCEPT = 2;
+const IS_FRIEND = 3;
+
 const defaultImage = {
   id: 1,
   url: "https://upload.wikimedia.org/wikipedia/en/thumb/5/56/Real_Madrid_CF.svg/1200px-Real_Madrid_CF.svg.png",
@@ -129,28 +134,6 @@ const listEyes = [
   "sad",
 ];
 
-function formatDate(dateString) {
-  const dateObj = new Date(dateString);
-  const dateExtraite = dateObj.toISOString().split("T")[0];
-
-  return dateExtraite;
-}
-
-function extractTime(dateTimeString) {
-  // Create a new Date object from the given date string
-  const date = new Date(dateTimeString);
-
-  // Extract hours, minutes, and seconds
-  const hours = date.getHours().toString().padStart(2, "0");
-  const minutes = date.getMinutes().toString().padStart(2, "0");
-  const seconds = date.getSeconds().toString().padStart(2, "0");
-
-  // Construct the time string
-  const timeString = `${hours}:${minutes}`;
-
-  return timeString;
-}
-
 const UserUbPage = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [friends, setFriends] = useState([]);
@@ -162,6 +145,28 @@ const UserUbPage = ({ navigation }) => {
   const ubService = new UbService();
   const [images, setImages] = useState([defaultImage]);
   const [refresh, setRefresh] = useState(true);
+  const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
+
+  function isIdInInvitations(invitations, friends, id) {
+    // for (const invitation of invitations) {
+    for (const friend of invitations.friends) {
+      if (friend._id === global.myId) {
+        setIsFollowed(WAIT_FOR_ACCEPT);
+        console.log("BAWE");
+        return true; // ID found in invitations
+      }
+      // }
+    }
+    for (const friend of friends) {
+      if (friend._id === id) {
+        setIsFollowed(IS_FRIEND);
+        return true; // ID found in invitations
+      }
+      // }
+    }
+    console.log("NOT FOUND");
+    return false; // ID not found in invitations
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,6 +178,7 @@ const UserUbPage = ({ navigation }) => {
         const responseData = response;
         const eventsObj = await ubService.getSubscribedEvents();
 
+        isIdInInvitations(response.invitations, response.friends, global.myId);
         if (eventsObj) {
           setEvents(eventsObj);
           const imagePromises = eventsObj.map(async (event) => {
@@ -184,10 +190,12 @@ const UserUbPage = ({ navigation }) => {
         }
         if (responseData) setUserData(responseData);
 
-        console.log("CONSOLE DATA UBPROFILE:", responseData);
-        if (responseData.friends.length > 0) {
+        if (response.friends.length > 0) {
           const users = [];
-          for (const friend of responseData.friends) {
+          if (global.currentUserId === global.myId) {
+            setIsFollowed(5);
+          }
+          for (const friend of response.friends) {
             // console.log("FRIENDS:", friend);
             const user = await ubService.getUserById(friend._id);
             if (user) {
@@ -196,10 +204,8 @@ const UserUbPage = ({ navigation }) => {
           }
           setFriends(users);
         }
-
-        console.log("USER style:", responseData);
-        if (responseData.profilePhoto) {
-          const img = await ubService.getImage(responseData.profilePhoto);
+        if (response.profilePhoto) {
+          const img = await ubService.getImage(response.profilePhoto);
           setImage(img);
         }
       } catch (error) {
@@ -320,6 +326,42 @@ const UserUbPage = ({ navigation }) => {
             <Text style={styles().network}>activité(s)</Text>
           </View>
         </View>
+
+        <View
+          style={{
+            padding: screenHeight * 0.02,
+          }}
+        >
+          {isFollowed === NOT_FRIENDS ? (
+            <Buttons
+              texte="suivre"
+              onPress={async () => {
+                const response = await ubService.sendFriendRequest(
+                  global.currentUserId
+                );
+
+                if (response) {
+                  console.log("SUCCESS FRIEND REQUEST");
+                  setIsFollowed(WAIT_FOR_ACCEPT);
+                } else console.log("FAILED FRIEND REQUEST");
+              }}
+            />
+          ) : isFollowed === WAIT_FOR_ACCEPT ? (
+            <Buttons
+              texte="en attente"
+              onPress={() => {}}
+              backgroundColor="grey"
+            />
+          ) : isFollowed === IS_FRIEND ? (
+            <Buttons
+              texte="ami(e)"
+              backgroundColor="green"
+              onPress={() => {}}
+            />
+          ) : (
+            <View />
+          )}
+        </View>
         <Text
           style={{
             fontSize: screenHeight * 0.03,
@@ -401,7 +443,7 @@ const UserUbPage = ({ navigation }) => {
             marginVertical: screenWidth * 0.06,
           }}
         >
-          Prochaine{"(s)"} Activité{"(s)"}
+          Activité{"(s)"}
         </Text>
 
         <View
@@ -505,6 +547,10 @@ const UserUbPage = ({ navigation }) => {
                   >
                     <FriendsList
                       users={friends}
+                      onPressChat={() => {
+                        console.log("GO LE CHAT");
+                        navigation.navigate("Chat");
+                      }}
                       onPress={() => {
                         setModalVisible(false);
                         setRefresh(!refresh);

@@ -344,6 +344,10 @@ const Profile = ({ navigation }) => {
                       setModalVisible(false);
                       navigation.navigate("UserUbPage");
                     }}
+                    onPressChat={() => {
+                      setModalVisible(false);
+                      navigation.navigate("Chat");
+                    }}
                   />
                 </View>
               </View>
