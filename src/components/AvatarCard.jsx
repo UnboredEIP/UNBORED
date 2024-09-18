@@ -156,8 +156,10 @@ const AvatarCard = ({
       isFollowed === IS_FRIEND ? (
         <TouchableOpacity
           style={styles(size).messageButton}
-          onPress={onPressChat}
-        >
+          onPress={() => {
+            global.idchat = id;
+            onPressChat();
+          }}>
           <Text style={styles(size).messageText}>💬</Text>
         </TouchableOpacity>
       ) : (

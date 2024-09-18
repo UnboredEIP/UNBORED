@@ -484,7 +484,6 @@ const UserUbPage = ({ navigation }) => {
                     <ParticipantsActivity
                       participents={participents}
                       onPressChat={() => {
-                        console.log("GO LE CHAT");
                       navigation.navigate("Chat");
                       }}
                     />

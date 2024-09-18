@@ -102,7 +102,7 @@ const Activities = ({ navigation }) => {
       name: activityName,
       address: address,
       end_date: endDate,
-      categories: ["test"],
+      categories: ["activité"],
     };
 
     try {

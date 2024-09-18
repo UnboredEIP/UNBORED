@@ -324,7 +324,6 @@ const Event = ({ navigation }) => {
                     <ParticipantsActivity
                       participents={participents}
                       onPressChat={() => {
-                        console.log("GO LE CHAT");
                         navigation.navigate("Chat");
                       }}
                     />
@@ -481,6 +480,8 @@ const Event = ({ navigation }) => {
                     <ParticipantsActivity
                       participents={participents}
                       onPressChat={() => {
+                        global.idchat = participents.id;
+                        console.log("GO LE CHAT: ", global.idchat);
                         console.log("GO LE CHAT");
                       navigation.navigate("Chat");
                       }}

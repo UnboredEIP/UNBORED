@@ -202,20 +202,7 @@ const Profile = ({ navigation }) => {
     // Clear the timeout if the component unmounts before 2 seconds
     return () => clearTimeout(timer);
   }, [nbFriends]);
-  // if (username !== "" && nbFriends !== friends.length) {
-  //   return (
-  //     <Image
-  //       source={require("../../../assets/loading.gif")}
-  //       style={{
-  //         height: 400,
-  //         width: 400,
-  //         alignContent: "center",
-  //         alignItems: "center",
-  //         marginTop: 200,
-  //       }}
-  //     ></Image>
-  //   );
-  // } else
+
   return (
     <View style={{ flex: 1 }}>
       <KeyboardAvoidingView
@@ -345,6 +332,7 @@ const Profile = ({ navigation }) => {
                       navigation.navigate("UserUbPage");
                     }}
                     onPressChat={() => {
+                      console.log("GO LE CHAT: ", global.idchat);
                       setModalVisible(false);
                       navigation.navigate("Chat");
                     }}
