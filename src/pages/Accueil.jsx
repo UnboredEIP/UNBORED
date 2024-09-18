@@ -18,6 +18,8 @@ import { UbService } from "../services/UbServices";
 import EventCard from "../components/Event/EventCard";
 import LoadingPage from "./Loading";
 import SearchFilter from "../components/SearchFilter";
+import * as Calendar from "expo-calendar";
+import Buttons from "../components/Buttons";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -29,15 +31,6 @@ const truncateName = (name) => {
   }
   return name;
 };
-
-const data = [
-  { id: "1", name: "Idrissa" },
-  { id: "2", name: "Yacine" },
-  { id: "3", name: "Steeven" },
-  { id: "4", name: "Rémi" },
-  { id: "5", name: "Jimy" },
-  { id: "6", name: "Pottin" },
-];
 
 const Accueil3 = ({ navigation }) => {
   // const [fontsLoaded] = useFonts({
@@ -74,6 +67,20 @@ const Accueil3 = ({ navigation }) => {
     return false;
   };
   useEffect(() => {
+    (async () => {
+      const firstLaunch = await AsyncStorage.getItem("firstLaunch");
+      if (firstLaunch === null) {
+        const { status } = await Calendar.requestCalendarPermissionsAsync();
+        if (status === "granted") {
+          const calendars = await Calendar.getCalendarsAsync(
+            Calendar.EntityTypes.EVENT
+          );
+          console.log("Here are all your calendars:");
+          // console.log({ calendars });
+        }
+        await AsyncStorage.setItem("firstLaunch", "true");
+      }
+    })();
     const fetchData = async () => {
       try {
         // await AsyncStorage.removeItem("favourites");
@@ -303,6 +310,28 @@ const Accueil3 = ({ navigation }) => {
                   // );
                 }}
               />
+
+              {/* <Buttons
+                title="Create a new calendar"
+                onPress={async () => {
+                  await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+                  try {
+                    const defaultCalendar =
+                      await Calendar.getDefaultCalendarAsync();
+
+                    await Calendar.createEventAsync(defaultCalendar.id, {
+                      title: "TEST",
+                      startDate: new Date("2021-01-25"),
+                      endDate: new Date("2021-01-26"),
+                    });
+
+                    console.log("Event was created.");
+                  } catch (e) {
+                    console.log(e.message);
+                  }
+                  console.log(`New calendar ID: ${newCalendarID}`);
+                }}
+              /> */}
               <Text
                 style={{
                   fontWeight: "bold",

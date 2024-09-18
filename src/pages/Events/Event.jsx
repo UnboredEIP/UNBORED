@@ -127,7 +127,8 @@ const Event = ({ navigation }) => {
         if (responseData.participents.length > 0 && dataLoaded === 0) {
           const users = [];
           for (const participent of responseData.participents) {
-            const user = await ubService.getUserById(participent);
+            // console.log("LE PARTICIPENT: ", participent);
+            const user = await ubService.getUserById(participent.user);
             // console.log(user);
             if (user) {
               users.push(user);

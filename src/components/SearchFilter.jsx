@@ -15,7 +15,7 @@ const screenHeight = Dimensions.get("screen").height;
 
 const SearchFilter = ({
   data,
-  placeholder = "Rechercher...",
+  placeholder = "Rechercher un utilisateur...",
   borderColor = "#E1604D",
   inputHeight = screenHeight * 0.05,
   inputTextColor = "black",
