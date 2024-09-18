@@ -74,7 +74,6 @@ const Chat = () => {
   const [messages, setMessages] = useState([]); // Liste des messages
   const [userId, setUserId] = useState(null);
 
-  // Récupération du profil utilisateur lors du premier rendu
   useEffect(() => {
     const fetchProfile = async () => {
       const profile = await handleProfileFetch();
@@ -84,6 +83,19 @@ const Chat = () => {
     };
     fetchProfile();
   }, []); // Appel une fois, lorsque le composant est monté
+  useEffect(() => {
+    if (userId) {
+      const interval = setInterval(async () => {
+        const messagesData = await handleMessagesFetch(userId);
+        if (messagesData) {
+          setMessages(messagesData); // Met à jour la liste des messages
+        }
+      }, 5000); // Répète toutes les 5000ms (5 secondes)
+
+      // Nettoyage de l'intervalle lors du démontage du composant
+      return () => clearInterval(interval);
+    }
+  }, [userId]); // Appel une fois que userId est mis à jour
 
   // Récupération des messages une fois que l'ID utilisateur est défini
   useEffect(() => {
