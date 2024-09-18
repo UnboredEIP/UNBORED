@@ -27,6 +27,30 @@ export class UbService {
       console.error("Error when try to get events:", error);
     }
   };
+  getApiEvents = async () => {
+    try {
+      const dataUrl =
+        "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/que-faire-a-paris-/records?limit=10&refine=group%3A%22Parcs%20et%20jardins%22";
+
+      // const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(dataUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          // Authorization: `Bearer ${authToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      return responseData;
+      //   await AsyncStorage.setItem("allEvents", responseData.events);
+    } catch (error) {
+      console.error("Error when try to get api events:", error);
+    }
+  };
   getSubscribedEvents = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
