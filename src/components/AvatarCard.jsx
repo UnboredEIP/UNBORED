@@ -19,7 +19,6 @@ const WAIT_FOR_ACCEPT = 2;
 const IS_FRIEND = 3;
 
 const AvatarCard = ({
-  navigation,
   name = "user",
   clothTop,
   eyes,
@@ -42,7 +41,7 @@ const AvatarCard = ({
   onPress = () => {},
   onPressChat = () => {},
 }) => {
-  const uberservice = new UbService();
+  const ubService = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
   const MAX_NAME_LENGTH = screenWidth * 0.0305;
 
@@ -92,6 +91,7 @@ const AvatarCard = ({
       style={styles(size).container}
       onPress={() => {
         global.currentUserId = id;
+        console.log(id);
         onPress();
       }}
     >
@@ -122,7 +122,7 @@ const AvatarCard = ({
           width={size * 0.6}
           height={size * 0.3}
           onPress={async () => {
-            const response = await uberservice.sendFriendRequest(id);
+            const response = await ubService.sendFriendRequest(id);
 
             if (response) {
               console.log("SUCCESS FRIEND REQUEST");
@@ -190,7 +190,7 @@ const AvatarCardFriendAccept = ({
   id,
   onPress = () => {},
 }) => {
-  const uberservice = new UbService();
+  const ubService = new UbService();
   const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
   const MAX_NAME_LENGTH = 11;
 
@@ -231,6 +231,7 @@ const AvatarCardFriendAccept = ({
       style={styles(size).container}
       onPress={() => {
         global.currentUserId = id;
+
         onPress();
       }}
     >
@@ -260,7 +261,7 @@ const AvatarCardFriendAccept = ({
         width={size * 0.6}
         height={size * 0.3}
         onPress={async () => {
-          const response = await uberservice.acceptFriendRequest(id);
+          const response = await ubService.acceptFriendRequest(id);
           if (response) {
             console.log("SUCCESS FRIEND REQUEST");
             Toast.show("Nouvel(le) ami(e)", {
@@ -313,7 +314,7 @@ const styles = (size) => {
       alignItems: "center",
     },
     messageButton: {
-      paddingLeft: screenWidth * 0.02,
+      // paddingLeft: screenWidth * 0.02,
     },
     messageText: {
       fontSize: 15,
@@ -324,6 +325,7 @@ const styles = (size) => {
     name: {
       fontSize: size * 0.14,
       marginLeft: size * 0.6,
+      fontWeight: "bold",
     },
   });
 };

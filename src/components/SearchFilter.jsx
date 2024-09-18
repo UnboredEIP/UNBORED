@@ -7,34 +7,15 @@ import {
   Text,
   View,
   Dimensions,
+  TouchableOpacity,
 } from "react-native";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
-interface Item {
-  id: string;
-  name: string;
-}
-
-interface SearchFilterProps {
-  data: Item[];
-  placeholder?: string;
-  borderColor?: string;
-  inputHeight?: number;
-  inputTextColor?: string;
-  inputBackgroundColor?: string;
-  itemTextColor?: string;
-  itemBackgroundColor?: string;
-  itemHeight?: number;
-  itemWidth?: number;
-  itemFontSize?: number;
-  itemBorderColor?: string;
-}
-
-const SearchFilter: React.FC<SearchFilterProps> = ({
+const SearchFilter = ({
   data,
-  placeholder = "Rechercher...",
+  placeholder = "Rechercher un utilisateur...",
   borderColor = "#E1604D",
   inputHeight = screenHeight * 0.05,
   inputTextColor = "black",
@@ -45,20 +26,21 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
   itemWidth = screenWidth * 1.5,
   itemFontSize = 18,
   itemBorderColor = "gray",
+  onPress,
 }) => {
-  const [searchText, setSearchText] = useState<string>("");
-  const [filteredData, setFilteredData] = useState<Item[]>(data);
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState(data);
   const [isFocused, setIsFocused] = useState(false);
 
-  const handleSearch = (text: string) => {
+  const handleSearch = (text) => {
     setSearchText(text);
     const filteredItems = data.filter((item) =>
-      item.name.toLowerCase().includes(text.toLowerCase())
+      item.username.toLowerCase().includes(text.toLowerCase())
     );
     setFilteredData(filteredItems);
   };
 
-  const styles = (borderColor: string, height: number) => {
+  const styles = (borderColor, height) => {
     return StyleSheet.create({
       container: {
         flex: 1,
@@ -109,24 +91,25 @@ const SearchFilter: React.FC<SearchFilterProps> = ({
           value={searchText}
           onChangeText={handleSearch}
           placeholderTextColor={inputTextColor}
-          onFocus={() => {
-            setIsFocused(true);
-          }}
-          onBlur={() => {
-            setIsFocused(false);
-          }}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
       </View>
-      {searchText === "" ? (
-        <View></View>
-      ) : (
+      {searchText !== "" && (
         <FlatList
           data={filteredData}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View style={dynamicStyles.item}>
-              <Text style={dynamicStyles.itemText}>{item.name}</Text>
-            </View>
+            <TouchableOpacity
+              onPress={() => {
+                global.currentUserId = item._id; // Stocke l'ID globalement
+                onPress?.(); // Appelle la fonction de rappel s'il y en a une
+              }}
+            >
+              <View style={dynamicStyles.item}>
+                <Text style={dynamicStyles.itemText}>{item.username}</Text>
+              </View>
+            </TouchableOpacity>
           )}
         />
       )}

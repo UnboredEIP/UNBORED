@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, Text, View, ScrollView } from "react-native";
 import { AvatarCard } from "../AvatarCard";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -123,54 +123,71 @@ const FriendsList = ({ users, onPress, onPressChat }) => {
   return (
     <View
       style={{
-        // borderColor: "#EBEEF2",
         height: screenHeight * 0.8,
         width: screenWidth * 0.83,
         borderRadius: 20,
         overflow: "hidden",
         alignItems: "center",
         justifyContent: "center",
+        paddingVertical: screenHeight * 0.03,
       }}
     >
-      <Text>Ma liste d'ami</Text>
+      <Text
+        style={{
+          marginTop: screenHeight * 0.05,
+          fontSize: screenHeight * 0.025,
+          fontWeight: "bold",
+        }}
+      >
+        Liste d'ami
+      </Text>
       {users.length > 0 ? (
-        users.map((user, index) => (
-          <View
-            key={index}
-            style={{
-              padding: screenHeight * 0.01,
-            }}
-          >
-            <AvatarCard
+        <ScrollView
+          style={{
+            width: "100%",
+          }}
+          contentContainerStyle={{
+            alignItems: "center",
+            paddingBottom: screenHeight * 0.02, // Adjust padding if needed
+          }}
+        >
+          {users.map((user, index) => (
+            <View
               key={index}
-              name={user.username}
-              size={100}
-              colorHair={user.style.hair.color}
-              hair={listHair[user.style.hair.id]}
-              colorSkin={user.style.head.color}
-              clothTop={listTop[user.style.accessory.id]}
-              colorClothingTop={user.style.accessory.color}
-              colorBeard={user.style.beard.color}
-              eyes={listEyes[user.style.eyes.id]}
-              eyebrow={
-                user.style.eyebrows.id
-                  ? listEyebrow[user.style.eyebrows.id]
-                  : listEyebrow[1]
-              }
-              mouth={listMouth[user.style.mouth.id]}
-              beard={listBeard[user.style.beard.id]}
-              invitations={user.invitations}
-              friends={user.friends}
-              id={user._id}
-              // onPress={() => {}}
-              onPress={onPress}
-              onPressChat={onPressChat}
-            />
-          </View>
-        ))
+              style={{
+                padding: screenHeight * 0.01,
+              }}
+            >
+              <AvatarCard
+                key={index}
+                name={user.username}
+                size={100}
+                colorHair={user.style.hair.color}
+                hair={listHair[user.style.hair.id]}
+                colorSkin={user.style.head.color}
+                clothTop={listTop[user.style.accessory.id]}
+                colorClothingTop={user.style.accessory.color}
+                colorBeard={user.style.beard.color}
+                eyes={listEyes[user.style.eyes.id]}
+                eyebrow={
+                  user.style.eyebrows.id
+                    ? listEyebrow[user.style.eyebrows.id]
+                    : listEyebrow[1]
+                }
+                mouth={listMouth[user.style.mouth.id]}
+                beard={listBeard[user.style.beard.id]}
+                invitations={user.invitations}
+                friends={user.friends}
+                id={user._id}
+                onPress={onPress}
+                onPressChat={onPressChat}
+              />
+            </View>
+          ))}
+        </ScrollView>
       ) : (
         <View>
-          <Text>Tu n'as pas encore d'amis {"):"}</Text>
+          <Text>Pas encore d'amis {"):"}</Text>
         </View>
       )}
     </View>

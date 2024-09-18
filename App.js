@@ -36,7 +36,9 @@ import SavedEventsPage from "./src/pages/Events/SavedEvents";
 import shop from "./src/pages/shop";
 import Chat from "./src/pages/chat";
 import UserUbPage from "./src/pages/profile/UserUb";
-import { ImagePickerIOS } from "react-native";
+import { useState } from "react";
+
+import * as CalendarDevice from "expo-calendar";
 class OTP2 extends React.Component {
   render() {
     return (
@@ -62,10 +64,11 @@ const checkFirstLaunch = async () => {
     // await AsyncStorage.removeItem("first");
     // const keys = await AsyncStorage.getAllKeys();
     // await AsyncStorage.multiRemove(keys);
+
+    // await AsyncStorage.removeItem("firstLaunch");
+
     const firstLaunch = await AsyncStorage.getItem("firstLaunch");
     if (firstLaunch === null) {
-      // L'application n'a jamais été lancée auparavant
-      await AsyncStorage.setItem("firstLaunch", "true");
       return true;
     }
     // L'application a déjà été lancée auparavant
@@ -226,7 +229,7 @@ const AppNavigator = createStackNavigator(
         animationEnabled: false,
       },
       navigationOptions: {
-      ...TransitionPresets.ScaleFromCenterAndroid,
+        ...TransitionPresets.ScaleFromCenterAndroid,
       },
     },
     Description: {
@@ -255,9 +258,9 @@ const AppNavigator = createStackNavigator(
     },
     SavedEventsPage: {
       screen: SavedEventsPage,
-      
+
       navigationOptions: {
-      ...TransitionPresets.ScaleFromCenterAndroid,
+        ...TransitionPresets.ScaleFromCenterAndroid,
       },
     },
     UserUbPage: {

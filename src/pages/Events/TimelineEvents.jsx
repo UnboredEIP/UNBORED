@@ -332,48 +332,52 @@ const TimelineEventsPage = ({ navigation }) => {
                 }}
               >
                 {events && events.length > 0 ? (
-                  events.map(
-                    (event, index) =>
-                      (event.categories[0] === activitiesType[choice] ||
-                        choice === 0) && (
-                        <View
-                          key={index}
-                          style={{
-                            marginVertical: screenHeight / 50,
-                            width: "50%",
-                            // width: screenWidth > 600 ? "48%" : "100%",
-                            marginVertical: screenHeight / 50,
-                            // marginRight: 20,
-                          }}
-                        >
-                          <EventCard
-                            onPress={() => {
-                              navigation.navigate("Event");
-                            }}
-                            size={screenHeight / 3.4}
+                  events
+                    // .filter((event) => event.end !== true)
+                    .map(
+                      (event, index) =>
+                        (event.categories[0] === activitiesType[choice] ||
+                          choice === 0) && (
+                          <View
                             key={index}
-                            name={event.name}
-                            address={event.address}
-                            pictures={
-                              images !== null && images[index].url
-                                ? images[index].url
-                                : defaultImage.url
-                            }
-                            categories={event.categories}
-                            date={event.start_date}
-                            participents={event.participents.length}
-                            id={event._id}
-                            rate={event.rate}
-                            handleRefresh={() => {
-                              handleRefresh(0);
+                            style={{
+                              marginVertical: screenHeight / 50,
+                              width: "50%",
+                              // width: screenWidth > 600 ? "48%" : "100%",
+                              marginVertical: screenHeight / 50,
+                              // marginRight: 20,
                             }}
-                            isSaved={
-                              isActivitySaved(event._id) === true ? false : true
-                            }
-                          />
-                        </View>
-                      )
-                  )
+                          >
+                            <EventCard
+                              onPress={() => {
+                                navigation.navigate("Event");
+                              }}
+                              size={screenHeight / 3.4}
+                              key={index}
+                              name={event.name}
+                              address={event.address}
+                              pictures={
+                                images !== null && images[index].url
+                                  ? images[index].url
+                                  : defaultImage.url
+                              }
+                              categories={event.categories}
+                              date={event.start_date}
+                              participents={event.participents.length}
+                              id={event._id}
+                              rate={event.rate}
+                              handleRefresh={() => {
+                                handleRefresh(0);
+                              }}
+                              isSaved={
+                                isActivitySaved(event._id) === true
+                                  ? false
+                                  : true
+                              }
+                            />
+                          </View>
+                        )
+                    )
                 ) : (
                   <View />
                 )}
@@ -381,9 +385,7 @@ const TimelineEventsPage = ({ navigation }) => {
             </ScrollView>
           </View>
         </ScrollView>
-        <View>
-          {/* <Navbar navigation={navigation} /> */}
-        </View>
+        <View>{/* <Navbar navigation={navigation} /> */}</View>
       </View>
     );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { Dimensions, Text, View } from "react-native";
+import { Dimensions, Text, View, ScrollView } from "react-native";
 import { AvatarCard } from "../AvatarCard";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -114,74 +114,73 @@ const listEyes = [
   "squint",
 ];
 
-const ParticipantsActivity = ({ participents, onPressChat }) => {
+const ParticipantsActivity = ({ participents, onPress, onPressChat }) => {
   return (
     <View
       style={{
-        // borderColor: "#EBEEF2",
         height: screenHeight * 0.8,
         width: screenWidth * 0.83,
         borderRadius: 20,
         overflow: "hidden",
         alignItems: "center",
         justifyContent: "center",
+        paddingVertical: screenHeight * 0.03,
       }}
     >
-      <Text>Fais connaissances avec eux</Text>
+      <Text
+        style={{
+          marginTop: screenHeight * 0.05,
+          fontSize: screenHeight * 0.025,
+          fontWeight: "bold",
+        }}
+      >
+        Fais connaissances avec eux
+      </Text>
       {participents.length > 0 ? (
-        participents.map((participent, index) => (
-          <View
-            key={index}
-            style={{
-              padding: screenHeight * 0.01,
-            }}
-          >
-            <AvatarCard
-              onPressChat={onPressChat}
+        <ScrollView
+          style={{
+            width: "100%",
+          }}
+          contentContainerStyle={{
+            alignItems: "center",
+            paddingBottom: screenHeight * 0.02, // Adjust padding if needed
+          }}
+        >
+          {participents.map((participent, index) => (
+            <View
               key={index}
-              name={participent.username}
-              size={100}
-              colorHair={participent.style.hair.color}
-              hair={listHair[participent.style.hair.id]}
-              colorSkin={participent.style.head.color}
-              clothTop={listTop[participent.style.accessory.id]}
-              colorClothingTop={participent.style.accessory.color}
-              colorBeard={participent.style.beard.color}
-              eyes={listEyes[participent.style.eyes.id]}
-              colorEye={participent.style.eyes.color}
-              eyebrow={
-                participent.style.eyebrows.id
-                  ? listEyebrow[participent.style.eyebrows.id]
-                  : listEyebrow[1]
-              }
-              mouth={listMouth[participent.style.mouth.id]}
-              beard={listBeard[participent.style.beard.id]}
-              invitations={participent.invitations}
-              friends={participent.friends}
-              id={participent._id}
-              // key={index}
-              // name={participent.username}
-              // size={100}
-              // colorHair={participent.style.hair.color}
-              // hair={listHair[participent.style.hair.id]}
-              // colorSkin={participent.style.head.color}
-              // clothTop={listTop[participent.style.accessory.id]}
-              // colorClothingTop={participent.style.accessory.color}
-              // colorBeard={participent.style.beard.color}
-              // eyes={listEyes[participent.style.eyes.id]}
-              // // eyebrow={
-              // //   participent.style.eyebrows.id
-              // //     ? listEyebrow[participent.style.eyebrows.id]
-              // //     : listEyebrow[1]
-              // // }
-              // mouth={listMouth[participent.style.mouth.id]}
-              // beard={listBeard[participent.style.beard.id]}
-              // invitations={participent.invitations}
-              // friends={participent.friends}
-              // id={participent._id}
-            />
-          </View>
-        ))
+              style={{
+                padding: screenHeight * 0.02,
+              }}
+            >
+              <AvatarCard
+                onPress={onPress}
+                onPressChat={onPressChat}
+                key={index}
+                name={participent.username}
+                size={100}
+                colorHair={participent.style.hair.color}
+                hair={listHair[participent.style.hair.id]}
+                colorSkin={participent.style.head.color}
+                clothTop={listTop[participent.style.accessory.id]}
+                colorClothingTop={participent.style.accessory.color}
+                colorBeard={participent.style.beard.color}
+                eyes={listEyes[participent.style.eyes.id]}
+                colorEye={participent.style.eyes.color}
+                eyebrow={
+                  participent.style.eyebrows.id
+                    ? listEyebrow[participent.style.eyebrows.id]
+                    : listEyebrow[1]
+                }
+                mouth={listMouth[participent.style.mouth.id]}
+                beard={listBeard[participent.style.beard.id]}
+                invitations={participent.invitations}
+                friends={participent.friends}
+                id={participent._id}
+              />
+            </View>
+          ))}
+        </ScrollView>
       ) : (
         <View>
           <Text>Pas encore de participent, sois le premier !</Text>

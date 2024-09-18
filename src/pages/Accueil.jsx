@@ -6,6 +6,7 @@ import {
   ScrollView,
   Dimensions,
   TouchableOpacity,
+  FlatList,
   StyleSheet,
 } from "react-native";
 import Navbar from "../components/NavigationBar";
@@ -17,6 +18,8 @@ import { UbService } from "../services/UbServices";
 import EventCard from "../components/Event/EventCard";
 import LoadingPage from "./Loading";
 import SearchFilter from "../components/SearchFilter";
+import * as Calendar from "expo-calendar";
+import Buttons from "../components/Buttons";
 
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -28,15 +31,6 @@ const truncateName = (name) => {
   }
   return name;
 };
-
-const data = [
-  { id: "1", name: "Idrissa" },
-  { id: "2", name: "Yacine" },
-  { id: "3", name: "Steeven" },
-  { id: "4", name: "Rémi" },
-  { id: "5", name: "Jimy" },
-  { id: "6", name: "Pottin" },
-];
 
 const Accueil3 = ({ navigation }) => {
   // const [fontsLoaded] = useFonts({
@@ -50,6 +44,7 @@ const Accueil3 = ({ navigation }) => {
   const [preferences, setPreferences] = useState([]);
   const [refresh, handleRefresh] = useState(0);
   const [favourites, setFavourites] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
 
   const defaultImage = {
     id: 1,
@@ -72,6 +67,20 @@ const Accueil3 = ({ navigation }) => {
     return false;
   };
   useEffect(() => {
+    (async () => {
+      const firstLaunch = await AsyncStorage.getItem("firstLaunch");
+      if (firstLaunch === null) {
+        const { status } = await Calendar.requestCalendarPermissionsAsync();
+        if (status === "granted") {
+          const calendars = await Calendar.getCalendarsAsync(
+            Calendar.EntityTypes.EVENT
+          );
+          console.log("Here are all your calendars:");
+          // console.log({ calendars });
+        }
+        await AsyncStorage.setItem("firstLaunch", "true");
+      }
+    })();
     const fetchData = async () => {
       try {
         // await AsyncStorage.removeItem("favourites");
@@ -115,6 +124,13 @@ const Accueil3 = ({ navigation }) => {
           if (responseData.user.username !== undefined)
             setUsername(responseData.user.username);
           setPreferences(preferences);
+
+          const response2 = await ubService.getAllUsers();
+
+          if (response2) {
+            setAllUsers(response2);
+            // console.log("USER NUMERO 1", allUsers[0].username);
+          } else console.log("C CUIT CHAKAL");
           // await getEvents();
           const tmpObj = await ubService.getEvents();
 
@@ -135,8 +151,6 @@ const Accueil3 = ({ navigation }) => {
           const tmpReservedEvents = await ubService.getUserEvents();
           global.reservedEvents = tmpReservedEvents;
           if (tmpReservedEvents && refresh === 0) {
-            console.log("DATA FROM NEW ROUTE:", tmpReservedEvents);
-            console.log("DATA FROM NEW ROUTE:", responseData.user.reservations);
             const events = [];
             for (const favourite of tmpReservedEvents) {
               const event = await ubService.getEventById(favourite);
@@ -154,29 +168,6 @@ const Accueil3 = ({ navigation }) => {
             const imageResults2 = await Promise.all(imagePromises2);
             setFavouritesImages(imageResults2);
           }
-          // const reservedEvents2 = tmpReservedEvents;
-          // global.reservedEvents = tmpReservedEvents;
-          // if (reservedEvents2 !== null) {
-          //   if (reservedEvents2.length > 0 && refresh === 0) {
-          //     // console.log(reservedEvents);
-          //     const events = [];
-          //     for (const favourite of reservedEvents2) {
-          //       const event = await ubService.getEventById(favourite);
-          //       // console.log(event);
-          //       if (event) {
-          //         events.push(event);
-          //       }
-          //     }
-          //     setReservedEvents(events);
-          //     // console.log("FAVOURITES EVENTS", favourites);
-          //     const imagePromises2 = reservedEvents.map(async (event) => {
-          //       const img = await ubService.getImage(event.pictures[0].id);
-          //       return img;
-          //     });
-          //     const imageResults2 = await Promise.all(imagePromises2);
-          //     setFavouritesImages(imageResults2);
-          //   }
-          // }
           handleRefresh(1);
         }
       } catch (error) {
@@ -196,6 +187,7 @@ const Accueil3 = ({ navigation }) => {
 
   if (
     profileData === null ||
+    allUsers.length < 1 ||
     events.length < 0 ||
     images.length !== events.length ||
     (profileData.user.reservations.length !== 0 &&
@@ -239,6 +231,7 @@ const Accueil3 = ({ navigation }) => {
                   fontSize: screenWidth * 0.07 - username.length * 0.3,
                   color: "black",
                   fontWeight: "bold",
+                  textAlign: "left",
                 }}
               >
                 {" "}
@@ -307,18 +300,47 @@ const Accueil3 = ({ navigation }) => {
                 // alignItems: "center",
               }}
             >
+              <SearchFilter
+                data={allUsers}
+                onPress={() => {
+                  navigation.navigate("UserUbPage");
+                  // console.log(
+                  //   "USER",
+                  //   allUsers.find((user) => user._id === global.currentUserId)
+                  // );
+                }}
+              />
+
+              {/* <Buttons
+                title="Create a new calendar"
+                onPress={async () => {
+                  await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
+                  try {
+                    const defaultCalendar =
+                      await Calendar.getDefaultCalendarAsync();
+
+                    await Calendar.createEventAsync(defaultCalendar.id, {
+                      title: "TEST",
+                      startDate: new Date("2021-01-25"),
+                      endDate: new Date("2021-01-26"),
+                    });
+
+                    console.log("Event was created.");
+                  } catch (e) {
+                    console.log(e.message);
+                  }
+                  console.log(`New calendar ID: ${newCalendarID}`);
+                }}
+              /> */}
               <Text
                 style={{
                   fontWeight: "bold",
                   fontSize: screenWidth / 20,
-                  alignSelf: "center",
                   marginBottom: 10,
-                  textAlign: "center",
                 }}
               >
                 Ces activités sont faites pour toi !
               </Text>
-              <SearchFilter data={data} />
               <TouchableOpacity
                 onPress={() => navigation.navigate("TimelineEventsPage")}
               >
@@ -360,9 +382,11 @@ const Accueil3 = ({ navigation }) => {
                     //     preferences.includes(category)
                     //   )
                     // )
+                    // .filter((event) => event.end !== true)
                     .map((event, index) => (
                       <EventCard
                         onPress={() => {
+                          global.currentEventId = event._id;
                           navigation.navigate("Event");
                         }}
                         key={index}
@@ -401,11 +425,11 @@ const Accueil3 = ({ navigation }) => {
               <Text
                 style={{
                   fontWeight: "bold",
-                  textAlign: "center",
                   fontSize: screenHeight / 40,
+                  textAlign: "left",
                 }}
               >
-                Tes activités qui arrivent
+                Tes activités
               </Text>
             </View>
             {/* <View style={{position:'relative', height:1000}}></View> */}
