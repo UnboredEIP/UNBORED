@@ -12,6 +12,7 @@ import {
 import Navbar from "../components/NavigationBar";
 import "../../asset/SourceSansPro-Regular.otf";
 import book from "../../asset/bookmark.png";
+import history from "../../asset/history.png"
 import notifications from "../../asset/notifications.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UbService } from "../services/UbServices";
@@ -244,6 +245,28 @@ const Accueil3 = ({ navigation }) => {
               ></View>
 
               <View style={{ flexDirection: "row" }}>
+                <TouchableOpacity
+                  style={{
+                    width: screenHeight * 0.05,
+                    height: screenHeight * 0.05,
+                    marginHorizontal: screenWidth * 0.03,
+                    justifyContent: "center",
+                    backgroundColor: "#5265FF1A",
+                    borderRadius: 12,
+                    alignItems: "center",
+                  }}
+                  onPress={() => {
+                    navigation.navigate("History");
+                  }}
+                >
+                  <Image
+                    style={{
+                      height: screenHeight * 0.02,
+                      width: screenHeight * 0.02,
+                    }}
+                    source={history}
+                  ></Image>
+                </TouchableOpacity>
                 <TouchableOpacity
                   style={{
                     width: screenHeight * 0.05,

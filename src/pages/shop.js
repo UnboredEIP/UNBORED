@@ -123,7 +123,35 @@ const shop = ({ navigation }) => {
     "sad2",
     "sad",
   ];
-
+  const handleHistory = async () => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+  
+      const response = await fetch(
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/history/set",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            history: [`Vous avez acheter un item dans le shop !`],
+          }),
+        }
+      );
+      console.log(response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      else{
+        console.log(response);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      return null;
+    }
+  };
   const handleProfileFetch = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -142,6 +170,7 @@ const shop = ({ navigation }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
+      handleHistory()
       const profileData = await response.json();
       console.log("Profile Data:", profileData);
       setUsername(profileData.user.username);

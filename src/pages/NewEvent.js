@@ -94,6 +94,36 @@ const NewEvent = ({ navigation }) => {
 
   const today = new Date().getDay();
 
+  const handleHistory = async (name) => {
+      try {
+        const authToken = await AsyncStorage.getItem("authToken");
+    
+        const response = await fetch(
+          "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/history/set",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${authToken}`,
+            },
+            body: JSON.stringify({
+              history: [`Vous avez créé l'activité : ${name} dans votre calendrier !`],
+            }),
+          }
+        );
+        console.log(response);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        else{
+          console.log(response);
+        }
+      } catch (error) {
+        console.error("Error fetching messages:", error);
+        return null;
+      }
+    };
+
   const handleSubmit = async () => {
     if (!selectedDay) {
       alert("Sélectionnez d'abord un jour");
@@ -101,8 +131,6 @@ const NewEvent = ({ navigation }) => {
     }
 
     const currentDate = new Date();
-
-    // Calculate the displayedDate based on the current day and the selected day
     let displayedDate = new Date(currentDate);
     const selectedDayIndex = displayedDays.findIndex((dayOffset) => {
       const tempDate = new Date(currentDate);
@@ -112,11 +140,8 @@ const NewEvent = ({ navigation }) => {
     displayedDate.setDate(
       displayedDate.getDate() + displayedDays[selectedDayIndex]
     );
-    // displayedDate.setDate(displayedDate.getDate() - 1);
-    // Prepare the data to send to the backend
     const formattedDate = displayedDate.toISOString().split("T")[0];
     console.log(formattedDate);
-    // Prepare the categories as an array
     const selectedCategories = selectedCategory ? [selectedCategory] : [];
 
     const eventData = {
@@ -124,7 +149,6 @@ const NewEvent = ({ navigation }) => {
       name: activityName,
       address: address,
       categories: selectedCategories,
-      //rewards
     };
 
     try {
@@ -152,21 +176,18 @@ const NewEvent = ({ navigation }) => {
             ...eventData,
             start_date: formattedStartDate,
             end_date: formattedEndDate,
-          }), // Replace the start_date field with the formatted date including hours
+          }),
         }
       );
 
       if (response.ok) {
-        // Handle success
         console.log("Event created successfully");
+        handleHistory(eventData.name);
         navigatetocalendar();
-        // You can also navigate to another screen or perform any other action upon successful creation
       } else {
-        // Handle errors
         console.error("Failed to create event", response.status);
       }
     } catch (error) {
-      // Handle network errors
       console.error("Network error:", error);
       alert("Network error");
     }

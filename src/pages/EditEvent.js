@@ -60,6 +60,35 @@ const EditEvent = ({ navigation }) => {
   };
 
   const today = new Date().getDay();
+  const handleHistory = async (name) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+  
+      const response = await fetch(
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/history/set",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            history: [`Vous avez modifié l'activité : ${name} dans votre calendrier !`],
+          }),
+        }
+      );
+      console.log(response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      else{
+        console.log(response);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      return null;
+    }
+  };
 
   const handleSubmit = async () => {
     if (!selectedDay) {
@@ -115,6 +144,7 @@ const EditEvent = ({ navigation }) => {
 
       if (response.ok) {
         console.log("Event edited successfully");
+        handleHistory(eventData.name)
         navigatetocalendar();
         // You can also navigate to another screen or perform any other action upon successful creation
       } else {
