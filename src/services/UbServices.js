@@ -230,10 +230,7 @@ export class UbService {
       console.error("Error when try to get event from user:", error);
     }
   };
-<<<<<<< HEAD
-=======
 
->>>>>>> 51b1f81d ([MERGE] caca)
   getUserEventsById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -455,8 +452,6 @@ export class UbService {
     }
   };
 
-<<<<<<< HEAD
-=======
   // getRegister = async (username, email, password, gender, birthdate) => {
   //   try {
   //     const response = await fetch(
@@ -519,7 +514,6 @@ export class UbService {
     }
   };
 
->>>>>>> 51b1f81d ([MERGE] caca)
   sendReview = async (id, stars, comments) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");

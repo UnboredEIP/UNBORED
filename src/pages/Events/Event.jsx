@@ -66,6 +66,7 @@ const Event = ({ navigation }) => {
   const [dataLoaded, setDataLoaded] = useState(0);
   const [review, setReview] = useState("");
   const [selectedStar, setSelectedStar] = useState(0); // État pour la star sélectionnée
+  const [creator, setCreator] = useState(null);
 
   function userIsEnroll(events, id) {
     // for (const invitation of invitations) {
@@ -118,6 +119,9 @@ const Event = ({ navigation }) => {
         }
         const responseData = response;
         setEventData(responseData);
+        const tmpCreator = await ubService.getUserById(responseData.creator);
+        console.log("CREATOR:", tmpCreator);
+        setCreator(tmpCreator);
         userIsEnroll(global.reservedEvents, global.currentEventId);
 
         global.reservedEvents;
