@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_URL } from "@env";
 
 export class UbService {
   getEvents = async () => {
@@ -231,6 +230,30 @@ export class UbService {
       console.error("Error when try to get event from user:", error);
     }
   };
+
+  getUserEventsById = async (id) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/users/reservations?id=${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      return responseData.reservations;
+    } catch (error) {
+      console.error("Error when try to get event from user:", error);
+    }
+  };
   getUserById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -408,36 +431,36 @@ export class UbService {
     }
   };
 
-  getRegister = async (username, email, password, gender, birthdate) => {
-    try {
-      const response = await fetch(
-        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username,
-            email,
-            password,
-            gender,
-            birthdate,
-          }),
-        }
-      );
-      if (response.status === 201) {
-        console.log("User created");
-        return true;
-      } else {
-        console.error(response.json);
-        return response.json();
-      }
-    } catch (error) {
-      console.error("Request error: ", error);
-      return false;
-    }
-  };
+  // getRegister = async (username, email, password, gender, birthdate) => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           username,
+  //           email,
+  //           password,
+  //           gender,
+  //           birthdate,
+  //         }),
+  //       }
+  //     );
+  //     if (response.status === 201) {
+  //       console.log("User created");
+  //       return true;
+  //     } else {
+  //       console.error(response.json);
+  //       return false;
+  //     }
+  //   } catch (error) {
+  //     console.error("Request error: ", error);
+  //     return false;
+  //   }
+  // };
 
   getLogin = async (email, password) => {
     try {

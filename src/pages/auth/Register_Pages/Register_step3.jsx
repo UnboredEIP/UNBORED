@@ -38,6 +38,7 @@ const RegisterStep3 = ({ navigation }) => {
   const [description, setDescription] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [isDisabled, setIsDisabled] = useState(true);
+  const [isPasswordValid, setIsPasswordValid] = useState(false);
 
   const validateForm = () => {
     if (password !== password2) {
@@ -79,23 +80,45 @@ const RegisterStep3 = ({ navigation }) => {
               Mot de passe<Text style={styles().colorStar}>*</Text>
             </Text>
             <MyTextInput
-              placeholder="Mot de passe"
+              placeholder="taille >= 7, 1 chiffre, 1 char spécial"
               secureTextEntry={true}
               onChangeText={(password) => setPassword(password)}
               setPasswordValid={setIsDisabled}
             />
+            <View
+              style={{
+                marginBottom: screenHeight * 0.01,
+              }}
+            />
+
+            {isDisabled === true ? (
+              <Text>
+                {" "}
+                Taille du mdp {">="} 7, 1 chiffre, 1 charactère spécial
+              </Text>
+            ) : (
+              <View />
+            )}
 
             <Text style={styles().titleTextField}>
               Confirmer mot de passe
               <Text style={styles().colorStar}>*</Text>
             </Text>
             <MyTextInput
-              placeholder="Mot de passe"
+              placeholder="taille >= 7, 1 chiffre, 1 char spécial"
               secureTextEntry={true}
               onChangeText={(password2) => setPassword2(password2)}
               handleOnBlur={validateForm}
               setPasswordValid={setIsDisabled}
             />
+            {isDisabled === true ? (
+              <Text>
+                {" "}
+                Taille du mdp {">="} 7, 1 chiffre, 1 charactère spécial
+              </Text>
+            ) : (
+              <View />
+            )}
             <Text style={styles().titleTextField}>Description</Text>
             <MyTextInput
               placeholder="Description"
@@ -158,7 +181,7 @@ const RegisterStep3 = ({ navigation }) => {
                     setIsDisabled(false);
                     const response = await authService.getRegister(
                       JSON.parse(global.RegisterData).username,
-                      JSON.parse(global.RegisterData).email,
+                      JSON.parse(global.RegisterData).email.toLowerCase(),
                       password,
                       gender,
                       description,
@@ -166,6 +189,17 @@ const RegisterStep3 = ({ navigation }) => {
                       global.OTPValue
                     );
                     setIsDisabled(false);
+
+                    console.log(
+                      "DATA",
+                      JSON.parse(global.RegisterData).username,
+                      JSON.parse(global.RegisterData).email,
+                      password,
+                      gender,
+                      description,
+                      JSON.parse(global.RegisterData).birthdate,
+                      global.OTPValue
+                    );
                     if (response === true) {
                       Toast.show("Registration succeed", {
                         duration: Toast.durations.LONG,
@@ -215,14 +249,14 @@ const RegisterStep3 = ({ navigation }) => {
               />
             </RootSiblingParent>
 
-            <View style={{ marginTop: 30, marginBottom: 30 }}></View>
+            {/* <View style={{ marginTop: 30, marginBottom: 30 }}></View>
 
             <Text style={styles().loginText}>
               J'ai déjà un compte{" "}
               <TouchableOpacity onPress={() => navigation.replace("Login2")}>
                 <Text style={styles().colorStar}>Se connecter</Text>
               </TouchableOpacity>
-            </Text>
+            </Text> */}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
