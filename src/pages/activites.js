@@ -83,6 +83,35 @@ const Activities = ({ navigation }) => {
       return isoDateString;
     }
   }
+  const handleHistory = async (name) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+  
+      const response = await fetch(
+        "https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/history/set",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({
+            history: [`Vous avez swipe l'activité : ${name} dans votre calendrier !`],
+          }),
+        }
+      );
+      console.log(response);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      else{
+        console.log(response);
+      }
+    } catch (error) {
+      console.error("Error fetching messages:", error);
+      return null;
+    }
+  };
 
   const createEvent = async (currentIndex) => {
     console.log("tezst,", currentIndex);
@@ -120,6 +149,7 @@ const Activities = ({ navigation }) => {
       );
 
       if (response.ok) {
+        handleHistory(eventData.name);
         console.log("Event created successfully");
       } else {
         console.error("Failed to create event", response);

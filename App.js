@@ -35,6 +35,7 @@ import FriendsRequest from "./src/pages/profile/FriendsRequest";
 import SavedEventsPage from "./src/pages/Events/SavedEvents";
 import shop from "./src/pages/shop";
 import Chat from "./src/pages/chat";
+import History from "./src/pages/history";
 import UserUbPage from "./src/pages/profile/UserUb";
 import { useState } from "react";
 
@@ -258,6 +259,13 @@ const AppNavigator = createStackNavigator(
     },
     SavedEventsPage: {
       screen: SavedEventsPage,
+
+      navigationOptions: {
+        ...TransitionPresets.ScaleFromCenterAndroid,
+      },
+    },
+    History: {
+      screen: History,
 
       navigationOptions: {
         ...TransitionPresets.ScaleFromCenterAndroid,
