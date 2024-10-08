@@ -11,8 +11,101 @@ import {
   Dimensions,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { UbService } from "../services/UbServices";
+import { AvatarCard } from "../components/AvatarCard";
+import MyAvatar from "../components/Avatar";
+const listHair = [
+  "null",
+  "calvitie",
+  "buzzcut",
+  "big",
+  "afro",
+  "frizzy",
+  "curvy",
+  "curlyshort",
+  "curly",
+  "mediumdreads",
+  "medium",
+  "longstraight",
+  "longdreads",
+  "shaggymullet",
+  "shaggy",
+  "minidreads",
+  "mediumlong",
+  "square",
+  "shortwaved",
+  "shortflat",
+];
 
-// Fonction pour récupérer le profil utilisateur
+const listMouth = [
+  "null",
+  "grimace",
+  "eating",
+  "desbelief",
+  "default",
+  "serious",
+  "scream",
+  "sad",
+  "open",
+  "vomit",
+  "twinkle",
+  "tongue",
+  "smile",
+];
+
+const listTop = [
+  "null",
+  "hoodie",
+  "crewneck",
+  "blazer",
+  "shirt",
+  "scoopneck",
+  "polo",
+  "vneck",
+  "overall",
+];
+
+const listEyebrow = [
+  "null",
+  "natural",
+  "flat",
+  "exited",
+  "angry",
+  "updown",
+  "unibrow",
+  "sad2",
+  "sad",
+];
+
+const listBeard = [
+  "null",
+  "medium",
+  "majestic",
+  "light",
+  "mustachemagnum",
+  "mustache",
+];
+
+const listEyes = [
+  "null",
+  "dizzy",
+  "default",
+  "cry",
+  "closed",
+  "side",
+  "heart",
+  "happy",
+  "eyeroll",
+  "wink",
+  "wacky",
+  "surprised",
+  "squint",
+  "angry",
+  "updown",
+  "unibrow",
+  "sad2",
+  "sad",
+];
 const handleProfileFetch = async () => {
   try {
     const authToken = await AsyncStorage.getItem("authToken");
@@ -40,6 +133,30 @@ const handleProfileFetch = async () => {
   }
 };
 
+const getUserById = async () => {
+  try {
+    const authToken = await AsyncStorage.getItem("authToken");
+    const response = await fetch(
+      `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/profile/get?id=${global.idchat}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const responseData = await response.json();
+    if (!responseData.user) throw new Error(`User null: ${response.status}`);
+    return responseData.user;
+  } catch (error) {
+    console.error("Error when try to get user:", error);
+  }
+};
 // Fonction pour récupérer les messages
 const handleMessagesFetch = async (userId) => {
   try {
@@ -69,20 +186,47 @@ const handleMessagesFetch = async (userId) => {
   }
 };
 
+
 const Chat = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]); // Liste des messages
   const [userId, setUserId] = useState(null);
+  const [username, setUsername] = useState("");
+  const [selectedHair, setSelectedHair] = useState("");
+  const [selectedBeard, setSelectedBeard] = useState("");
+  const [selectedMouth, setSelectedMouth] = useState("");
+  const [selectedEyebrow, setSelectedEyebrow] = useState("");
+  const [avatarColor, setAvatarColor] = useState("#FFFFFF");
+  const [clothColor, setClothColor] = useState("");
+  const [selectedCloth, setSelectedCloth] = useState(null);
+  const [selectedGlasses, setSelectedGlasses] = useState(null);
+  const [friend, setFriend] = useState(null); // Correct usage of useState
 
   useEffect(() => {
     const fetchProfile = async () => {
       const profile = await handleProfileFetch();
       if (profile) {
         setUserId(profile.user._id); // Récupère l'ID utilisateur
+        setFriend(await getUserById()); // Met à jour l'ami (friend) avec le profil utilisateur récupéré
       }
     };
     fetchProfile();
   }, []); // Appel une fois, lorsque le composant est monté
+
+  useEffect(() => {
+    if (friend) {
+      setUsername(friend.username);
+      setAvatarColor(friend.style.head.color);
+      setSelectedBeard(friend.style.beard.id);
+      setSelectedEyebrow(friend.style.eyebrows.id);
+      setSelectedCloth(friend.style.accessory.id);
+      setSelectedGlasses(friend.style.eyes.id);
+      setSelectedHair(friend.style.hair.id);
+      setSelectedMouth(friend.style.mouth.id);
+      setClothColor(friend.style.accessory.color);
+    }
+  }, [friend]); // Appel à chaque mise à jour de friend
+
   useEffect(() => {
     if (userId) {
       const interval = setInterval(async () => {
@@ -152,16 +296,33 @@ const Chat = () => {
       }
     }
   };
-
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <View style={styles.container}>
+        <View style={styles.header}>
+          <View style={styles.header2}>
+      <MyAvatar
+                  size={60}
+                  colorSkin={avatarColor}
+                  eyes={listEyes[selectedGlasses]}
+                  clothTop={listTop[selectedCloth]}
+                  colorClothingTop={clothColor}
+                  hair={listHair[selectedHair]}
+                  colorHair={"black"}
+                  colorEye={"black"}
+                  beard={listBeard[selectedBeard]}
+                  mouth={listMouth[selectedMouth]}
+                  eyebrow={listEyebrow[selectedEyebrow]}
+                />
+                </View>
+        <Text style = {styles.username}>{username}</Text>
+        </View>
         <ScrollView
           style={[styles.chatContainer]}
-          contentContainerStyle={{ paddingBottom: 100 }}
+          contentContainerStyle={{ paddingBottom: 100}}
         >
           {messages.map((msg) => (
             <View
@@ -208,13 +369,32 @@ const Chat = () => {
 const screenHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
+  username: {
+    fontSize:20,
+    top:60,
+    color:"#000",
+    borderWidth:3,
+    backgroundColor:"#f2f2f2",
+    borderColor:"#E1604D",
+    borderRadius:20,
+    padding:10
+  },
   container: {
     flex: 1,
     backgroundColor: "#f2f2f2",
   },
+  header:{
+    zIndex:1000,
+    alignItems:"center",
+    top:50,
+  },
+  header2:{
+    right:30,
+    marginBottom:20,
+  },
   chatContainer: {
     paddingHorizontal: 10,
-    paddingTop: 80,
+    paddingTop: 100,
   },
   messageBubble: {
     borderRadius: 20,
@@ -245,7 +425,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   sendButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#e1604D",
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 20,
