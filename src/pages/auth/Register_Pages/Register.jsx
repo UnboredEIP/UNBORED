@@ -22,11 +22,11 @@ const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
 
 // //A décommenter au moment de build
-// import {
-//   GoogleSignin,
-//   GoogleSigninButton,
-//   statusCodes,
-// } from "@react-native-google-signin/google-signin";
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
 
 global.RegisterData = [];
 function generateSixDigitNumber() {
@@ -55,13 +55,13 @@ const Register = ({ navigation }) => {
   // }
 
   // //A décommenter au moment de build
-  // GoogleSignin.configure({
-  //   scopes: [
-  //     "https://www.googleapis.com/auth/drive.readonly",
-  //     "https://www.googleapis.com/auth/calendar.readonly",
-  //   ], // what API you want to access on behalf of the user, default is email and profile
-  //   webClientId: `${CLIENT_ID_WEB}`, // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
-  // });
+  GoogleSignin.configure({
+    scopes: [
+      "https://www.googleapis.com/auth/drive.readonly",
+      "https://www.googleapis.com/auth/calendar.readonly",
+    ], // what API you want to access on behalf of the user, default is email and profile
+    webClientId: `${CLIENT_ID_WEB}`, // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+  });
 
   return (
     <View style={styles().container}>
@@ -169,7 +169,7 @@ const Register = ({ navigation }) => {
             <View style={{ flexDirection: "row", marginBottom: 32 }}>
               <RootSiblingParent>
                 {/* //A décommenter au moment de build */}
-                {/* <Buttons
+                <Buttons
                   hasIcon={true}
                   iconPath={
                     "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
@@ -224,7 +224,7 @@ const Register = ({ navigation }) => {
                     }
                   }}
                   texte="Google"
-                /> */}
+                />
               </RootSiblingParent>
             </View>
 

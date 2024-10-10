@@ -329,6 +329,31 @@ export class UbService {
     }
   };
 
+  rejectFriendRequest = async (id) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/friends/delete?user_id=${id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.log("RESPONSE:", response.status);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      console.log("DELETE FRIEND:", id);
+      return true;
+    } catch (error) {
+      console.error("Error when try to delete friend:", error);
+    }
+  };
+
   getEventRate = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
