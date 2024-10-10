@@ -13,6 +13,8 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { UbService } from "../services/UbServices";
 import { AvatarCard } from "../components/AvatarCard";
+import moment from 'moment';
+
 import MyAvatar from "../components/Avatar";
 const listHair = [
   "null",
@@ -254,6 +256,16 @@ const Chat = () => {
     }
   }, [userId]); // Appel une fois que userId est mis à jour
 
+  const renderDateBar = (currentDate, previousDate) => {
+    if (!previousDate || moment(currentDate).isAfter(previousDate, 'day')) {
+      return (
+        <View style={styles.dateBar}>
+          <Text style={styles.dateBarText}>{moment(currentDate).format('DD/MM')}</Text>
+        </View>
+      );
+    }
+    return null;
+  };
   // Fonction pour envoyer un message
   const sendMessage = async () => {
     if (message.trim().length > 0) {
@@ -321,35 +333,43 @@ const Chat = () => {
         <Text style = {styles.username}>{username}</Text>
         </View>
         <ScrollView
-          style={[styles.chatContainer]}
-          contentContainerStyle={{ paddingBottom: 100}}
-        >
-          {messages.map((msg) => (
-            <View
-              key={msg._id}
-              style={[
-                styles.messageBubble,
-                {
-                  backgroundColor:
-                    msg.senderId === userId ? "#007AFF" : "#E5E5EA", // Couleur différente selon l'expéditeur
-                  alignSelf:
-                    msg.senderId === userId ? "flex-end" : "flex-start", // Alignement selon l'expéditeur
-                },
-              ]}
-            >
-              <Text
+        style={[styles.chatContainer]}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
+        {messages.map((msg, index) => {
+          const previousMsg = messages[index - 1];
+          const previousDate = previousMsg ? moment(previousMsg.createdAt) : null;
+
+          return (
+            <View key={msg._id}>
+              {renderDateBar(msg.createdAt, previousDate)}
+              <View
                 style={[
-                  styles.messageText,
+                  styles.messageBubble,
                   {
-                    color: msg.senderId === userId ? "#fff" : "#000", // Couleur du texte
+                    backgroundColor: msg.senderId === userId ? '#007AFF' : '#E5E5EA',
+                    alignSelf: msg.senderId === userId ? 'flex-end' : 'flex-start',
                   },
                 ]}
               >
-                {msg.content}
-              </Text>
+                <Text
+                  style={[
+                    styles.messageText,
+                    {
+                      color: msg.senderId === userId ? '#fff' : '#000',
+                    },
+                  ]}
+                >
+                  {msg.content}
+                </Text>
+                <Text style={styles.messageTime}>
+                  {moment(msg.createdAt).format('HH:mm')}
+                </Text>
+              </View>
             </View>
-          ))}
-        </ScrollView>
+          );
+        })}
+      </ScrollView>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
@@ -378,6 +398,20 @@ const styles = StyleSheet.create({
     borderColor:"#E1604D",
     borderRadius:20,
     padding:10
+  },
+  dateBar: {
+    alignItems: 'center',
+    marginVertical: 10,
+  },
+  dateBarText: {
+    fontSize: 14,
+    color: '#888',
+  },
+  messageTime: {
+    fontSize: 12,
+    marginTop: 5,
+    alignSelf: 'flex-end',
+    color: '#E1604D',
   },
   container: {
     flex: 1,
