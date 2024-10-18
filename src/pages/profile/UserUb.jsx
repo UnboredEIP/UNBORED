@@ -10,15 +10,9 @@ import {
   Modal,
   TouchableWithoutFeedback,
 } from "react-native";
-import vector from "../../../asset/Vector.png";
-import loc from "../../../asset/location_on.png";
-import startFilled from "../../../assets/star_filled.png";
-import startUnfilled from "../../../assets/star_unfilled.png";
 import { UbService } from "../../services/UbServices";
 import Buttons from "../../components/Buttons";
-import ParticipantsActivity from "../../components/Modals/ParticipantsActivity";
 import FriendsList from "../../components/Modals/Friends";
-import Toast from "react-native-root-toast";
 import LoadingPage from "../Loading";
 import { BackArrow } from "../../../assets/avatars/avatars";
 import Swiper from "react-native-swiper";
@@ -28,8 +22,6 @@ import EventCard from "../../components/Event/EventCard";
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
 
-const IS_ENROLL = 1;
-const NOT_ENROLL = 2;
 
 const NOT_FRIENDS = 1;
 const WAIT_FOR_ACCEPT = 2;
@@ -173,7 +165,11 @@ const UserUbPage = ({ navigation }) => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const responseData = response;
-        const eventsObj = await ubService.getSubscribedEvents();
+
+        const eventsObj =
+          global.myId === global.currentUserId
+            ? await ubService.getUserEventsById(global.myId)
+            : await ubService.getUserEventsById(global.currentUserId);
 
         isIdInInvitations(response.invitations, response.friends, global.myId);
         if (eventsObj) {
@@ -193,7 +189,6 @@ const UserUbPage = ({ navigation }) => {
             setIsFollowed(5);
           }
           for (const friend of response.friends) {
-            // console.log("FRIENDS:", friend);
             const user = await ubService.getUserById(friend._id);
             if (user) {
               users.push(user);
@@ -211,13 +206,25 @@ const UserUbPage = ({ navigation }) => {
     };
 
     fetchData();
-  }, [navigation, refresh]);
+
+    const fetchDataInterval = setInterval(fetchData, 5000);
+
+    const logInterval = setInterval(() => {
+      console.log("UbPage reloads every 3 seconds");
+    }, 3000);
+
+    return () => {
+      clearInterval(fetchDataInterval);
+      clearInterval(logInterval);
+    };
+  }, [navigation, refresh, isFollowed]);
 
   if (
     userData === null ||
     (userData !== null &&
       userData.profilePhoto !== undefined &&
-      image === defaultImage)
+      image === defaultImage) ||
+    events.length !== images.length
   ) {
     return <LoadingPage />;
   } else {

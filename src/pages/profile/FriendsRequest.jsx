@@ -114,7 +114,7 @@ const FriendsRequest = ({ navigation }) => {
   const [profileData, setProfileData] = useState(null);
   const [users, setUsers] = useState([]);
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-  const [hasAnimated, setHasAnimated] = useState(false); // État pour savoir si l'animation a déjà été jouée
+  const [hasAnimated, setHasAnimated] = useState(false);
   const animations = useRef([]).current;
   const ubservice = new UbService();
 
@@ -155,25 +155,23 @@ const FriendsRequest = ({ navigation }) => {
     }
   };
 
-  // Première récupération des données et rafraîchissement toutes les 5 secondes
   useEffect(() => {
-    fetchData(); // Récupération initiale des données
+    fetchData();
 
     const intervalId = setInterval(() => {
-      fetchData(); // Rafraîchir les données toutes les 5 secondes
+      fetchData();
     }, 1000);
 
-    return () => clearInterval(intervalId); // Nettoyage de l'intervalle à la fin
+    return () => clearInterval(intervalId);
   }, [navigation]);
 
-  // Jouer l'animation seulement lors de la première fois que les utilisateurs sont chargés
   useEffect(() => {
     if (isDataLoaded && users.length > 0 && !hasAnimated) {
       users.forEach((_, index) => {
         animations[index] = new Animated.Value(0);
       });
       animateAvatars();
-      setHasAnimated(true); // L'animation a été jouée
+      setHasAnimated(true);
     }
   }, [isDataLoaded, users]);
 
@@ -295,7 +293,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 4,
-    elevation: 3, // Android shadow
+    elevation: 3,
   },
 });
 

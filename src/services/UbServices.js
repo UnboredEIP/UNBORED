@@ -231,6 +231,29 @@ export class UbService {
       console.error("Error when try to get event from user:", error);
     }
   };
+  getUserEventsById = async (id) => {
+    try {
+      const authToken = await AsyncStorage.getItem("authToken");
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/event/users/reservations?id=${id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const responseData = await response.json();
+      return responseData.reservations;
+    } catch (error) {
+      console.error("Error when try to get event from user:", error);
+    }
+  };
   getUserById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -381,8 +404,6 @@ export class UbService {
         const eventRate = responseData.event.rate;
         let totalStars = 0;
         let totalRatings = 0;
-
-        // console.log("eventRate:", eventRate);
         if (Array.isArray(eventRate)) {
           eventRate.forEach((rating) => {
             const stars = parseInt(rating.stars);
@@ -398,8 +419,6 @@ export class UbService {
         if (totalRatings > 0) {
           averageRating = totalStars / totalRatings;
         }
-        // console.log("AVERAGE:", totalRatings);
-        // console.log("STARS", totalStars);
         return averageRating;
       }
       return 5;
@@ -430,68 +449,6 @@ export class UbService {
       //   await AsyncStorage.setItem("allEvents", responseData.events);
     } catch (error) {
       console.error("Error when try to get images:", error);
-    }
-  };
-
-  getRegister = async (username, email, password, gender, birthdate) => {
-    try {
-      const response = await fetch(
-        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username,
-            email,
-            password,
-            gender,
-            birthdate,
-          }),
-        }
-      );
-      if (response.status === 201) {
-        console.log("User created");
-        return true;
-      } else {
-        console.error(response.json);
-        return response.json();
-      }
-    } catch (error) {
-      console.error("Request error: ", error);
-      return false;
-    }
-  };
-
-  getLogin = async (email, password) => {
-    try {
-      // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
-      const response = await fetch(
-        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            password,
-          }),
-        }
-      );
-      if (response.status === 202) {
-        const data = await response.json();
-        const token = data.token;
-        await AsyncStorage.setItem("authToken", token);
-        return true;
-      } else {
-        console.error(response.toString());
-        return false;
-      }
-    } catch (error) {
-      console.error("Request error: ", error);
-      return false;
     }
   };
 

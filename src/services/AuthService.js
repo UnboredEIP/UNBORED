@@ -100,7 +100,6 @@ export class AuthService {
 
   getLogin = async (email, password) => {
     try {
-      // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
       const response = await fetch(
         `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login`,
         {
@@ -131,7 +130,6 @@ export class AuthService {
 
   loginGoogle = async (googleTokenId) => {
     try {
-      // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
       const response = await fetch(
         `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login/google`,
         {
