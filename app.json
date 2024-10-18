@@ -21,7 +21,7 @@
           "ios": {
             "supportsTablet": true,
             "bundleIdentifier": "com.unboredeip.unboredapp",
-            "buildNumber": "3"
+            "buildNumber": "4"
           }
         }
       ],
@@ -32,7 +32,7 @@
       "expo-font"
     ],
     "slug": "unbored2",
-    "version": "1.0.2",
+    "version": "1.0.4",
     "orientation": "portrait",
     "icon": "./assets/unBored.png",
     "userInterfaceStyle": "light",
