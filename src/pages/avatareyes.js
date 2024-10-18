@@ -1036,7 +1036,7 @@ const styles = StyleSheet.create({
     marginBottom: -300,
   },
   lockedButton: {
-    opacity: 0.5,
+    opacity: 0.1,
   },
   lockOverlay: {
     position: 'absolute',
