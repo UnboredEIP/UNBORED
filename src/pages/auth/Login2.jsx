@@ -65,6 +65,15 @@ const Login2 = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isPasswordValid, setIsPasswordValid] = useState(false);
 
+  // //A décommenter au moment de build
+  // GoogleSignin.configure({
+  //   scopes: [
+  //     "https://www.googleapis.com/auth/drive.readonly",
+  //     "https://www.googleapis.com/auth/calendar.readonly",
+  //   ], // what API you want to access on behalf of the user, default is email and profile
+  //   webClientId: `${CLIENT_ID_WEB}`, // client ID of type WEB for your server. Required to get the idToken on the user object, and for offline access.
+  // });
+
   return (
     <View style={styles().container}>
       <KeyboardAvoidingView
@@ -184,6 +193,7 @@ const Login2 = ({ navigation }) => {
                       await GoogleSignin.signOut();
                       await GoogleSignin.hasPlayServices();
                       const userInfo = await GoogleSignin.signIn();
+                      console.log("USER ID TOKEN", userInfo.idToken);
                       const response = await authService.loginGoogle(
                         userInfo.idToken
                       );

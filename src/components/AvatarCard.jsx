@@ -71,7 +71,6 @@ const AvatarCard = ({
       }
       // }
     }
-    console.log("NOT FOUND");
     return false; // ID not found in invitations
   }
 
@@ -159,7 +158,8 @@ const AvatarCard = ({
           onPress={() => {
             global.idchat = id;
             onPressChat();
-          }}>
+          }}
+        >
           <Text style={styles(size).messageText}>💬</Text>
         </TouchableOpacity>
       ) : (
@@ -182,40 +182,22 @@ const AvatarCardFriendAccept = ({
   colorClothingTop = "black",
   mouth = "grimace",
   eyebrow = "natural",
-  //@ts-ignore
   hat,
   colorHat = "yellow",
   invitations,
-  //@ts-ignore
   id,
   onPress = () => {},
 }) => {
   const ubService = new UbService();
-  const [isFollowed, setIsFollowed] = useState(NOT_FRIENDS);
+  const [isFollowed, setIsFollowed] = useState("NOT_FRIENDS");
   const MAX_NAME_LENGTH = 11;
 
-  //@ts-ignore
   const truncateName = (name) => {
     if (name.length > MAX_NAME_LENGTH) {
       return name.substring(0, MAX_NAME_LENGTH) + "...";
     }
     return name;
   };
-
-  function isIdInInvitations(invitations, id) {
-    // for (const invitation of invitations) {
-    for (const friend of invitations.friends) {
-      if (friend._id === id) {
-        setIsFollowed(WAIT_FOR_ACCEPT);
-        return true; // ID found in invitations
-      }
-      // }
-    }
-    console.log("NOT FOUND");
-    return false; // ID not found in invitations
-  }
-
-  // console.log("MES INVITATIONS:", invitations.friends._id);
 
   useEffect(() => {
     if (invitations.friends.length > 0) {
@@ -226,16 +208,96 @@ const AvatarCardFriendAccept = ({
     }
   }, [isFollowed]);
 
+  const isIdInInvitations = (invitations, id) => {
+    for (const friend of invitations.friends) {
+      if (friend._id === id) {
+        setIsFollowed("WAIT_FOR_ACCEPT");
+        return true;
+      }
+    }
+    // console.log("NOT FOUND");
+    return false;
+  };
+
+  const handleAccept = async () => {
+    const response = await ubService.acceptFriendRequest(id);
+    if (response) {
+      console.log("SUCCESS FRIEND REQUEST");
+      Toast.show("Nouvel(le) ami(e)", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        backgroundColor: "green",
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
+      setIsFollowed("IS_FRIEND");
+    } else {
+      console.log("FAILED FRIEND REQUEST");
+      Toast.show("Veuillez réessayer", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        backgroundColor: "red",
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
+    }
+  };
+
+  const handleReject = async () => {
+    await ubService.acceptFriendRequest(id);
+    const response = await ubService.rejectFriendRequest(id);
+    if (response) {
+      console.log("SUCCESS REJECT FRIEND REQUEST");
+      Toast.show("Invitation rejetée", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        backgroundColor: "red",
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
+      setIsFollowed("NOT_FRIENDS");
+    } else {
+      console.log("FAILED REJECT FRIEND REQUEST");
+      Toast.show("Erreur lors du rejet", {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.BOTTOM,
+        backgroundColor: "red",
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+      });
+    }
+  };
+
   return (
     <TouchableOpacity
       style={styles(size).container}
       onPress={() => {
         global.currentUserId = id;
-
         onPress();
       }}
     >
       <View style={styles(size).leftSection}>
+        {/* Boutons Refuser (rouge) à gauche et Accepter (vert) à droite */}
+        <View style={styles(size).buttonContainer}>
+          {/* Bouton Refuser (Rouge) à gauche de l'avatar */}
+
+          <Buttons
+            height={size * 0.3}
+            width={size * 0.3}
+            texte="X"
+            onPress={handleReject}
+            backgroundColor="red"
+          />
+          {/* <TouchableOpacity
+            style={styles(size).rejectButton}
+            onPress={handleReject}
+          ></TouchableOpacity> */}
+        </View>
+        {/* Avatar */}
         <View style={styles(size).avatarContainer}>
           <MyAvatar
             clothTop={clothTop}
@@ -255,43 +317,27 @@ const AvatarCardFriendAccept = ({
         </View>
         <Text style={styles(size).name}>{truncateName(name)}</Text>
       </View>
-      <Buttons
-        texte="Accepter"
-        textSize={size * 0.13}
-        width={size * 0.6}
-        height={size * 0.3}
-        onPress={async () => {
-          const response = await ubService.acceptFriendRequest(id);
-          if (response) {
-            console.log("SUCCESS FRIEND REQUEST");
-            Toast.show("Nouvel(le) ami(e)", {
-              duration: Toast.durations.LONG,
-              position: Toast.positions.BOTTOM,
-              backgroundColor: "green",
-              shadow: true,
-              animation: true,
-              hideOnPress: true,
-            });
-            setIsFollowed(IS_FRIEND);
-          } else {
-            console.log("FAILED FRIEND REQUEST");
 
-            Toast.show("Veuillez réessayez", {
-              duration: Toast.durations.LONG,
-              position: Toast.positions.BOTTOM,
-              backgroundColor: "red",
-              shadow: true,
-              animation: true,
-              hideOnPress: true,
-            });
-          }
-        }}
-      />
+      {/* Boutons Refuser (rouge) à gauche et Accepter (vert) à droite */}
+      <View style={styles(size).buttonContainer}>
+        {/* Bouton Accepter (Vert) à droite de l'avatar */}
+        {/* <TouchableOpacity
+          style={styles(size).acceptButton}
+          onPress={handleAccept}
+        /> */}
+        <Buttons
+          height={size * 0.3}
+          width={size * 0.3}
+          texte="V"
+          onPress={handleAccept}
+          backgroundColor="green"
+        />
+      </View>
     </TouchableOpacity>
   );
 };
 
-//@ts-ignore
+// Styles
 const styles = (size) => {
   return StyleSheet.create({
     container: {
@@ -307,17 +353,29 @@ const styles = (size) => {
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
-      elevation: 5,
+      // elevation: 5,
     },
     leftSection: {
       flexDirection: "row",
       alignItems: "center",
     },
-    messageButton: {
-      // paddingLeft: screenWidth * 0.02,
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+      // marginLeft: 10, // Adjust spacing between avatar and buttons
     },
-    messageText: {
-      fontSize: 15,
+    acceptButton: {
+      width: size * 0.3,
+      height: size * 0.3,
+      borderRadius: size * 0.15,
+      backgroundColor: "green",
+    },
+    rejectButton: {
+      width: size * 0.3,
+      height: size * 0.3,
+      borderRadius: size * 0.15,
+      backgroundColor: "red",
+      marginRight: 10, // Space between avatar and reject button
     },
     avatarContainer: {
       paddingBottom: screenHeight * 0.06,
