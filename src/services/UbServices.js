@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_URL } from "@env";
 
 export class UbService {
   getEvents = async () => {
@@ -231,6 +230,10 @@ export class UbService {
       console.error("Error when try to get event from user:", error);
     }
   };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 51b1f81d ([MERGE] caca)
   getUserEventsById = async (id) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -452,6 +455,71 @@ export class UbService {
     }
   };
 
+<<<<<<< HEAD
+=======
+  // getRegister = async (username, email, password, gender, birthdate) => {
+  //   try {
+  //     const response = await fetch(
+  //       `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/register`,
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           username,
+  //           email,
+  //           password,
+  //           gender,
+  //           birthdate,
+  //         }),
+  //       }
+  //     );
+  //     if (response.status === 201) {
+  //       console.log("User created");
+  //       return true;
+  //     } else {
+  //       console.error(response.json);
+  //       return false;
+  //     }
+  //   } catch (error) {
+  //     console.error("Request error: ", error);
+  //     return false;
+  //   }
+  // };
+
+  getLogin = async (email, password) => {
+    try {
+      // https://x2025unbored786979363000.francecentral.cloudapp.azure.com
+      const response = await fetch(
+        `https://x2025unbored786979363000.francecentral.cloudapp.azure.com/auth/login`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
+      if (response.status === 202) {
+        const data = await response.json();
+        const token = data.token;
+        await AsyncStorage.setItem("authToken", token);
+        return true;
+      } else {
+        console.error(response.toString());
+        return false;
+      }
+    } catch (error) {
+      console.error("Request error: ", error);
+      return false;
+    }
+  };
+
+>>>>>>> 51b1f81d ([MERGE] caca)
   sendReview = async (id, stars, comments) => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");

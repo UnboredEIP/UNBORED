@@ -56,11 +56,11 @@ const RegisterStep2 = ({ navigation }) => {
               onPress={async () => {
                 console.log(
                   "Value EMAIL",
-                  JSON.parse(global.RegisterData).email
+                  JSON.parse(global.RegisterData).email.toLowerCase()
                 );
                 console.log("Value OTP", global.OTPValue);
                 const response = await authService.checkOTP(
-                  JSON.parse(global.RegisterData).email,
+                  JSON.parse(global.RegisterData).email.toLowerCase(),
                   global.OTPValue
                 );
                 if (response) navigation.replace("RegisterStep3");
