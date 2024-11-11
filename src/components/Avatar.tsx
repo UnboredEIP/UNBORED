@@ -111,7 +111,7 @@ const MyAvatar = ({
   //@ts-ignore
   eyes, //="wink", C bon
   //@ts-ignore
-  size, //= 200, C bon
+  size = 100, // C bon
   //@ts-ignore
   hair, //="afro", C bon
   //@ts-ignore

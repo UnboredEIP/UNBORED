@@ -21,6 +21,8 @@ import Toast from "react-native-root-toast";
 import LoadingPage from "../Loading";
 import { BackArrow } from "../../../assets/avatars/avatars";
 import MyTextInput from "../../components/TextField";
+import MyAvatar from "../../components/Avatar";
+import avatarResources from "../../utils/clothes.json";
 
 const screenHeight = Dimensions.get("screen").height;
 const screenWidth = Dimensions.get("screen").width;
@@ -216,9 +218,28 @@ const Event = ({ navigation }) => {
             </Text>
           </View>
         </View>
-        <Text style={styles(eventData.name.length).description}>
-          {eventData.description}
-        </Text>
+        <MyAvatar
+          size={50}
+          colorSkin={creator.style.head.color}
+          clothTop={avatarResources.listTop[creator.style.accessory.id]}
+          colorClothingTop={creator.style.accessory.color}
+          hair={avatarResources.listHair[creator.style.hair.id]}
+          colorHair={creator.style.hair.color}
+          eyes={avatarResources.listEyes[creator.style.eyes.id]}
+          colorEye={creator.style.eyes.color}
+          mouth={avatarResources.listMouth[creator.style.mouth.id]}
+          eyebrow={avatarResources.listEyebrow[creator.style.eyebrows.id]}
+          beard={avatarResources.listBeard[creator.style.beard.id]}
+        />
+        <View
+          style={{
+            marginTop: "15%",
+          }}
+        >
+          <Text style={styles(eventData.name.length).description}>
+            {eventData.description}
+          </Text>
+        </View>
 
         <Buttons
           texte="Voir les participants"
@@ -228,9 +249,11 @@ const Event = ({ navigation }) => {
         />
         <View
           style={{
-            marginVertical: 10,
+            marginVertical: "5%",
           }}
-        />
+        >
+
+       
 
         {isEnroll == IS_ENROLL ? (
           <Buttons
@@ -313,6 +336,7 @@ const Event = ({ navigation }) => {
             }}
           />
         )}
+         </View>
 
         <Modal
           animationType="fade"
@@ -658,6 +682,7 @@ const styles = (categoryLen) =>
     },
     locationContainer: {
       marginTop: screenHeight * 0.03,
+
       flexDirection: "row",
       justifyContent: "space-between",
     },

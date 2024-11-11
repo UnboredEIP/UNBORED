@@ -1,0 +1,94 @@
+{
+  "listHair": [
+    "null",
+    "calvitie",
+    "buzzcut",
+    "big",
+    "afro",
+    "frizzy",
+    "curvy",
+    "curlyshort",
+    "curly",
+    "mediumdreads",
+    "medium",
+    "longstraight",
+    "longdreads",
+    "shaggymullet",
+    "shaggy",
+    "minidreads",
+    "mediumlong",
+    "square",
+    "shortwaved",
+    "shortflat"
+  ],
+
+  "listMouth": [
+    "null",
+    "grimace",
+    "eating",
+    "desbelief",
+    "default",
+    "serious",
+    "scream",
+    "sad",
+    "open",
+    "vomit",
+    "twinkle",
+    "tongue",
+    "smile"
+  ],
+
+  "listTop": [
+    "null",
+    "hoodie",
+    "crewneck",
+    "blazer",
+    "shirt",
+    "scoopneck",
+    "polo",
+    "vneck",
+    "overall"
+  ],
+
+  "listEyebrow": [
+    "null",
+    "natural",
+    "flat",
+    "exited",
+    "angry",
+    "updown",
+    "unibrow",
+    "sad2",
+    "sad"
+  ],
+
+  "listBeard": [
+    "null",
+    "medium",
+    "majestic",
+    "light",
+    "mustachemagnum",
+    "mustache"
+  ],
+
+  "listEyes": [
+    "null",
+    "dizzy",
+    "default",
+    "cry",
+    "closed",
+    "side",
+    "heart",
+    "happy",
+    "eyeroll",
+    "wink",
+    "wacky",
+    "surprised",
+    "squint",
+    "angry",
+    "updown",
+    "unibrow",
+    "sad2",
+    "sad"
+  ]
+}
