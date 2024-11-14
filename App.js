@@ -37,6 +37,8 @@ import shop from "./src/pages/shop";
 import Chat from "./src/pages/chat";
 import History from "./src/pages/history";
 import UserUbPage from "./src/pages/profile/UserUb";
+import Bbreacker from "./src/pages/bbreacker";
+
 import { useState } from "react";
 
 import * as CalendarDevice from "expo-calendar";
@@ -102,6 +104,9 @@ const AppNavigator = createStackNavigator(
     },
     Chat: {
       screen: Chat,
+    },
+    Bbreacker: {
+      screen:Bbreacker,
     },
     Home: {
       screen: Register,

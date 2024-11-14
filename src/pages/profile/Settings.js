@@ -152,6 +152,9 @@ const Settings = ({ navigation }) => {
   const navigatetoshop = async () => {
     navigation.navigate("shop");
   };
+  const navigatetoMiniJeu = async () => {
+    navigation.navigate("Bbreacker");
+  }
   const handleSave = async () => {
     try {
       const authToken = await AsyncStorage.getItem("authToken");
@@ -285,7 +288,6 @@ const Settings = ({ navigation }) => {
                 </Text>
               </TouchableOpacity>
             </View>
-            {/* <Text style={styles.username}>Birthdate</Text> */}
             <MyTextInput
               dateSelect={new Date(birthdate)}
               placeholder="Date de naissance"
@@ -299,12 +301,20 @@ const Settings = ({ navigation }) => {
             >
               <Text style={styles.loginBtnText2}>Créer ton avatar !</Text>
             </TouchableOpacity>
+            <View style={styles.buttonContainer}>
             <TouchableOpacity
-              style={styles.loginBtn3}
+              style={styles.loginBtn2}
               onPress={navigatetoshop}
             >
               <Text style={styles.loginBtnText2}>Shop !</Text>
             </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.loginBtn2}
+              onPress={navigatetoMiniJeu}
+            >
+              <Text style={styles.loginBtnText2}>Mini Jeu</Text>
+            </TouchableOpacity>
+            </View>
             <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
               <Text style={styles.loginBtnText}>Sauvegarder</Text>
             </TouchableOpacity>
@@ -360,7 +370,6 @@ const styles = StyleSheet.create({
     marginTop: 20, // Adjust margin as needed
   },
   loginBtn2: {
-    marginTop: 20,
     marginLeft: 5,
     marginRight: 5,
     width: "50%",
@@ -368,7 +377,6 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 20,
     backgroundColor: "#FFF",
     borderColor: "#b3b3b3",
     borderWidth: 1,
