@@ -20,7 +20,7 @@ const Bbreacker = ({ navigation }) => {
     x: width / 2 - ballSize / 2,
     y: paddleY - ballSize - 1, // Start just above the paddle
   };
-  const initialBallVelocity = { x: 150, y: 150 }; // Positive Y-velocity to move downward
+  const initialBallVelocity = { x: 250, y: 250 }; // Positive Y-velocity to move downward
 
   // State variables
   const [paddleX, setPaddleX] = useState(width / 2 - paddleWidth / 2);

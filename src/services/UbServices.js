@@ -275,7 +275,7 @@ export class UbService {
       if (!responseData.user) throw new Error(`User null: ${response.status}`);
       return responseData.user;
     } catch (error) {
-      console.error("Error when try to get user:", error);
+      // console.error("Error when try to get userRRRRR:", error);
     }
   };
 

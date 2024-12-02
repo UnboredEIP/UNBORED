@@ -310,9 +310,9 @@ const Settings = ({ navigation }) => {
             </TouchableOpacity>
             <TouchableOpacity
               style={styles.loginBtn2}
-              onPress={navigatetoMiniJeu}
+              // onPress={navigatetoMiniJeu}
             >
-              <Text style={styles.loginBtnText2}>Mini Jeu</Text>
+              <Text style={styles.loginBtnText2}>Mini Jeu (WIP)</Text>
             </TouchableOpacity>
             </View>
             <TouchableOpacity style={styles.loginBtn} onPress={handleSave}>
