@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../components/TextField";
-import { RootSiblingParent } from "react-native-root-siblings";
+
 import Toast from "react-native-root-toast";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Buttons from "../../components/Buttons";
@@ -108,58 +108,57 @@ const Login2 = ({ navigation }) => {
               onChangeText={(password) => setPassword(password)}
               setPasswordValid={setIsPasswordValid}
             />
-            <RootSiblingParent>
-              <View style={{ marginBottom: 10 }}></View>
-              <Buttons
-                texte={"Se connecter"}
-                onPress={async () => {
-                  if (email !== "" && password !== "") {
-                    const response = await authService.getLogin(
-                      email,
-                      password
-                    );
-                    if (response) {
-                      Toast.show("Vous êtes connecté", {
-                        duration: Toast.durations.LONG,
-                        position: Toast.positions.BOTTOM,
-                        backgroundColor: "green",
-                        shadow: true,
-                        animation: true,
-                        hideOnPress: true,
-                      });
-                      const tmp = await navigateTo();
-                      if (tmp === true) navigation.replace("Accueil3");
-                      else navigation.replace("Choose");
-                    } else {
-                      Toast.show("Mot de passe ou Email incorrect", {
-                        duration: Toast.durations.LONG,
-                        position: Toast.positions.BOTTOM,
-                        backgroundColor: "red",
-                        shadow: true,
-                        animation: true,
-                        hideOnPress: true,
-                      });
-                    }
+            <View style={{ marginBottom: 10 }}></View>
+            <Buttons
+              texte={"Se connecter"}
+              onPress={async () => {
+                if (email !== "" && password !== "") {
+                  const response = await authService.getLogin(email, password);
+                  if (response) {
+                    Toast.show("Authentification réussie", {
+                      duration: Toast.durations.LONG,
+                      position: Toast.positions.BOTTOM,
+                      visible: true,
+                      textStyle: { fontSize: "10px" },
+                      backgroundColor: "green",
+                      textColor: "white",
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                    });
+                    const tmp = await navigateTo();
+                    if (tmp === true) navigation.replace("Accueil3");
+                    else navigation.replace("Choose");
                   } else {
-                    Toast.show(
-                      "Mot de passe ou email manquant. Veuillez remplir les deux champs",
-                      {
-                        duration: Toast.durations.LONG,
-                        position: Toast.positions.BOTTOM,
-                        backgroundColor: "red",
-                        shadow: true,
-                        animation: true,
-                        hideOnPress: true,
-                      }
-                    );
+                    Toast.show("Email ou mot de passe incorrect", {
+                      duration: Toast.durations.LONG,
+                      position: Toast.positions.BOTTOM,
+                      backgroundColor: "red",
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                    });
                   }
-                }}
-                disabled={!isPasswordValid}
-                style={
-                  !isPasswordValid ? styles().buttonDisabled : styles().button
+                } else {
+                  Toast.show(
+                    "Mot de passe ou email manquant. Veuillez remplir les deux champs",
+                    {
+                      duration: Toast.durations.LONG,
+                      position: Toast.positions.BOTTOM,
+                      textColor: "white",
+                      backgroundColor: "red",
+                      shadow: true,
+                      animation: true,
+                      hideOnPress: true,
+                    }
+                  );
                 }
-              />
-            </RootSiblingParent>
+              }}
+              disabled={!isPasswordValid}
+              style={
+                !isPasswordValid ? styles().buttonDisabled : styles().button
+              }
+            />
             <TouchableOpacity
               onPress={async () => navigation.navigate("MotDePasse")}
             >
@@ -178,9 +177,8 @@ const Login2 = ({ navigation }) => {
               ou continuer avec
             </Text>
             <View style={{ flexDirection: "row" }}>
-              <RootSiblingParent>
-                {/* //A décommenter au moment de build */}
-                {/* <Buttons
+              {/* //A décommenter au moment de build */}
+              {/* <Buttons
                   hasIcon={true}
                   iconPath={
                     "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
@@ -237,7 +235,6 @@ const Login2 = ({ navigation }) => {
                   }}
                   texte="Google"
                 /> */}
-              </RootSiblingParent>
             </View>
             <View style={{ marginTop: 15 }} />
             <Text style={styles().loginText}>
@@ -257,42 +254,54 @@ const styles = (textColor) => {
   return StyleSheet.create({
     container: {
       flex: 1,
+      //   marginTop: screenHeight < 768 ? 41 : 50,
+      // backgroundColor: "white",
     },
     Mainbox: {
       flex: 1,
       alignItems: "center",
+      //   justifyContent: "center",
+      //   marginTop: screenHeight < 768 ? 41 : 50,
       marginVertical: screenHeight < 768 ? 41 : 50,
       marginHorizontal: screenWidth / 15,
+      // backgroundColor: "white",
     },
     h1: {
       fontSize: screenHeight < 768 ? 20 : 24,
-      // fontFamily: "SourceSansPro_600SemiBold",
+      fontFamily: "SourceSansPro_600SemiBold",
       textAlign: "center",
+      //   marginHorizontal: screenWidth / 30,
       marginBottom: screenHeight / 30,
     },
     titleTextField: {
       fontSize: 16,
       alignSelf: "flex-start",
-      // fontFamily: "SourceSansPro_600SemiBold",
+      fontFamily: "SourceSansPro_600SemiBold",
       opacity: 0.4,
       marginLeft: 20,
     },
     loginText: {
       fontSize: 16,
       alignSelf: "center",
-      // fontFamily: "SourceSansPro_600SemiBold",
+      fontFamily: "SourceSansPro_600SemiBold",
       color: "#858C94",
     },
     colorStar: {
       color: "#E1604D",
     },
-    button: {
+    boutton: {
+      width: "80%",
+      borderRadius: 50,
+      height: 50,
+      alignItems: "center",
+      justifyContent: "center",
       backgroundColor: "#E1604D",
-      opacity: 1,
+      marginTop: 50,
     },
-    buttonDisabled: {
-      backgroundColor: "#E1604D",
-      opacity: 0.5,
+    textButton: {
+      fontFamily: "SourceSansPro_600SemiBold",
+      fontSize: 16,
+      color: "white",
     },
   });
 };

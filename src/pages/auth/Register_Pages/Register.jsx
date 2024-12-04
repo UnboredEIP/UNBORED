@@ -12,7 +12,6 @@ import {
 import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../../components/TextField";
 import Toast from "react-native-root-toast";
-import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import { AuthService } from "../../../services/AuthService";
 import LoadingPage from "../../Loading";
@@ -102,64 +101,62 @@ const Register = ({ navigation }) => {
             />
 
             <View style={{ marginTop: 20 }} />
-            <RootSiblingParent>
-              <Buttons
-                texte={"S'inscrire"}
-                backgroundColor="#E1604D"
-                onPress={async () => {
-                  if (email && username && birthdate) {
-                    const response = await authService.checkUsernameEmail(
-                      username,
-                      email
-                    );
-                    console.log("STATUS:", response);
-                    if (response) {
-                      global.RegisterData = JSON.stringify({
-                        email: email,
-                        username: username,
-                        birthdate: birthdate,
-                        gender: gender,
-                      });
-                      // console.log(global.RegisterData);
-
-                      navigation.replace("RegisterStep2");
-                    } else {
-                      Toast.show(
-                        `Inscription échouée: identifiants déjà utilisé.`,
-                        {
-                          duration: Toast.durations.LONG,
-                          position: Toast.positions.BOTTOM,
-                          backgroundColor: "red",
-                          shadow: true,
-                          animation: true,
-                          hideOnPress: true,
-                        }
-                      );
-                    }
-                  } else {
-                    let errorMessage3 =
-                      "\nInscription échouée, champs manquant(s) :\n";
-                    if (username.trim() === "") {
-                      errorMessage3 += " Nom d'utilisateur \n";
-                    }
-                    if (email.trim() === "") {
-                      errorMessage3 += " Email \n";
-                    }
-                    if (password.trim() === "") {
-                      errorMessage3 += " Mot de passe \n";
-                    }
-                    Toast.show(errorMessage3, {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.BOTTOM,
-                      backgroundColor: "red",
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
+            <Buttons
+              texte={"S'inscrire"}
+              backgroundColor="#E1604D"
+              onPress={async () => {
+                if (email && username && birthdate) {
+                  const response = await authService.checkUsernameEmail(
+                    username,
+                    email
+                  );
+                  console.log("STATUS:", response);
+                  if (response) {
+                    global.RegisterData = JSON.stringify({
+                      email: email,
+                      username: username,
+                      birthdate: birthdate,
+                      gender: gender,
                     });
+                    // console.log(global.RegisterData);
+
+                    navigation.replace("RegisterStep2");
+                  } else {
+                    Toast.show(
+                      `Inscription échouée: identifiants déjà utilisé.`,
+                      {
+                        duration: Toast.durations.LONG,
+                        position: Toast.positions.BOTTOM,
+                        backgroundColor: "red",
+                        shadow: true,
+                        animation: true,
+                        hideOnPress: true,
+                      }
+                    );
                   }
-                }}
-              />
-            </RootSiblingParent>
+                } else {
+                  let errorMessage3 =
+                    "\nInscription échouée, champs manquant(s) :\n";
+                  if (username.trim() === "") {
+                    errorMessage3 += " Nom d'utilisateur \n";
+                  }
+                  if (email.trim() === "") {
+                    errorMessage3 += " Email \n";
+                  }
+                  if (password.trim() === "") {
+                    errorMessage3 += " Mot de passe \n";
+                  }
+                  Toast.show(errorMessage3, {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+                }
+              }}
+            />
 
             <Text
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
@@ -167,9 +164,8 @@ const Register = ({ navigation }) => {
               ou continuer avec
             </Text>
             <View style={{ flexDirection: "row", marginBottom: 32 }}>
-              <RootSiblingParent>
-                {/* //A décommenter au moment de build */}
-                {/* <Buttons
+              {/* //A décommenter au moment de build */}
+              {/* <Buttons
                   hasIcon={true}
                   iconPath={
                     "https://assets-global.website-files.com/5f68558b209a0b8f85194e47/6512c3effb2887c0bdbefca7_Google%20G%20Logo.png"
@@ -225,7 +221,6 @@ const Register = ({ navigation }) => {
                   }}
                   texte="Google"
                 /> */}
-              </RootSiblingParent>
             </View>
 
             <Text style={styles().loginText}>

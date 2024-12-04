@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../components/TextField";
-import { RootSiblingParent } from "react-native-root-siblings";
 import Toast from "react-native-root-toast";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
@@ -81,55 +80,49 @@ const MotDePasse = ({ navigation }) => {
               onChangeText={(email) => setEmail(email)}
             />
 
-            <RootSiblingParent>
-              <View style={{ marginBottom: 10 }}></View>
-              <Buttons
-                texte={"Changer son mot de passe"}
-                onPress={async () => {
-                  if (email !== "") {
-                    const response = await makeRLoginRequest(email);
-                    navigation.navigate("Login2");
-                  } else {
-                    Toast.show("Veuillez remplir l'Email", {
-                      duration: Toast.durations.LONG,
-                      position: Toast.positions.BOTTOM,
-                      backgroundColor: "red",
-                      shadow: true,
-                      animation: true,
-                      hideOnPress: true,
-                    });
-                  }
-                }}
-              />
-            </RootSiblingParent>
+            <View style={{ marginBottom: 10 }}></View>
+            <Buttons
+              texte={"Changer son mot de passe"}
+              onPress={async () => {
+                if (email !== "") {
+                  const response = await makeRLoginRequest(email);
+                  navigation.navigate("Login2");
+                } else {
+                  Toast.show("Veuillez remplir l'Email", {
+                    duration: Toast.durations.LONG,
+                    position: Toast.positions.BOTTOM,
+                    backgroundColor: "red",
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                  });
+                }
+              }}
+            />
             <Text
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
             >
               ou continuer avec
             </Text>
             <View style={{ flexDirection: "row" }}>
-              <RootSiblingParent>
-                <Buttons
-                  hasIcon={true}
-                  iconPath={
-                    "https://www.facebook.com/images/fb_icon_325x325.png"
-                  }
-                  textColor="black"
-                  width={screenWidth < 350 ? 145 : 160}
-                  backgroundColor="white"
-                  texte="Facebook"
-                />
-                <Buttons
-                  hasIcon={true}
-                  iconPath={
-                    "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png"
-                  }
-                  textColor="black"
-                  width={screenWidth < 350 ? 145 : 160}
-                  backgroundColor="white"
-                  texte="Google"
-                />
-              </RootSiblingParent>
+              <Buttons
+                hasIcon={true}
+                iconPath={"https://www.facebook.com/images/fb_icon_325x325.png"}
+                textColor="black"
+                width={screenWidth < 350 ? 145 : 160}
+                backgroundColor="white"
+                texte="Facebook"
+              />
+              <Buttons
+                hasIcon={true}
+                iconPath={
+                  "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/800px-Google_%22G%22_Logo.svg.png"
+                }
+                textColor="black"
+                width={screenWidth < 350 ? 145 : 160}
+                backgroundColor="white"
+                texte="Google"
+              />
             </View>
             <View style={{ marginTop: 15 }} />
             <Text style={styles().loginText}>

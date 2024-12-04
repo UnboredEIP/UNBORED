@@ -13,7 +13,7 @@ import Button from "./components/Buttons";
 const width = Dimensions.get("screen").width;
 const height = Dimensions.get("screen").height;
 const OnBoardingItem = ({ item, navigation }) => {
-  const { width, height } = useWindowDimensions();
+  // const { width, height } = useWindowDimensions();
   return (
     <View style={[styles.container, { width, height }]}>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginTop: height * 0.10,
+    marginTop: height * 0.1,
   },
   scrollViewContainer: {
     // flexGrow: 1,

@@ -38,6 +38,7 @@ import Chat from "./src/pages/chat";
 import History from "./src/pages/history";
 import UserUbPage from "./src/pages/profile/UserUb";
 import Bbreacker from "./src/pages/bbreacker";
+import { RootSiblingParent } from "react-native-root-siblings";
 
 import { useState } from "react";
 
@@ -106,7 +107,7 @@ const AppNavigator = createStackNavigator(
       screen: Chat,
     },
     Bbreacker: {
-      screen:Bbreacker,
+      screen: Bbreacker,
     },
     Home: {
       screen: Register,
@@ -305,6 +306,10 @@ export default class App extends React.Component {
         );
       }
     });
-    return <AppContainer />;
+    return (
+      <RootSiblingParent>
+        <AppContainer />
+      </RootSiblingParent>
+    );
   }
 }

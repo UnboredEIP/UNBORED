@@ -17,7 +17,6 @@ import { ScrollView } from "react-native-gesture-handler";
 import MyTextInput from "../../../components/TextField";
 import RNPickerSelect from "react-native-picker-select";
 import Toast from "react-native-root-toast";
-import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import { AuthService } from "../../../services/AuthService";
 import LoadingPage from "../../Loading";
@@ -163,7 +162,6 @@ const RegisterStep3 = ({ navigation }) => {
               }}
             />
             <View style={{ marginTop: 20 }} />
-            <RootSiblingParent>
               <Buttons
                 texte={"S'inscrire"}
                 backgroundColor="#E1604D"
@@ -247,7 +245,6 @@ const RegisterStep3 = ({ navigation }) => {
                 }}
                 disabled={!isDisabled}
               />
-            </RootSiblingParent>
 
             {/* <View style={{ marginTop: 30, marginBottom: 30 }}></View>
 

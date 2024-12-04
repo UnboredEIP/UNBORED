@@ -15,7 +15,6 @@ import RNPickerSelect from "react-native-picker-select";
 import Toast from "react-native-root-toast";
 const screenWidth = Dimensions.get("screen").width;
 const screenHeight = Dimensions.get("screen").height;
-import { RootSiblingParent } from "react-native-root-siblings";
 import Buttons from "../../../components/Buttons";
 import OTPInput from "../../../components/OTP_intputs";
 import { UbService } from "../../../services/UbServices";
@@ -80,7 +79,6 @@ const RegisterStep2 = ({ navigation }) => {
               style={(styles().loginText, { marginTop: 30, marginBottom: 30 })}
             ></View>
             {/* <View style={{ flexDirection: "row", marginBottom: 32 }}>
-              <RootSiblingParent>
                 <Buttons
                   hasIcon={true}
                   iconPath={
@@ -101,7 +99,6 @@ const RegisterStep2 = ({ navigation }) => {
                   backgroundColor="white"
                   texte="Google"
                 />
-              </RootSiblingParent>
             </View> */}
 
             <Text style={styles().loginText}>
